@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class SignController extends Controller {
+class SignController extends CommonController {
     const SUCCESS_URL = '/Home/Sign/index';
 
 	public function index(){

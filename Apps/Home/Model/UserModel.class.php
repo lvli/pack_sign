@@ -12,7 +12,7 @@ class UserModel extends Model{
 	}
 
 	public function is_login(){
-		return session('?user_id') && session('?user_name');
+		return session('?admin_id') && session('?admin_name');
 	}
 
 	public function login($user, $password){

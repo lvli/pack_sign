@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class UserController extends Controller {
+class UserController extends CommonController {
     public function login(){
         $this->display();
     }

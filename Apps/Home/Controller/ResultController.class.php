@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class ResultController extends Controller {
+class ResultController extends CommonController {
     const SUCCESS_URL = '/Home/Result/index/task_id/';
 
 	public function index(){

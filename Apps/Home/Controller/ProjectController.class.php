@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class ProjectController extends Controller {
+class ProjectController extends CommonController {
     const SUCCESS_URL = '/Home/Project/index';
 
 	public function index(){
