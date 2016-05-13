@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>项目管理</title>
+    <title>任务管理</title>
     <import type='js' file='Js.jquery' >
         <import type='js' file='JS.bootstrap'>
             </head>
@@ -10,7 +10,9 @@
 <div class="container">
     <div class="page-header">
         <h1>
-            项目管理&nbsp;  <a href="/Home/Project/save">添加</a>
+            任务管理&nbsp; 项目名称:{$project_name}&nbsp;
+            <a href="/Home/Task/save/project_id/{$project_id}">添加</a>&nbsp;
+            <a href="/Home/Project/index">返回</a>&nbsp;
         </h1>
     </div>
     <div class="bs-example" data-example-id="bordered-table">
@@ -18,12 +20,9 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>项目名称</th>
-                <th>打包服务器IP</th>
-                <th>打包服务器端口号</th>
-                <th>打包脚本环境变量</th>
-                <th>打包脚本路径</th>
-                <th>打包脚本工作目录</th>
+                <th>是否签名</th>
+                <th>是否扫毒</th>
+                <th>签名脚本路径</th>
                 <th>备注</th>
                 <th>添加人</th>
                 <th>添加时间</th>
@@ -35,20 +34,16 @@
             <volist name="list" id="data">
                 <tr>
                     <th>{$data.id}</th>
-                    <td>{$data.project_name}</td>
-                    <td>{$data.pack_ip}</td>
-                    <td>{$data.pack_port}</td>
-                    <td>{$data.pack_env}</td>
-                    <td>{$data.pack_path}</td>
-                    <td>{$data.pack_workpath}</td>
+                    <td><if condition="$data.is_sign eq 1">是<else />否</if></td>
+                    <td><if condition="$data.is_virus eq 1">是<else />否</if></td>
+                    <td>{$data.sign_path}</td>
                     <td>{$data.back}</td>
                     <td>{$data.admin_name}</td>
                     <td>{$data.addtime}</td>
                     <td>{$data.edittime}</td>
                     <td>
-                        <a href="/index.php/Home/Task/index/project_id/{$data.id}">查看任务</a>&nbsp;
-                        <a href="/index.php/Home/Project/save/id/{$data.id}">编辑</a>&nbsp;
-                        <a href="/index.php/Home/Project/delete/id/{$data.id}">删除</a>
+                        <a href="/index.php/Home/Task/save/id/{$data.id}/project_id/{$project_id}">编辑</a>&nbsp;
+                        <a href="/index.php/Home/Task/delete/id/{$data.id}/project_id/{$project_id}">删除</a>
                     </td>
                 </tr>
             </volist>

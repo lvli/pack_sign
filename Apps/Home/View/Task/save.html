@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>任务添加/编辑</title>
+    <import type='js' file='Js.jquery' ></import>
+    <import type='js' file='JS.bootstrap'></import>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                任务添加/编辑
+            </h1>
+        </div>
+        <form action="/Home/Task/save_up" method="post">
+            <div class="form-group">
+                <label>项目名称:</label>
+                <input type="text" class="form-control" name="project_name" placeholder="项目名称" value="{$project_name}" disabled="disabled">
+            </div>
+            <div class="form-group">
+                <label>签名:</label>
+                <label>
+                    <input type="radio" name="is_sign" value="1" <if condition="$virus.is_sign eq 1">checked</if> >
+                    是
+                </label>
+                <label>
+                    <input type="radio" name="is_sign" value="0" <if condition="$virus.is_sign eq 0">checked</if>>
+                    否
+                </label>
+            </div>
+            <div class="form-group">
+                <label>扫毒:</label>
+                <label>
+                    <input type="radio" name="is_virus" value="1" <if condition="$virus.is_virus eq 1">checked</if> >
+                    是
+                </label>
+                <label>
+                    <input type="radio" name="is_virus" value="0" <if condition="$virus.is_virus eq 0">checked</if>>
+                    否
+                </label>
+            </div>
+            <div class="form-group">
+                <label>签名脚本路径:</label>
+                <input type="text" class="form-control" name="sign_path" placeholder="签名脚本路径" value="{$data.sign_path}">
+            </div>
+            <div class="form-group">
+                <label>备注:</label>
+                <textarea name="back">{$data.back}</textarea>
+            </div>
+            <input type="hidden" value="{$project_id}" name="project_id">
+            <input type="hidden" value="{$data.id}" name="id">
+            <button type="submit" class="btn btn-default">保存/修改</button>
+        </form>
+    </div>
+</body>
+</html>

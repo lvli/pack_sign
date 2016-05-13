@@ -2,8 +2,8 @@
 namespace Home\Model;
 use Think\Model;
 
-class ProjectModel extends Model{
-	protected $tableName = 'project';
+class TaskModel extends Model{
+	protected $tableName = 'task';
 	protected  $table;
 
 	function __construct() {
@@ -33,21 +33,18 @@ class ProjectModel extends Model{
 		return $result;
 	}
 
-	function findOne($id, $field){
-		if(empty($id)){
-			return '';
+	function findAll($projectId, $pageCount){
+		if(empty($projectId)){
+			return array();
 		}
-		$result = $this->table->where("id={$id}")->getField($field);
-		return $result;
-	}
 
-	function findAll($pageCount){
 		import('ORG.Util.Page');
-		$count = $this->table->count();
+		$count = $this->table->where("project_id={$projectId}")->count();
 		if(!empty($count)){
 			$page = new \Org\Util\Page($count, $pageCount);
-			$list = $this->table->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
+			$list = $this->table->where("project_id={$projectId}")->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
 		}
+
 		if(!empty($list)){
 			$admin_arr = array();
 			foreach($list as &$v){
@@ -78,14 +75,12 @@ class ProjectModel extends Model{
 		}
 	}
 
-	function save($project_name, $pack_ip, $pack_port, $pack_env, $pack_path, $pack_workpath, $back, $id = 0){
+	function save($project_id, $is_sign, $is_virus, $sign_path, $back, $id = 0){
 		$data = array(
-			'project_name' => $project_name,
-			'pack_ip' => $pack_ip,
-			'pack_port' => $pack_port,
-			'pack_env' => $pack_env,
-			'pack_path' => $pack_path,
-			'pack_workpath' => $pack_workpath,
+			'project_id' => $project_id,
+			'is_sign' => $is_sign,
+			'is_virus' => $is_virus,
+			'sign_path' => $sign_path,
 			'back' => $back,
 			'admin_id' => session('admin_id'),
 		);
