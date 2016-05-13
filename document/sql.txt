@@ -1,6 +1,6 @@
 CREATE TABLE `ps_admin` (
 	`id` INT(10) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-	`user` VARCHAR(50) NULL DEFAULT '' COMMENT '用户名',
+	`name` VARCHAR(50) NULL DEFAULT '' COMMENT '用户名',
 	`password` CHAR(32) NULL DEFAULT '' COMMENT '密码(md5)',
 	`status` TINYINT(3) NULL DEFAULT '0' COMMENT '是否可用(0=可用 1=不可用)',
 	`addtime` INT(11) NULL DEFAULT '0' COMMENT '添加时间',
