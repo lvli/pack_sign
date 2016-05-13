@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>任务结果</title>
+    <import type='js' file='Js.jquery' ></import>
+    <import type='js' file='JS.bootstrap'></import>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>
+            任务结果&nbsp; 项目名称:{$project_name}&nbsp;任务名称:{$task_id}
+            <a href="javascript:history.go(-1);">返回</a>&nbsp;
+        </h1>
+    </div>
+    <div class="bs-example" data-example-id="bordered-table">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>打包状态</th>
+                <th>签名状态</th>
+                <th>扫毒状态</th>
+                <th>扫毒结果</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="list" id="data">
+                <tr>
+                    <th>{$data.id}</th>
+                    <td><if condition="$data.pack_status eq 0">尚未开始<elseif condition="$data.pack_status eq 1" />成功<else />失败</if></td>
+                    <td><if condition="$data.sign_status eq 0">尚未开始<elseif condition="$data.sign_status eq 1" />成功<else />失败</if></td>
+                    <td><if condition="$data.virus_status eq 0">尚未开始<elseif condition="$data.virus_status eq 1" />成功<else />失败</if></td>
+                    <td>{$data.virus_result}</td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+        {$pagination}
+    </div>
+</div>
+</body>
+</html>
