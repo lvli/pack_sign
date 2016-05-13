@@ -9,4 +9,5 @@ return array(
 	'DB_CHARSET' => 'utf8',
 	'DB_PORT'  => '3306',
 	'APP_DEBUG'  =>  false,
+	'DB_FIELDS_CACHE'=>false,
 );

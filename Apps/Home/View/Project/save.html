@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>项目添加/编辑</title>
+    <import type='js' file='Js.jquery' ></import>
+    <import type='js' file='JS.bootstrap'></import>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                项目添加/编辑
+            </h1>
+        </div>
+        <form action="/Home/Project/save_up" method="post">
+            <div class="form-group">
+                <label>项目名称:</label>
+                <input type="text" class="form-control" name="project_name" placeholder="项目名称" value="{$data.project_name}">
+            </div>
+            <div class="form-group">
+                <label>打包服务器IP:</label>
+                <input type="text" class="form-control" name="pack_ip" placeholder="打包服务器IP" value="{$data.pack_ip}">
+            </div>
+            <div class="form-group">
+                <label>打包脚本环境变量:</label>
+                <input type="text" class="form-control" name="pack_env" placeholder="打包脚本环境变量" value="{$data.pack_env}">
+            </div>
+            <div class="form-group">
+                <label>打包服务器端口号:</label>
+                <input type="text" class="form-control" name="pack_port" placeholder="打包服务器端口号" value="{$data.pack_port}">
+            </div>
+            <div class="form-group">
+                <label>打包脚本命令行路径:</label>
+                <input type="text" class="form-control" name="pack_path" placeholder="打包脚本命令行路径" value="{$data.pack_path}">
+            </div>
+            <div class="form-group">
+                <label>打包脚本工作目录:</label>
+                <input type="text" class="form-control" name="pack_workpath" placeholder="打包脚本工作目录" value="{$data.pack_workpath}">
+            </div>
+            <div class="form-group">
+                <label>备注:</label>
+                <textarea name="back">{$data.back}</textarea>
+            </div>
+            <input type="hidden" value="{$data.id}" name="id">
+            <button type="submit" class="btn btn-default">保存/修改</button>
+        </form>
+    </div>
+</body>
+</html>
