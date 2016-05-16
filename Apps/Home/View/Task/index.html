@@ -1,23 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>任务管理</title>
-    <import type='js' file='Js.jquery'></import>
-    <import type='js' file='JS.bootstrap'></import>
-</head>
-<body>
-<div class="container">
-    <div class="page-header">
-        <h1>
-            任务管理&nbsp; 项目名称:{$project_name}&nbsp;
-            <a href="/Home/Task/save/project_id/{$project_id}">添加</a>&nbsp;
-            <a href="/Home/Project/index">返回</a>&nbsp;
-        </h1>
-    </div>
-    <div class="bs-example" data-example-id="bordered-table">
-        <table class="table table-bordered">
-            <thead>
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+            <form method='get' action="/WasProtectForbidProc/index">
+                <a class="btn btn-success" href="/Home/Task/save/project_id/{$project_id}">添加</a>&nbsp;
+                <a class="btn btn-success" href="/Home/Project/index">返回</a>&nbsp;
+                项目名称:<span style="color:sandybrown;font-weight:bold">{$project_name}</span>
+            </form>
+            <table class="table table-bordered">
             <tr>
                 <th>ID</th>
                 <th>是否签名</th>
@@ -29,8 +20,6 @@
                 <th>编辑时间</th>
                 <th>操作</th>
             </tr>
-            </thead>
-            <tbody>
             <volist name="list" id="data">
                 <tr>
                     <th>{$data.id}</th>
@@ -49,10 +38,11 @@
                     </td>
                 </tr>
             </volist>
-            </tbody>
+                <tr>
+                    <td colspan="18" class="pagination">{$pagination}</td>
+                </tr>
         </table>
-        {$pagination}
     </div>
 </div>
-</body>
-</html>
+</div>
+<include file="Public:footer" />

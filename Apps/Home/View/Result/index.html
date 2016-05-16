@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>任务结果</title>
-    <import type='js' file='Js.jquery' ></import>
-    <import type='js' file='JS.bootstrap'></import>
-</head>
-<body>
-<div class="container">
-    <div class="page-header">
-        <h1>
-            任务结果&nbsp; 项目名称:{$project_name}&nbsp;任务名称:{$task_id}
-            <a href="javascript:history.go(-1);">返回</a>&nbsp;
-        </h1>
-    </div>
-    <div class="bs-example" data-example-id="bordered-table">
-        <table class="table table-bordered">
-            <thead>
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+            <form method='get' action="/WasProtectForbidProc/index">
+                <a class="btn btn-success" href="javascript:history.go(-1);">返回</a>&nbsp;
+                项目名称:<span style="color:sandybrown;font-weight:bold">{$project_name}</span>&nbsp;
+                任务名称:<span style="color:sandybrown;font-weight:bold">{$task_id}</span>
+            </form>
+            <table class="table table-bordered">
             <tr>
                 <th>ID</th>
                 <th>打包状态</th>
@@ -24,8 +16,6 @@
                 <th>扫毒状态</th>
                 <th>扫毒结果</th>
             </tr>
-            </thead>
-            <tbody>
             <volist name="list" id="data">
                 <tr>
                     <th>{$data.id}</th>
@@ -35,10 +25,11 @@
                     <td>{$data.virus_result}</td>
                 </tr>
             </volist>
-            </tbody>
+                <tr>
+                    <td colspan="18" class="pagination">{$pagination}</td>
+                </tr>
         </table>
-        {$pagination}
+        </div>
     </div>
 </div>
-</body>
-</html>
+<include file="Public:footer" />

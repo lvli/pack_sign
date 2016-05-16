@@ -1,61 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>项目管理</title>
-    <import type='js' file='Js.jquery' >
-        <import type='js' file='JS.bootstrap'>
-            </head>
-<body>
-<div class="container">
-    <div class="page-header">
-        <h1>
-            项目管理&nbsp;  <a href="/Home/Project/save">添加</a>
-        </h1>
-    </div>
-    <div class="bs-example" data-example-id="bordered-table">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>项目名称</th>
-                <th>打包服务器IP</th>
-                <th>打包服务器端口号</th>
-                <th>打包脚本环境变量</th>
-                <th>打包脚本路径</th>
-                <th>打包脚本工作目录</th>
-                <th>备注</th>
-                <th>添加人</th>
-                <th>添加时间</th>
-                <th>编辑时间</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <volist name="list" id="data">
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+            <form method='get' action="/WasProtectForbidProc/index">
+                <a class="btn btn-success" href="/Home/Project/save">添加</a>
+            </form>
+            <table class="table table-bordered">
                 <tr>
-                    <th>{$data.id}</th>
-                    <td>{$data.project_name}</td>
-                    <td>{$data.pack_ip}</td>
-                    <td>{$data.pack_port}</td>
-                    <td>{$data.pack_env}</td>
-                    <td>{$data.pack_path}</td>
-                    <td>{$data.pack_workpath}</td>
-                    <td>{$data.back}</td>
-                    <td>{$data.admin_name}</td>
-                    <td>{$data.addtime}</td>
-                    <td>{$data.edittime}</td>
-                    <td>
-                        <a href="/index.php/Home/Task/index/project_id/{$data.id}">查看任务</a>&nbsp;
-                        <a href="/index.php/Home/Project/save/id/{$data.id}">编辑</a>&nbsp;
-                        <a href="/index.php/Home/Project/delete/id/{$data.id}">删除</a>
-                    </td>
+                    <th>ID</th>
+                    <th>项目名称</th>
+                    <th>打包服务器IP</th>
+                    <th>打包服务器端口号</th>
+                    <th>打包脚本环境变量</th>
+                    <th>打包脚本路径</th>
+                    <th>打包脚本工作目录</th>
+                    <th>备注</th>
+                    <th>添加人</th>
+                    <th>添加时间</th>
+                    <th>编辑时间</th>
+                    <th>操作</th>
                 </tr>
-            </volist>
-            </tbody>
-        </table>
-        {$pagination}
+                <volist name="list" id="data">
+                    <tr>
+                        <th>{$data.id}</th>
+                        <td>{$data.project_name}</td>
+                        <td>{$data.pack_ip}</td>
+                        <td>{$data.pack_port}</td>
+                        <td>{$data.pack_env}</td>
+                        <td>{$data.pack_path}</td>
+                        <td>{$data.pack_workpath}</td>
+                        <td>{$data.back}</td>
+                        <td>{$data.admin_name}</td>
+                        <td>{$data.addtime}</td>
+                        <td>{$data.edittime}</td>
+                        <td>
+                            <a href="/index.php/Home/Task/index/project_id/{$data.id}">查看任务</a>&nbsp;
+                            <a href="/index.php/Home/Project/save/id/{$data.id}">编辑</a>&nbsp;
+                            <a href="/index.php/Home/Project/delete/id/{$data.id}">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <tr>
+                    <td colspan="18" class="pagination">{$pagination}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
-</body>
-</html>
+<include file="Public:footer" />

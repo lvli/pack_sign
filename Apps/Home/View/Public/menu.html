@@ -1,0 +1,12 @@
+<div class="span2" style="text-align:left">
+    <div class="well sidebar-nav">
+        <h3>菜单</h3>
+        <ul class="nav nav-list">
+            <li <if condition="'ps_project' eq $menu_hl">class="active"</if>><a href="/Home/Project/index/"><i class="icon icon-tag"></i>&nbsp;项目管理</a></li>
+            <li <if condition="'ps_sign' eq $menu_hl">class="active"</if>><a href="/Home/Sign/index"><i class="icon icon-tag"></i>&nbsp;签名池管理</a></li>
+            <li <if condition="'ps_user_edit' eq $menu_hl">class="active"</if>><a href="/Home/User/edit"><i class="icon icon-tag"></i>&nbsp;修改管理员密码</a></li>
+            <li <if condition="'ps_user_register' eq $menu_hl">class="active"</if>><a href="/Home/User/register"><i class="icon icon-tag"></i>&nbsp;增加管理员</a></li>
+            <li <if condition="'ps_user_logout' eq $menu_hl">class="active"</if>><a href="/Home/User/logout"><i class="icon icon-tag"></i>&nbsp;退出登录</a></li>
+        </ul>
+    </div>
+</div>

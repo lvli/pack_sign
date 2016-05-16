@@ -21,7 +21,7 @@ class UserController extends CommonController {
 
         $status = D('User')->login($user, $password);
         if($status){
-            $this->success('登录成功', '/Home/Index/index');
+            $this->success('登录成功', '/Home/Project/index/');
         }else{
             $this->error('登录失败');
         }
@@ -55,7 +55,7 @@ class UserController extends CommonController {
 
         $status = D('User')->register($user, $password);
         if($status){
-            $this->success('注册成功', '/Home/Index/index');
+            $this->success('注册成功', '/Home/User/login');
         }else{
             $this->error('注册失败');
         }
@@ -93,7 +93,7 @@ class UserController extends CommonController {
 
         $status = D('User')->edit($password);
         if($status){
-            $this->success('修改成功', '/Home/Index/index');
+            $this->success('修改成功', '/Home/Project/index/');
         }else{
             $this->error('修改失败');
         }
@@ -101,6 +101,6 @@ class UserController extends CommonController {
 
     public function logout(){
         D('User')->logout();
-        $this->success('注销成功', '/Home/Index/index');
+        $this->success('注销成功', '/Home/User/login');
     }
 }

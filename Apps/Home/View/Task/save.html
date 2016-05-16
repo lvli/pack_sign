@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>任务添加/编辑</title>
-    <import type='js' file='Js.jquery' ></import>
-    <import type='js' file='JS.bootstrap'></import>
-</head>
-<body>
-    <div class="container">
-        <div class="page-header">
-            <h1>
-                任务添加/编辑
-            </h1>
-        </div>
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
         <form action="/Home/Task/save_up" method="post">
             <div class="form-group">
                 <label>项目名称:</label>
@@ -23,8 +13,6 @@
                 <label>
                     <input type="radio" name="is_sign" value="1" <if condition="$data.is_sign eq 1">checked</if> >
                     是
-                </label>
-                <label>
                     <input type="radio" name="is_sign" value="0" <if condition="$data.is_sign eq 0">checked</if>>
                     否
                 </label>
@@ -34,8 +22,6 @@
                 <label>
                     <input type="radio" name="is_virus" value="1" <if condition="$data.is_virus eq 1">checked</if> >
                     是
-                </label>
-                <label>
                     <input type="radio" name="is_virus" value="0" <if condition="$data.is_virus eq 0">checked</if>>
                     否
                 </label>
@@ -52,6 +38,7 @@
             <input type="hidden" value="{$data.id}" name="id">
             <button type="submit" class="btn btn-default">保存/修改</button>
         </form>
-    </div>
-</body>
-</html>
+        </div>
+</div>
+</div>
+<include file="Public:footer" />
