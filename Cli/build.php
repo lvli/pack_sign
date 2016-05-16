@@ -10,6 +10,7 @@ define("BUIDL_PATH",'C:\\code\\ggg\\');
 // Production
 // define("PKG_FILE_PATH", 'D:\\digital\\');
 
+
 $path = str_replace("/", '\\',$_GET["path"]);
 
 if (strpos($path,'pub') !== false)
@@ -36,7 +37,6 @@ if(!file_exists($_path))
 {
 	mkdir($_path, 0777, true);
 }
-
 $buildTool = '"C:\\Program Files (x86)\\Python35-32\\python.exe" '.BUIDL_PATH.'buildtools\\AutoBuild\\AutoBuild\\build_signle.py ';
 $buildToolCmd .= sprintf(" %s", $buildTool);
 $buildToolCmd .= sprintf(" %s" ,$params);
