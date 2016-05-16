@@ -10,14 +10,19 @@ class CommonController extends Controller {
             'User/login',
             'User/login_up',
         );
+
+        $jump_flag = false;
         if(!empty($exclude_actions))    foreach($exclude_actions as $actions){
-            if(stripos($actions, __SELF__) !== false){
-                $status = D('User')->is_login();
-                if(!$status){
-                    $this->redirect('/Home/User/login');
-                }
+            if(stripos(__SELF__, $actions) !== false){
+                $jump_flag = true;
             }
         }
 
+        if(!$jump_flag){
+            $status = D('User')->is_login();
+            if(!$status){
+                $this->redirect('/Home/User/login');
+            }
+        }
     }
 }
