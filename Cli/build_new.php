@@ -8,6 +8,8 @@
  */
 
 class Cron{
+	const CALLBACK_URL = '';
+	const TIMEOUT = 10;
 	private $pkg_file_path = '';
 	private $default_env = '';
 	private $default_path = '';
@@ -19,6 +21,7 @@ class Cron{
 		$this->init();
 		$this->get_params();
 		$this->exec();
+		$this->result();
 		$this->end();
 	}
 
@@ -48,14 +51,51 @@ class Cron{
 		}
 	}
 
+	private function result(){
+
+	}
+
+	private function post($post_arr){
+		if(empty($post_arr)){
+			return false;
+		}
+
+		$mh = curl_multi_init();
+		$res = array();
+		$conn = array();
+		foreach ($post_arr as $i => $v) {
+			$conn[$i] = curl_init();
+			curl_setopt($conn[$i], CURLOPT_URL, self::CALLBACK_URL);
+			curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, 1);
+			curl_setopt($conn[$i], CURLOPT_FAILONERROR, 1);
+			curl_setopt($conn[$i], CURLOPT_TIMEOUT, self::TIMEOUT);
+			curl_setopt($conn[$i], CURLOPT_POST, 1);
+			curl_setopt($conn[$i], CURLOPT_POSTFIELDS, $v['data']);
+
+			curl_multi_add_handle($mh, $conn[$i]);
+		}
+
+		do{
+			curl_multi_exec($mh,$active);
+		}while($active);
+
+		foreach ($post_arr as $i => $v) {
+			$res[$i] = curl_multi_getcontent($conn[$i]);
+			curl_close($conn[$i]);
+		}
+
+		return $res;
+	}
+
 	private function get_params(){
 		$this->env = isset($_REQUEST['env']) ? $_REQUEST['env'] : '';
 		$this->path = isset($_REQUEST['path']) ? $_REQUEST['path'] : $this->default_path;
 		$this->work_path = isset($_REQUEST['work_path']) ? $_REQUEST['work_path'] : '';
 
 		//TEST TODO
-		$this->env = '';
-		$this->work_path  = '';
+		//$this->env = '';
+		//$this->work_path  = '';
 		//TEST
 
 		if(empty($this->env) || empty($this->path) ||empty($this->work_path) || is_dir($this->path) || is_dir($this->work_path)){
