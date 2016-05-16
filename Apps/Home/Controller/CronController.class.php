@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-class CronController extends Controller {
+class CronController extends CommonController {
     const TIMEOUT = 10;
 
     private $post_pack_arr = array();
@@ -16,19 +16,38 @@ class CronController extends Controller {
         $this->sign();
         $this->virus();
 
-        $this->post($this->post_pack_arr);
+        $res = $this->post($this->post_pack_arr);
 
+        $this->end();
     }
 
     private function init(){
+        $this->log("脚本开始运行",  'info');
+        set_time_limit(0);
+        header("Content-type: text/html; charset=utf-8");
         if(!IS_CLI){
-            echo "请在命令行模式下运行此脚本";
-            exit;
+            //echo "请在命令行模式下运行此脚本";
+            $this->log("请在命令行模式下运行此脚本",  'info');
+            //exit;
         }
     }
 
+    private function end(){
+      $this->log("脚本结束运行",  'info');
+    }
+
+    private function log($log, $level = 'info'){
+        if($level ==  'info'){
+            $level = \Think\Log::INFO;
+        }elseif($level ==  'error'){
+            $level = \Think\Log::ERR;
+        }else{}
+        $destination = C('LOG_PATH') .'cron_' . date('y_m_d').'.log';
+        \Think\Log::write($log,  $level, '', $destination);
+    }
+
     private function pack(){
-        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->find();
+        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->select();
         if(!empty($pack_list))    foreach($pack_list as $v){
             //TODO 把project_id存到result表中
             $task_info = M('task')->where("id={$v['task_id']}")->find();
@@ -45,17 +64,18 @@ class CronController extends Controller {
             );
             $this->post_pack_arr[] = $data;
             M('result')->where("id={$v['id']}")->data(array(
+                'pack_status' => TASK_STATUS_PROCESS,
                 'pack_start_time' => time(),
             ))->save();
         }
     }
 
     private function sign(){
-        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->find();
+        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->select();
     }
 
     private function virus(){
-        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->find();
+        $pack_list = M('result')->where('pack_status = ' . TASK_STATUS_INIT)->select();
     }
 
     private function post($post_arr){

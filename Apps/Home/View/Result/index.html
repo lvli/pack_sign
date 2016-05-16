@@ -25,9 +25,9 @@
             <volist name="list" id="data">
                 <tr>
                     <th>{$data.id}</th>
-                    <td><if condition="$data.pack_status eq 0">尚未开始<elseif condition="$data.pack_status eq 1" />成功<else />失败</if></td>
-                    <td><if condition="$data.sign_status eq 0">尚未开始<elseif condition="$data.sign_status eq 1" />成功<else />失败</if></td>
-                    <td><if condition="$data.virus_status eq 0">尚未开始<elseif condition="$data.virus_status eq 1" />成功<else />失败</if></td>
+                    <td><if condition="$data.pack_status eq 0">尚未开始<elseif condition="$data.pack_status eq 1" />处理中<elseif condition="$data.pack_status eq 2" />成功<else />失败</if></td>
+                    <td><if condition="$data.sign_status eq 0">尚未开始<elseif condition="$data.pack_status eq 1" />处理中<elseif condition="$data.sign_status eq 2" />成功<elseif condition="$data.sign_status eq 4" />跳过<else />失败</if></td>
+                    <td><if condition="$data.virus_status eq 0">尚未开始<elseif condition="$data.pack_status eq 1" />处理中<elseif condition="$data.virus_status eq 3" />成功<elseif condition="$data.virus_status eq 4" />跳过<else />失败</if></td>
                     <td>{$data.virus_result}</td>
                     <td>{$data.pack_start_time}</td>
                     <td>{$data.pack_end_time}</td>
