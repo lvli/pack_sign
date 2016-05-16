@@ -6,6 +6,8 @@ class CommonController extends Controller {
 
     public function __construct(){
         parent::__construct();
+        require  COMMON_PATH.'Common/constants.php';
+
         $exclude_actions = array(
             'User/login',
             'User/login_up',

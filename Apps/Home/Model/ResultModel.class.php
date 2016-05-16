@@ -62,11 +62,12 @@ class ResultModel extends Model{
 	}
 
 	function save_up($task_id){
+		$task_info = M('task')->where('id={$task_id}')->find();
 		$data = array(
 				'task_id' => $task_id,
 				'pack_status' => 0,
-				'sign_status' => 0,
-				'virus_status' => 0,
+				'sign_status' => $task_info['is_sign'] == IS_STATUS_NO ? TASK_STATUS_JUMP : TASK_STATUS_INIT,
+				'virus_status' => $task_info['virus_status'] == IS_STATUS_NO ? TASK_STATUS_JUMP : TASK_STATUS_INIT,
 				'virus_result' => '',
 				'addtime' => time(),
 		);
