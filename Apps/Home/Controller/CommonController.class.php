@@ -7,14 +7,17 @@ class CommonController extends Controller {
     public function __construct(){
         parent::__construct();
         $exclude_actions = array(
-            '/Home/User/login',
-            '/Home/User/login_up',
+            'User/login',
+            'User/login_up',
         );
-        if(!in_array(__SELF__, $exclude_actions)){
-            $status = D('User')->is_login();
-            if(!$status){
-                $this->redirect('/Home/User/login');
+        if(!empty($exclude_actions))    foreach($exclude_actions as $actions){
+            if(stripos($actions, __SELF__) !== false){
+                $status = D('User')->is_login();
+                if(!$status){
+                    $this->redirect('/Home/User/login');
+                }
             }
         }
+
     }
 }
