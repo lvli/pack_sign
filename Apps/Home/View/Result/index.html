@@ -6,7 +6,7 @@
             <form method='get' action="/WasProtectForbidProc/index">
                 <a class="btn btn-success" href="javascript:history.go(-1);">返回</a>&nbsp;
                 项目名称:<span style="color:sandybrown;font-weight:bold">{$project_name}</span>&nbsp;
-                任务名称:<span style="color:sandybrown;font-weight:bold">{$task_id}</span>
+                任务ID:<span style="color:sandybrown;font-weight:bold">{$task_id}</span>
             </form>
             <table class="table table-bordered">
             <tr>
@@ -15,6 +15,12 @@
                 <th>签名状态</th>
                 <th>扫毒状态</th>
                 <th>扫毒结果</th>
+                <th>打包开始时间</th>
+                <th>打包完成时间</th>
+                <th>签名开始时间</th>
+                <th>签名完成时间</th>
+                <th>扫毒开始时间</th>
+                <th>扫毒完成时间</th>
             </tr>
             <volist name="list" id="data">
                 <tr>
@@ -23,6 +29,12 @@
                     <td><if condition="$data.sign_status eq 0">尚未开始<elseif condition="$data.sign_status eq 1" />成功<else />失败</if></td>
                     <td><if condition="$data.virus_status eq 0">尚未开始<elseif condition="$data.virus_status eq 1" />成功<else />失败</if></td>
                     <td>{$data.virus_result}</td>
+                    <td>{$data.pack_start_time}</td>
+                    <td>{$data.pack_end_time}</td>
+                    <td>{$data.sign_start_time}</td>
+                    <td>{$data.sign_end_time}</td>
+                    <td>{$data.virus_start_time}</td>
+                    <td>{$data.virus_end_time}</td>
                 </tr>
             </volist>
                 <tr>

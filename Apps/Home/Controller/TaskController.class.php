@@ -36,11 +36,11 @@ class TaskController extends CommonController {
 	}
 
 	public function save_up(){
-		$project_id = I('post.project_id', 0, 'string');
+		$project_id = I('post.project_id', '', 'int');
 		$is_sign = I('post.is_sign', 0, 'int');
 		$is_virus = I('post.is_virus', 0, 'int');
-		$sign_path = I('post.sign_path', 0, 'string');
-		$back = I('post.back', 0, 'string');
+		$sign_path = I('post.sign_path', '', 'string');
+		$back = I('post.back', '', 'string');
 		$id = I('post.id', 0, 'int');
 
         if(empty($project_id)){
@@ -65,7 +65,7 @@ class TaskController extends CommonController {
 	}
 
 	public function delete(){
-		$project_id = I('get.project_id', 0, 'string');
+		$project_id = I('get.project_id', 0, 'int');
 		if(empty($project_id)){
 			$this->error('项目ID不能为空');
 		}
@@ -85,7 +85,22 @@ class TaskController extends CommonController {
 	}
 
 	public function run(){
-		
+		$project_id = I('get.project_id', 0, 'int');
+		$task_id = I('get.task_id', 0, 'int');
+
+		if(empty($project_id)){
+			$this->error('项目ID不能为空');
+		}
+		if(empty($task_id)){
+			$this->error('任务ID不能为空');
+		}
+
+		$status = D('Result')->save_up($task_id);
+		if($status){
+			$this->success('开始运行', self::SUCCESS_URL . $project_id);
+		}else{
+			$this->error('运行失败');
+		}
 	}
 
 }

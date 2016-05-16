@@ -20,13 +20,13 @@ class ProjectController extends CommonController {
 	}
 
 	public function save_up(){
-		$project_name = I('post.project_name', 0, 'string');
-		$pack_ip = I('post.pack_ip', 0, 'validate_ip');
+		$project_name = I('post.project_name', '', 'string');
+		$pack_ip = I('post.pack_ip', '', 'validate_ip');
 		$pack_port = I('post.pack_port', 0, 'int');
-		$pack_env = I('post.pack_env', 0, 'string');
-		$pack_path = I('post.pack_path', 0, 'string');
-		$pack_workpath = I('post.pack_workpath', 0, 'string');
-		$back = I('post.back', 0, 'string');
+		$pack_env = I('post.pack_env', '', 'string');
+		$pack_path = I('post.pack_path', '', 'string');
+		$pack_workpath = I('post.pack_workpath', '', 'string');
+		$back = I('post.back', '', 'string');
 		$id = I('post.id', 0, 'int');
 
 		$pack_ip = ip2long($pack_ip);

@@ -20,10 +20,10 @@ class SignController extends CommonController {
 	}
 
 	public function save_up(){
-		$sign_path = I('post.sign_path', 0, 'string');
-		$sign_pwd = I('post.sign_pwd', 0, 'string');
+		$sign_path = I('post.sign_path', '', 'string');
+		$sign_pwd = I('post.sign_pwd', '', 'string');
 		$status = I('post.status', 0, 'int');
-		$back = I('post.back', 0, 'string');
+		$back = I('post.back', '', 'string');
 		$id = I('post.id', 0, 'int');
 
         if(empty($sign_path)){

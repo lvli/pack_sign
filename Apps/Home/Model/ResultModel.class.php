@@ -16,6 +16,14 @@ class ResultModel extends Model{
 			return array();
 		}
 		$result = $this->table->where("id={$id}")->find();
+
+		$result['pack_start_time'] = empty($result['pack_start_time']) ? '' : date('Y-m-d H:i:s', $result['pack_start_time']);
+		$result['pack_end_time'] = empty($result['pack_end_time']) ? '' : date('Y-m-d H:i:s', $result['pack_end_time']);
+		$result['sign_start_time'] = empty($result['sign_start_time']) ? '' : date('Y-m-d H:i:s', $result['sign_start_time']);
+		$result['sign_end_time'] = empty($result['sign_end_time']) ? '' : date('Y-m-d H:i:s', $result['sign_end_time']);
+		$result['virus_start_time'] = empty($result['virus_start_time']) ? '' : date('Y-m-d H:i:s', $result['virus_start_time']);
+		$result['virus_end_time'] = empty($result['virus_end_time']) ? '' : date('Y-m-d H:i:s', $result['virus_end_time']);
+
 		return $result;
 	}
 
@@ -33,6 +41,12 @@ class ResultModel extends Model{
 
 		if(!empty($list)){
 			foreach($list as &$v){
+				$v['pack_start_time'] = empty($v['pack_start_time']) ? '' : date('Y-m-d H:i:s', $v['pack_start_time']);
+				$v['pack_end_time'] = empty($v['pack_end_time']) ? '' : date('Y-m-d H:i:s', $v['pack_end_time']);
+				$v['sign_start_time'] = empty($v['sign_start_time']) ? '' : date('Y-m-d H:i:s', $v['sign_start_time']);
+				$v['sign_end_time'] = empty($v['sign_end_time']) ? '' : date('Y-m-d H:i:s', $v['sign_end_time']);
+				$v['virus_start_time'] = empty($v['virus_start_time']) ? '' : date('Y-m-d H:i:s', $v['virus_start_time']);
+				$v['virus_end_time'] = empty($v['virus_end_time']) ? '' : date('Y-m-d H:i:s', $v['virus_end_time']);
 
 			}
 			return array(
@@ -44,6 +58,24 @@ class ResultModel extends Model{
 				"list" => array(),
 				"pagination" => '',
 			);
+		}
+	}
+
+	function save_up($task_id){
+		$data = array(
+				'task_id' => $task_id,
+				'pack_status' => 0,
+				'sign_status' => 0,
+				'virus_status' => 0,
+				'virus_result' => '',
+				'addtime' => time(),
+		);
+		if(empty($id)){
+			$data['addtime'] = time();
+			return $this->table->data($data)->add();
+		}else{
+			$data['edittime'] = time();
+			return $this->table->where("id={$id}")->data($data)->save();
 		}
 	}
 

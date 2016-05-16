@@ -31,10 +31,10 @@
                     <td>{$data.addtime}</td>
                     <td>{$data.edittime}</td>
                     <td>
-                        <a href="/index.php/Home/Result/index/task_id/{$data.id}">查看结果</a>&nbsp;
-                        <a href="/index.php/Home/Task/run/id/{$data.id}">执行</a>&nbsp;
-                        <a href="/index.php/Home/Task/save/id/{$data.id}/project_id/{$project_id}">编辑</a>&nbsp;
-                        <a href="/index.php/Home/Task/delete/id/{$data.id}/project_id/{$project_id}">删除</a>
+                        <a href="/Home/Result/index/task_id/{$data.id}">查看结果</a>&nbsp;
+                        <a href="/Home/Task/run/task_id/{$data.id}/project_id/{$project_id}">运行</a>&nbsp;
+                        <a href="/Home/Task/save/task_id/{$data.id}/project_id/{$project_id}">编辑</a>&nbsp;
+                        <a href="/Home/Task/delete/id/{$data.id}/project_id/{$project_id}">删除</a>
                     </td>
                 </tr>
             </volist>
