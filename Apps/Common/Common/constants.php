@@ -9,3 +9,12 @@ const TASK_STATUS_JUMP = 4;
 //是否签名(1=是,0=否) 是否扫毒(1=是,0=否)
 const IS_STATUS_NO = 0;
 const IS_STATUS_YES = 1;
+
+//状态
+const STATUS_INIT = 0;//尚未开始
+const STATUS_PROGRAM_NO_VIRUS = 1;//程序无毒
+const STATUS_SIGN = 2;//签名
+const STATUS_SIGN_NO_VIRUS =3;//签名无毒
+const STATUS_PROGRAM_VIRUS = 4;//程序有毒
+const STATUS_SIGN_VIRUS = 5;//签名有毒
+const STATUS_PROGRAM_STILL_VIRUS = 6;//签名后依然有毒,需要再次扫描的
