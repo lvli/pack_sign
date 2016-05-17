@@ -13,8 +13,8 @@ class CronVirusUploadedController extends CronCommonController {
     public function run(){
         $this->init();
 
-        //从mains数据库获取要扫毒的文件
-        $this->log("从mains数据库获取新上传的文件",  'info');
+        //从CDN上下载要扫毒的文件
+        $this->log("从CDN上下载要扫毒的文件",  'info');
         $this->save_list();
 
         //进行未签名的扫毒
@@ -57,15 +57,14 @@ class CronVirusUploadedController extends CronCommonController {
 
         if(!empty($file_list))    foreach($file_list as $v){
             M('list_cron')->data(array(
-                'url_no_sign' => '',//TODO
-                'url_sign' => '',
+                'url' => '',//TODO
+                'file_path' => $download_url .basename($v['name']),//TODO
                 'status' => 0,
                 'scan_time' => $time,
+                'is_sign' => '',//TODO
                 'email_status' => 0,
             ))->add();
         }
         return $file_list;
     }
-
-
 }

@@ -119,12 +119,13 @@ ENGINE=InnoDB;
 
 CREATE TABLE `ps_list_cron` (
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-	`url_no_sign` VARCHAR(250) NOT NULL DEFAULT '' COMMENT '文件未签名url',
-	`url_sign` VARCHAR(250) NOT NULL DEFAULT '' COMMENT '文件签名url',
+	`url` VARCHAR(250) NOT NULL DEFAULT '' COMMENT '文件url',
+	`file_path` VARCHAR(250) NOT NULL DEFAULT '' COMMENT '文件路径',
 	`status` TINYINT(3) NULL DEFAULT '0' COMMENT '状态 0 尚未开始 1 程序无毒 2 签名 3签名有毒 4程序有毒',
 	`sign_used` VARCHAR(1024) NULL DEFAULT '' COMMENT '使用过的签名',
 	`scan_time` INT(11) NULL DEFAULT '0' COMMENT '扫描时间',
 	`email_status` TINYINT(3) NULL DEFAULT '0' COMMENT '邮件发送状态 0 未发送 1 已发送',
+	`is_sign` TINYINT(3) NULL DEFAULT '0' COMMENT '是否签名 0=是 1=否',
 	PRIMARY KEY (`id`)
 )
 COMMENT='定时扫描文件的签名扫毒列表'
