@@ -26,9 +26,13 @@ class CronVirusController extends CronCommonController {
         $this->scan_sign($list);
         $this->scan_virus($list);
 
-        //签名后有毒，需要更换签名再次扫描的
-        $this->log("签名后有毒的文件，需要更换签名再次扫描的",  'info');
-        $list = $this->get_list(STATUS_SIGN_STILL_VIRUS);
+        //用微软的程序验证签名本身是否有毒
+        $list = $this->get_list(STATUS_SIGN_STILL_VIRUS_NO_CHECK);
+        $this->check_scan($list);
+
+        //确认签名有毒,需要更换签名再次扫描的
+        $this->log("确认签名有毒,需要更换签名再次扫描的",  'info');
+        $list = $this->get_list(STATUS_SIGN_STILL_VIRUS_CHECKED);
         $this->scan_sign($list);
         $this->scan_virus($list);
 

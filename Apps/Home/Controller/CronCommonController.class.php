@@ -4,10 +4,11 @@ use Think\Controller;
 
 //定时任务的基类
 class CronCommonController extends CommonController {
+    const CHECK_SIGN_URL = 'c:\windows\notepad.exe';
+
     protected $log_prefix = '';
     protected $table_detail = '';
     protected $table_list = '';
-
     protected $sign_method = array(
         'signature_no_timstamp_normal',
         'signature_no_timstamp_sha256',
@@ -79,6 +80,44 @@ class CronCommonController extends CommonController {
             $this->log(sprintf("记录到%s表中的信息为:",$this->table_detail, json_encode($data)),  'info');
         }
         $this->post($post_url, $post_arr);
+    }
+
+    protected function check_scan($list){
+        if(empty($list)){
+            return false;
+        }
+
+        $sign_list = array();//需要验证的签名列表
+        foreach($list as $v){
+            $sign = array_pop(explode(',', $v['sign_used']));
+            if(empty($sign_list[$sign])){
+                $sign_list[$sign] = M('sign_pool')->where('id={$v}')->find();
+            }
+        }
+
+        foreach($sign_list as $v){
+            $sign_cmd = sprintf("%s sign /f %s /fd %s /p %s %s", self::BASE_SIGN_URL, $v['sign_path'], $this->sign_method[0], $v['sign_pwd'], self::CHECK_SIGN_URL);
+            system($sign_cmd, $ret);
+            if($ret !== FALSE){
+                $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
+                if(class_exists('\CURLFile')){
+                    $post_data = array(
+                        "file_path" =>	new \CURLFile($v['file_path']),
+                    );
+                }else{
+                    $post_data = array(
+                        "file_path" =>	'@' . $v['file_path'],
+                    );
+                }
+                $data = array(
+                    'sign_pool_id' => $v['id'],
+                    'status' => 0,//0=未开始 1=无毒 2=有毒
+                    'begin_time' => time(),
+                );
+                M('check_sign')->data($data)->add();
+                $this->post($post_url, array($post_data));
+            }
+        }
     }
 
     protected function scan_sign($list){

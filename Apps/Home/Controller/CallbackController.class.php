@@ -37,15 +37,7 @@ class CallbackController extends CommonController {
                 if(empty($list['sign_used'])){
                     $list_status = STATUS_PROGRAM_VIRUS;
                 }else{
-                    $list_status = STATUS_SIGN_STILL_VIRUS;
-                    //停用有问题的签名
-                    $sign = array_pop(explode(',', $list['sign_used']));
-                    M('sign_pool')->where("sign_path='{$sign}'")->data(array(
-                        'status' => 1,
-                        'edittime' => time(),
-                        'back' => '签名报毒已被系统停用',
-                    ))->save();
-
+                    $list_status = STATUS_SIGN_STILL_VIRUS_NO_CHECK;
                 }
             }
 
@@ -61,6 +53,36 @@ class CallbackController extends CommonController {
             if($status == 2 && !empty($list['sign_used'])){
                 $this->log(sprintf("发邮件，email:%s,主程序扫毒通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
                 send_email("主程序扫毒通知", $this->sign_email_body, $this->email_list);
+            }
+        }
+    }
+
+    //获取签名扫毒后的结果
+    public function SignResult(){
+        $data_raw = $_REQUEST['data'];
+        $data = json_decode($data_raw, true);
+        $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
+
+        if(!empty($data) && !empty($data['name'])){
+            if($data['status'] == 0){
+                $status = 1;//无毒
+            }else{
+                $status = 2;//有毒
+            }
+            $data = array(
+                'status' => $status,
+                'end_time' => time(),
+            );
+            M('check_sign')->where("sign_md5='{$data['name']}'")->data($data)->save();
+            $sign_pool_id = M('check_sign')->where("sign_md5='{$data['name']}'")->getField('sign_pool_id');
+
+            //停用有问题的签名
+            if($status == 1){
+                M('sign_pool')->where("id='{$sign_pool_id}'")->data(array(
+                    'status' => 1,
+                    'edittime' => time(),
+                    'back' => '签名报毒已被系统停用',
+                ))->save();
             }
         }
     }
