@@ -184,7 +184,22 @@ class CronCommonController extends CommonController {
     }
 
     protected function up_cdn($list){
+        foreach($list as $v){
+            $this->_put_main_file($v);
+        }
+    }
 
+    private function _put_main_file($file){
+        return false;//TODO
+       $put_dir = C('PUT_CDN_DIR');
+
+        $key = 'zips/'.$put_dir.'/'.basename($file);
+        $this->put_file($file, $key, $this->_bucket);
+
+        $did_arr = array('E3LGYSST79LKBZ', 'E23UAJGEZSW65H', 'ECY8I9R9M4QO5');
+        foreach($did_arr as $did){
+            $this->sync2cf(array('/'. $put_dir . '/'. basename($file)), $did);
+        }
     }
 
     protected function post($post_url, $post_arr){
@@ -219,6 +234,46 @@ class CronCommonController extends CommonController {
         }
 
         return $res;
+    }
+
+    protected function download($download_url, $file_list){
+        $file_list = array_chunk($file_list, 20);
+        foreach($file_list as $v){
+            $this->_download($download_url, $v);
+        }
+    }
+
+    private function _download($download_url, $file_list){
+        $this->log(sprintf("开始下载文件，保存地址为%s,下载的文件列表为%s", $download_url, $file_list),  'info');
+        if(empty($file_list)){
+            return false;
+        }
+        $mh = curl_multi_init();
+        $res = array();
+        $conn = array();
+        foreach ($file_list as $i => $url) {
+            $conn[$i] = curl_init();
+            curl_setopt($conn[$i], CURLOPT_URL, $url);
+            curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($conn[$i], CURLOPT_FAILONERROR, 1);
+            curl_setopt($conn[$i], CURLOPT_TIMEOUT, self::TIMEOUT);
+            curl_multi_add_handle($mh, $conn[$i]);
+        }
+
+        do{
+            curl_multi_exec($mh, $active);
+        }while($active);
+
+        foreach ($file_list as $i => $v) {
+            $res[$i] = curl_multi_getcontent($conn[$i]);
+            $fp = fopen($download_url, 'w');
+            fwrite($fp, $res[$i]);
+            fclose($fp);
+            unset($res[$i]);
+            curl_close($conn[$i]);
+        }
+        $this->log("下载文件结束",  'info');
     }
 
     protected function log($log, $level = 'info'){

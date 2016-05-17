@@ -19,4 +19,6 @@ return array(
 	'DB_INS_PREFIX'  => '',
 	'DB_INS_CHARSET' => 'utf8',
 	'DB_INS_PORT'  => '3306',
+
+	'PUT_CDN_DIR' => 'lvli', //main
 );

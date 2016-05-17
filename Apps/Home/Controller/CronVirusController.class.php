@@ -55,12 +55,13 @@ class CronVirusController extends CronCommonController {
         ))->save();
         $this->log("从mains数据表获取到的新上传文件:" . json_encode($file_list),  'info');
 
+        $time = time();
         if(!empty($file_list))    foreach($file_list as $v){
             M('list_new')->data(array(
                 'mains_id' => $v['id'],
                 'file_path' => $v['path'],
                 'status' => 0,
-                'scan_time' => time(),
+                'scan_time' => $time,
                 'email_status' => 0,
             ))->add();
         }

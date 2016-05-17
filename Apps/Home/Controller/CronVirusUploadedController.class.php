@@ -4,6 +4,8 @@ use Think\Controller;
 
 //获取已经在CDN上的文件 每6个小时执行一次
 class CronVirusUploadedController extends CronCommonController {
+    const DOWNLOAD_URL =  ROOT_PATH . 'Download/cdn';
+
     protected $table_detail = 'detail_cron';
     protected $table_list = 'list_cron';
     protected $log_prefix = 'cron_uploaded_';
@@ -45,19 +47,25 @@ class CronVirusUploadedController extends CronCommonController {
     }
 
     private function save_list(){
-        $file_list = array();//TODO
-        $this->log("从mains数据表获取到的新上传文件:" . json_encode($file_list),  'info');
+        $CDN = new Main();
+        $file_list = $CDN->mlist();//TODO
+        $this->log("从CDN上获取到的文件列表为:" . json_encode($file_list),  'info');
+
+        $time = time();
+        $download_url = sprintf("%s/%s/%s/%s/", self::DOWNLOAD_URL, date('Y'), date('m'), date('d'), $time);
+        $this->download($download_url, $file_list);
 
         if(!empty($file_list))    foreach($file_list as $v){
-            M('list_new')->data(array(
-                'mains_id' => $v['id'],
-                'file_path' => $v['path'],
+            M('list_cron')->data(array(
+                'url_no_sign' => '',//TODO
+                'url_sign' => '',
                 'status' => 0,
-                'scan_time' => time(),
+                'scan_time' => $time,
                 'email_status' => 0,
             ))->add();
         }
         return $file_list;
     }
+
 
 }
