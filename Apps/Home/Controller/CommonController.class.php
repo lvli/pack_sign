@@ -26,5 +26,9 @@ class CommonController extends Controller {
                 $this->redirect('/Home/User/login');
             }
         }
+
+        $params = explode('/', __SELF__);
+        $menu_hl = $params[2] . '_' . $params[3];
+        $this->assign('menu_hl', $menu_hl);
     }
 }
