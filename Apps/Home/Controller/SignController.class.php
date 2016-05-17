@@ -20,17 +20,44 @@ class SignController extends CommonController {
 	}
 
 	public function save_up(){
-		$sign_path = I('post.sign_path', '', 'string');
+		$sign_name = I('post.sign_name', '', 'string');
 		$sign_pwd = I('post.sign_pwd', '', 'string');
 		$status = I('post.status', 0, 'int');
 		$back = I('post.back', '', 'string');
 		$id = I('post.id', 0, 'int');
 
-        if(empty($sign_path)){
-			$this->error('签名文件路径不能为空');
+		if(empty($sign_name)){
+			$this->error('签名名称不能为空');
 		}
+
 		if(empty($sign_pwd)){
 			$this->error('签名密码不能为空');
+		}
+
+		$is_upload = false;
+		if(!empty($id)){
+			$old_sign_path = D('Sign')->find($id);
+			if(!empty($sign_path) && $old_sign_path != $sign_path){
+				$is_upload = true;
+			}
+		}else{
+			$is_upload = true;
+		}
+
+		if($is_upload){
+			$save_path =  sprintf("%s/%s/%s/", date('Y'), date('m'),  date('d'));
+			$upload = new \Think\Upload();
+			$upload->autoSub = false;
+			$upload->rootPath = UPLOAD_DIR;
+			$upload->savePath = $save_path;
+			$upload->saveName = '';
+			$info = $upload->uploadOne($_FILES['sign_path']);
+			if(!$info){
+				$this->error($upload->getError());
+			}
+			$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
+		}else{
+			$sign_path = '';
 		}
 
 		$status = D('Sign')->save($sign_path, $sign_pwd, $status, $back, $id);

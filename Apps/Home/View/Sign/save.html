@@ -3,26 +3,31 @@
     <div class="row-fluid">
         <include file='Public:menu' />
         <div class="span10" style="text-align: left;">
-        <form action="/Home/Sign/save_up" method="post">
+        <form action="/Home/Sign/save_up" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <label>签名文件路径:</label>
-                <input type="text" class="form-control" name="sign_path" placeholder="签名文件路径" value="{$data.sign_path}">
+               签名名称:
+                <input type="text" class="form-control" name="sign_name" placeholder="签名名称" value="{$data.sign_name}">
             </div>
             <div class="form-group">
-                <label>签名密码:</label>
+                签名密码:
                 <input type="text" class="form-control" name="sign_pwd" placeholder="签名密码" value="{$data.sign_pwd}">
             </div>
             <div class="form-group">
-                <label>状态:</label>
-                <label>
+                状态:
                     <input type="radio" name="status" value="0" <if condition="$data.status eq 0">checked</if> >
                     可用
                     <input type="radio" name="status" value="1" <if condition="$data.status eq 1">checked</if>>
                     不可用
-                </label>
             </div>
             <div class="form-group">
-                <label>备注:</label>
+               签名文件路径:
+                <input type="file" class="form-control" name="sign_path">
+                <notempty name="data.sign_path">
+                    <input type="text" class="form-control" value="{$data.sign_path}" disabled="disabled">
+                </notempty>
+            </div>
+            <div class="form-group">
+               备注:
                 <textarea name="back">{$data.back}</textarea>
             </div>
             <input type="hidden" value="{$data.id}" name="id">

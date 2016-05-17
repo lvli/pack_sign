@@ -237,6 +237,14 @@ class CronCommonController extends CommonController {
     }
 
     protected function download($download_url, $file_list){
+        if(empty($file_list)){
+            return false;
+        }
+
+        if (!is_dir($download_url)) {
+            mkdir($download_url, 0755, true);
+        }
+
         $file_list = array_chunk($file_list, 20);
         foreach($file_list as $v){
             $this->_download($download_url, $v);
@@ -245,9 +253,7 @@ class CronCommonController extends CommonController {
 
     private function _download($download_url, $file_list){
         $this->log(sprintf("开始下载文件，保存地址为%s,下载的文件列表为%s", $download_url, $file_list),  'info');
-        if(empty($file_list)){
-            return false;
-        }
+
         $mh = curl_multi_init();
         $res = array();
         $conn = array();
@@ -267,7 +273,7 @@ class CronCommonController extends CommonController {
 
         foreach ($file_list as $i => $v) {
             $res[$i] = curl_multi_getcontent($conn[$i]);
-            $fp = fopen($download_url, 'w');
+            $fp = fopen($download_url . $v['name'], 'w');
             fwrite($fp, $res[$i]);
             fclose($fp);
             unset($res[$i]);

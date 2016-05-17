@@ -1,4 +1,7 @@
 <?php
+define('UPLOAD_DIR', ROOT_PATH . 'Upload/');
+define('DOWNLOAD_URL', ROOT_PATH . 'Download/Cdn');
+
 //任务运行状态
 const TASK_STATUS_INIT = 0;
 const TASK_STATUS_PROCESS = 1;

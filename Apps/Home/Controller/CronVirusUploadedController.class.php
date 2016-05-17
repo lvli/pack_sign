@@ -4,8 +4,6 @@ use Think\Controller;
 
 //获取已经在CDN上的文件 每6个小时执行一次
 class CronVirusUploadedController extends CronCommonController {
-    const DOWNLOAD_URL =  ROOT_PATH . 'Download/cdn';
-
     protected $table_detail = 'detail_cron';
     protected $table_list = 'list_cron';
     protected $log_prefix = 'cron_uploaded_';
@@ -52,7 +50,7 @@ class CronVirusUploadedController extends CronCommonController {
         $this->log("从CDN上获取到的文件列表为:" . json_encode($file_list),  'info');
 
         $time = time();
-        $download_url = sprintf("%s/%s/%s/%s/", self::DOWNLOAD_URL, date('Y'), date('m'), date('d'), $time);
+        $download_url = sprintf("%s/%s/%s/%s/", DOWNLOAD_URL, date('Y'), date('m'), date('d'), $time);
         $this->download($download_url, $file_list);
 
         if(!empty($file_list))    foreach($file_list as $v){
