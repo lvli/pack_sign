@@ -2,11 +2,11 @@
 namespace Home\Controller;
 use Think\Controller;
 
-//获取新上传的文件 每10分钟执行一次
-class CronVirusController extends CronCommonController {
-    protected $table_detail = 'detail_new';
-    protected $table_list = 'list_new';
-    protected $log_prefix = 'cron_';
+//获取已经在CDN上的文件 每6个小时执行一次
+class CronVirusUploadedController extends CronCommonController {
+    protected $table_detail = 'detail_cron';
+    protected $table_list = 'list_cron';
+    protected $log_prefix = 'cron_uploaded_';
 
     public function run(){
         $this->init();
@@ -41,14 +41,7 @@ class CronVirusController extends CronCommonController {
     }
 
     private function save_list(){
-        $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
-        $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
-
-        //状态值，1 正常，0删除 2=处理中 3=无毒 4=程序有毒 5=签名有毒
-        $file_list = M('mains', NULL, $connection)->where('status=1')->field('id,path')->select();
-        M('mains', NULL, $connection)->where('status=1')->data(array(
-            "status" => 2,
-        ))->save();
+        $file_list = array();//TODO
         $this->log("从mains数据表获取到的新上传文件:" . json_encode($file_list),  'info');
 
         if(!empty($file_list))    foreach($file_list as $v){

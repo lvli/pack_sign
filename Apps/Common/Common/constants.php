@@ -17,4 +17,4 @@ const STATUS_SIGN = 2;//签名
 const STATUS_SIGN_NO_VIRUS =3;//签名无毒
 const STATUS_PROGRAM_VIRUS = 4;//程序有毒
 const STATUS_SIGN_VIRUS = 5;//签名有毒
-const STATUS_PROGRAM_STILL_VIRUS = 6;//签名后依然有毒,需要再次扫描的
+const STATUS_SIGN_STILL_VIRUS = 6;//签名后依然有毒,需要再次扫描的

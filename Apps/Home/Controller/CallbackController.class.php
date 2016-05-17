@@ -12,6 +12,7 @@ class CallbackController extends CommonController {
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
         $data = json_decode($data_raw, true);
+        $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
 
         if(!empty($data) && !empty($data['name'])){
             if($data['status'] == 0){
@@ -36,7 +37,15 @@ class CallbackController extends CommonController {
                 if(empty($list['sign_used'])){
                     $list_status = STATUS_PROGRAM_VIRUS;
                 }else{
-                    $list_status = STATUS_PROGRAM_STILL_VIRUS;
+                    $list_status = STATUS_SIGN_STILL_VIRUS;
+                    //停用有问题的签名
+                    $sign = array_pop(explode(',', $list['sign_used']));
+                    M('sign_pool')->where("sign_path='{$sign}'")->data(array(
+                        'status' => 1,
+                        'edittime' => time(),
+                        'back' => '签名报毒已被系统停用',
+                    ))->save();
+
                 }
             }
 
@@ -46,13 +55,23 @@ class CallbackController extends CommonController {
                 'scan_time' => time(),
             ))->save();
 
-
             //程序有毒,发邮件通知用户
             $this->sign_email_body = str_replace('{file_path}', $list['file_path'],  $this->sign_email_body);
             $this->sign_email_body = str_replace('{virus_result}', $data_raw,  $this->sign_email_body);
             if($status == 2 && !empty($list['sign_used'])){
+                $this->log(sprintf("发邮件，email:%s,主程序扫毒通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
                 send_email("主程序扫毒通知", $this->sign_email_body, $this->email_list);
             }
         }
+    }
+
+    private function log($log, $level = 'info'){
+        if($level ==  'info'){
+            $level = \Think\Log::INFO;
+        }elseif($level ==  'error'){
+            $level = \Think\Log::ERR;
+        }else{}
+        $destination = C('LOG_PATH') .'callback_' . date('y_m_d').'.log';
+        \Think\Log::write($log,  $level, '', $destination);
     }
 }
