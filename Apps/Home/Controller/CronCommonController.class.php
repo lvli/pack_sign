@@ -65,7 +65,7 @@ class CronCommonController extends CommonController {
                     "file_path" =>	'@' . $v['file_path'],
                 );
             }
-            $post_data['email_list'] = 'JSON_API_PS';
+            $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_PS'));
             $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
@@ -109,6 +109,7 @@ class CronCommonController extends CommonController {
                         "file_path" =>	'@' . $v['file_path'],
                     );
                 }
+                $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
                 $data = array(
                     'sign_pool_id' => $v['id'],
                     'status' => 0,//0=未开始 1=无毒 2=有毒

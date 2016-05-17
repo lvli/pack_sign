@@ -3,11 +3,6 @@ namespace Home\Controller;
 use Think\Controller;
 
 class CallbackController extends CommonController {
-    private $email_list = array(
-        '2302216679@qq.com',
-    );
-    private $sign_email_body = '路径为{file_path}的程序有毒，具体结果为{virus_result}';
-
     //获取扫毒后的结果
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
@@ -46,14 +41,6 @@ class CallbackController extends CommonController {
                 'status' => $list_status,
                 'scan_time' => time(),
             ))->save();
-
-            //程序有毒,发邮件通知用户
-            $this->sign_email_body = str_replace('{file_path}', $list['file_path'],  $this->sign_email_body);
-            $this->sign_email_body = str_replace('{virus_result}', $data_raw,  $this->sign_email_body);
-            if($status == 2 && !empty($list['sign_used'])){
-                $this->log(sprintf("发邮件，email:%s,主程序扫毒通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
-                send_email("主程序扫毒通知", $this->sign_email_body, $this->email_list);
-            }
         }
     }
 
