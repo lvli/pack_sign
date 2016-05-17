@@ -1,0 +1,34 @@
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+            <table class="table table-bordered">
+            <tr>
+                <th>ID</th>
+                <th>mains表ID</th>
+                <th>文件路径</th>
+                <th>文件状态</th>
+                <th>使用过的签名ID</th>
+                <th>扫描时间</th>
+                <th>邮件发送状态</th>
+            </tr>
+            <volist name="list" id="data">
+                <tr>
+                    <th>{$data.id}</th>
+                    <td>{$data.mains_id}</td>
+                    <td>{$data.file_path}</td>
+                    <td>{$data.status}</td>
+                    <td>{$data.sign_used}</td>
+                    <td>{$data.scan_time}</td>
+                    <td><if condition="$data.email_status eq 0">未发送<else />已发送</if></td>
+                </tr>
+            </volist>
+                <tr>
+                    <td colspan="18" class="pagination">{$pagination}</td>
+                </tr>
+        </table>
+    </div>
+</div>
+</div>
+<include file="Public:footer" />

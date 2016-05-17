@@ -2,7 +2,9 @@
     <div class="well sidebar-nav">
         <h3>菜单</h3>
         <ul class="nav nav-list">
-            <li <if condition="'ps_project' eq $menu_hl">class="active"</if>><a href="/Home/Project/index/"><i class="icon icon-tag"></i>&nbsp;项目管理</a></li>
+            <!--<li <if condition="'ps_project' eq $menu_hl">class="active"</if>><a href="/Home/Project/index/"><i class="icon icon-tag"></i>&nbsp;项目管理</a></li>-->
+            <li <if condition="'ps_sign' eq $menu_hl">class="active"</if>><a href="/Home/ListUpload/index"><i class="icon icon-tag"></i>&nbsp;查看上传文件结果</a></li>
+            <li <if condition="'ps_sign' eq $menu_hl">class="active"</if>><a href="/Home/ListCron/index"><i class="icon icon-tag"></i>&nbsp;查看定时扫描结果</a></li>
             <li <if condition="'ps_sign' eq $menu_hl">class="active"</if>><a href="/Home/Sign/index"><i class="icon icon-tag"></i>&nbsp;签名池管理</a></li>
             <li <if condition="'ps_user_edit' eq $menu_hl">class="active"</if>><a href="/Home/User/edit"><i class="icon icon-tag"></i>&nbsp;修改管理员密码</a></li>
             <li <if condition="'ps_user_register' eq $menu_hl">class="active"</if>><a href="/Home/User/register"><i class="icon icon-tag"></i>&nbsp;增加管理员</a></li>

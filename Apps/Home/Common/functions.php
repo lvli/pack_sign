@@ -44,3 +44,4 @@ function send_email($subject, $body, $addresses, $path = "") {
 	$mail->SetFrom('elexauto@163.com', '系统通知');
 	return $mail->Send();
 }
+
