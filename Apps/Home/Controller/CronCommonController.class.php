@@ -188,6 +188,9 @@ class CronCommonController extends CommonController {
         $cdn = new \CDN();
         foreach($list as $v){
             $cdn->put_cdn_file($v['file_path']);
+            M($this->table_list)->where('id=' . $v['id'])->data(array(
+                'status' => STATUS_CDN_UPLOADED,
+            ))->save();
         }
     }
 

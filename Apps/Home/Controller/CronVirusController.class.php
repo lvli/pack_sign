@@ -18,7 +18,6 @@ class CronVirusController extends CronCommonController {
         $this->log("开始下载文件",  'info');
         $this->downloadUnSign($file_list);
         $this->log("下载文件结束",  'info');
-        exit;
 
         //进行未签名的扫毒
         $this->log("进行未签名文件的扫毒",  'info');
