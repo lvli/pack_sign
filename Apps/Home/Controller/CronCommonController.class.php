@@ -82,6 +82,38 @@ class CronCommonController extends CommonController {
         $this->post($post_url, $post_arr);
     }
 
+    protected function scan_signed_cdn($list){
+        $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
+        $this->log("扫毒接口的url为:" . $post_url,  'info');
+
+        $post_arr = array();
+        foreach($list as $v){
+            if(class_exists('\CURLFile')){
+                $post_data = array(
+                    "file_path" =>	new \CURLFile($v['file_path']),
+                );
+            }else{
+                $post_data = array(
+                    "file_path" =>	'@' . $v['file_path'],
+                );
+            }
+            $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_CDN'));
+            $post_arr[] = $post_data;
+
+            $sign = array_pop(explode('', $v['sign_used']));
+            $data = array(
+                'list_id' => $v['id'],
+                'file_md5' => md5_file($v['file_path']),
+                'status' => 0,
+                'begin_time' => time(),
+                'sign' => $sign == NULL ? '' : $sign,
+            );
+            M($this->table_detail)->data($data)->add();
+            $this->log(sprintf("记录到%s表中的信息为:",$this->table_detail, json_encode($data)),  'info');
+        }
+        $this->post($post_url, $post_arr);
+    }
+
     protected function check_scan($list){
         if(empty($list)){
             return false;
@@ -234,6 +266,15 @@ class CronCommonController extends CommonController {
         }
 
         return $res;
+    }
+
+    protected function downloadUSigned($file_list){
+        $cdn_dwonload_url = C('CDN_DOWANLOAD_URL');
+        foreach($file_list as &$v){
+            $v['download_url'] = $cdn_dwonload_url . $v['path'];
+            $v['save_path'] = DOWNLOAD_URL . $v['path'];
+        }
+        $this->download($file_list);
     }
 
     protected function downloadUnSign($file_list){

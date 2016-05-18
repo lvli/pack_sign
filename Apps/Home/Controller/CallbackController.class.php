@@ -74,6 +74,41 @@ class CallbackController extends CommonController {
         }
     }
 
+    //CDN上文件的扫描
+    public function cdnVirusResult(){
+        $data_raw = $_REQUEST['data'];
+        $data = json_decode($data_raw, true);
+        $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
+
+        $time = time();
+        if(!empty($data) && !empty($data['name'])){
+            $id = M('detail_new')->where("file_md5='{$data['name']}'")->getField('list_id');
+            if($data['status'] == 0){ //无毒
+                M('list_cron')->where("id={$id}")->data(array(
+                    'status' => STATUS_PROGRAM_NO_VIRUS,
+                    'scan_time' => $time,
+                ))->save();
+            }else{ //有毒
+                //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
+                M('list_new')->where("id={$id}")->data(array(
+                    'status' => STATUS_INIT,
+                    'scan_time' => $time,
+                ))->save();
+                M('list_cron')->where("id={$id}")->data(array(
+                    'status' => STATUS_PROGRAM_VIRUS,
+                    'scan_time' => $time,
+                ))->save();
+                $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
+                $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
+
+                $list_new = M('list_cron')->where("id={$id}")->find();
+                M('mains', NULL, $connection)->where('id='.$list_new['mains_id'])->data(array(
+                    "sign_status" => MAINS_STATUS_PROGRAM_VIRUS,
+                ))->save();
+            }
+        }
+    }
+
     private function log($log, $level = 'info'){
         if($level ==  'info'){
             $level = \Think\Log::INFO;

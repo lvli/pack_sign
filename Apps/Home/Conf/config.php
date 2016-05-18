@@ -22,4 +22,5 @@ return array(
 
 	'PUT_CDN_DIR' => 'lvli', //main
 	'GGG_DOMAIN_URL' => 'http://ggg.cekaojme.com/',
+	'CDN_DOWANLOAD_URL' => 'https://s3-us-west-2.amazonaws.com/ins-files/zips/lvli/',
 );
