@@ -30,7 +30,6 @@ class CDN{
         $cdn_dir = C('PUT_CDN_DIR');
         $key = "zips/{$cdn_dir}/" . basename($file);
         $status = $this->put_file($file, $key, $this->_bucket);
-        var_dump($status);
 
         $did_arr = array('E3LGYSST79LKBZ', 'E23UAJGEZSW65H', 'ECY8I9R9M4QO5');
         foreach($did_arr as $did){
@@ -40,8 +39,6 @@ class CDN{
 
     private function put_file($filepath, $filename, $bucket)
     {
-        $filepath = 'D:\wamp\bin\php\php5.5.12\license.txt';
-        var_dump($filepath);
         if(!file_exists($filepath)){
             return false;
         }
