@@ -184,21 +184,10 @@ class CronCommonController extends CommonController {
     }
 
     protected function up_cdn($list){
+        require_once(ROOT_PATH .'Lib/cdn.php');
+        $cdn = new \CDN();
         foreach($list as $v){
-            $this->_put_main_file($v);
-        }
-    }
-
-    private function _put_main_file($file){
-        return false;//TODO
-       $put_dir = C('PUT_CDN_DIR');
-
-        $key = 'zips/'.$put_dir.'/'.basename($file);
-        $this->put_file($file, $key, $this->_bucket);
-
-        $did_arr = array('E3LGYSST79LKBZ', 'E23UAJGEZSW65H', 'ECY8I9R9M4QO5');
-        foreach($did_arr as $did){
-            $this->sync2cf(array('/'. $put_dir . '/'. basename($file)), $did);
+            $cdn->put_cdn_file($v['file_path']);
         }
     }
 

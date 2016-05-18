@@ -48,10 +48,10 @@ class CronVirusController extends CronCommonController {
         $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
         $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
-        //状态值，1 正常，0删除 2=处理中 3=无毒 4=程序有毒 5=签名有毒
-        $file_list = M('mains', NULL, $connection)->where('status=1')->field('id,path')->select();
-        M('mains', NULL, $connection)->where('status=1')->data(array(
-            "status" => 2,
+        //sign_status状态值，0 未处理，1=处理中 2=程序无毒 3=签名无毒 4=程序有毒 5=签名有毒 6=已上传CDN 7=定时扫描处理中
+        $file_list = M('mains', NULL, $connection)->where('status=1 AND signed=0 AND sign_status=0')->field('id,path')->select();
+        M('mains', NULL, $connection)->where('status=1 AND signed=0 AND sign_status=0')->data(array(
+            "sign_status" => 1,
         ))->save();
         $this->log("从mains数据表获取到的新上传文件:" . json_encode($file_list),  'info');
 
