@@ -24,3 +24,10 @@ const STATUS_SIGN_VIRUS = 5;//签名有毒
 const STATUS_SIGN_STILL_VIRUS_NO_CHECK = 6;//签名后依然有毒,需要用微软程序验证签名是否有毒
 const STATUS_SIGN_STILL_VIRUS_CHECKED = 7;//确认签名有毒,需要更换签名再次扫描的
 const STATUS_CDN_UPLOADED = 8;//新文件已上传CDN
+
+//mains表状态
+const MAINS_STATUS_INIT = 0;//初始化;
+const MAINS_STATUS_DEAL = 1;//处理中
+const MAINS_STATUS_PROGRAM_VIRUS = 2;//程序有毒
+const MAINS_STATUS_SIGN_VIRUS = 3;//签名有毒
+const MAINS_STATUS_UPLOADED_CDN = 4;//已上传CDN

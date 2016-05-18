@@ -191,6 +191,14 @@ class CronCommonController extends CommonController {
             M($this->table_list)->where('id=' . $v['id'])->data(array(
                 'status' => STATUS_CDN_UPLOADED,
             ))->save();
+
+            //修改main表上的状态为已上传CDN
+            $this->log('修改main表上的状态为已上传CDN',  'info');
+            $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
+            $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
+            M('mains', NULL, $connection)->where('id='.$v['mains_id'])->data(array(
+                'sign_status' => MAINS_STATUS_UPLOADED_CDN,
+            ))->save();
         }
     }
 
