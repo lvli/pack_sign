@@ -63,7 +63,7 @@ class CronVirusController extends CronCommonController {
         if(!empty($file_list))    foreach($file_list as $v){
             M('list_new')->data(array(
                 'mains_id' => $v['id'],
-                'file_path' => $v['path'],
+                'file_path' => DOWNLOAD_MAIN_URL . $v['path'],
                 'status' => 0,
                 'scan_time' => $time,
                 'email_status' => 0,
