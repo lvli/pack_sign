@@ -13,7 +13,12 @@ class CronVirusController extends CronCommonController {
 
         //从mains数据库获取要扫毒的文件
         $this->log("从mains数据库获取新上传的文件",  'info');
-        $this->save_list();
+        $file_list = $this->save_list();
+
+        $this->log("开始下载文件",  'info');
+        $this->downloadUnSign($file_list);
+        $this->log("下载文件结束",  'info');
+        exit;
 
         //进行未签名的扫毒
         $this->log("进行未签名文件的扫毒",  'info');

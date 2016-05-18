@@ -21,4 +21,5 @@ return array(
 	'DB_INS_PORT'  => '3306',
 
 	'PUT_CDN_DIR' => 'lvli', //main
+	'GGG_DOMAIN_URL' => 'http://ggg.cekaojme.com/',
 );

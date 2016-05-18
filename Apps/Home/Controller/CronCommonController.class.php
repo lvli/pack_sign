@@ -225,30 +225,35 @@ class CronCommonController extends CommonController {
         return $res;
     }
 
-    protected function download($download_url, $file_list){
+    protected function downloadUnSign($file_list){
+        $ggg_domain_url = C('GGG_DOMAIN_URL');
+        foreach($file_list as &$v){
+            $v['download_url'] = $ggg_domain_url . $v['path'];
+            $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
+        }
+        $this->download($file_list);
+    }
+
+    protected function download($file_list){
         if(empty($file_list)){
             return false;
         }
 
-        if (!is_dir($download_url)) {
-            mkdir($download_url, 0755, true);
-        }
-
         $file_list = array_chunk($file_list, 20);
         foreach($file_list as $v){
-            $this->_download($download_url, $v);
+            $this->_download($v);
         }
     }
 
-    private function _download($download_url, $file_list){
-        $this->log(sprintf("开始下载文件，保存地址为%s,下载的文件列表为%s", $download_url, $file_list),  'info');
+    private function _download($file_list){
+        $this->log(sprintf("开始下载文件，列表为%s", json_encode($file_list)),  'info');
 
         $mh = curl_multi_init();
         $res = array();
         $conn = array();
-        foreach ($file_list as $i => $url) {
+        foreach ($file_list as $i => $v) {
             $conn[$i] = curl_init();
-            curl_setopt($conn[$i], CURLOPT_URL, $url);
+            curl_setopt($conn[$i], CURLOPT_URL, $v['download_url']);
             curl_setopt($conn[$i], CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($conn[$i], CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($conn[$i], CURLOPT_FAILONERROR, 1);
@@ -261,8 +266,12 @@ class CronCommonController extends CommonController {
         }while($active);
 
         foreach ($file_list as $i => $v) {
+            if (!is_dir(dirname($v['save_path']))) {
+                mkdir(dirname($v['save_path']), 0755, true);
+            }
+
             $res[$i] = curl_multi_getcontent($conn[$i]);
-            $fp = fopen($download_url . $v['name'], 'w');
+            $fp = fopen($v['save_path'], 'w');
             fwrite($fp, $res[$i]);
             fclose($fp);
             unset($res[$i]);

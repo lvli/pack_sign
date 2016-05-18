@@ -51,7 +51,7 @@ class CronVirusUploadedController extends CronCommonController {
 
         $time = time();
         $download_url = sprintf("%s/%s/%s/%s/", DOWNLOAD_URL, date('Y'), date('m'), date('d'), $time);
-        $this->download($download_url, $file_list);
+       // $this->download($download_url, $file_list); TODO
 
         if(!empty($file_list))    foreach($file_list as $v){
             M('list_cron')->data(array(
