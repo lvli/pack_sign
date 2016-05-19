@@ -7,6 +7,7 @@ class CallbackController extends CommonController {
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
         $data_raw = str_replace('\'', '"', $data_raw);
+        $data_raw = trim($data_raw, '"');
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . $data_raw,  'info');
 
@@ -54,6 +55,7 @@ class CallbackController extends CommonController {
     public function SignResult(){
         $data_raw = $_REQUEST['data'];
         $data_raw = str_replace('\'', '"', $data_raw);
+        $data_raw = trim($data_raw, '"');
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
 
@@ -85,6 +87,7 @@ class CallbackController extends CommonController {
     public function cdnVirusResult(){
         $data_raw = $_REQUEST['data'];
         $data_raw = str_replace('\'', '"', $data_raw);
+        $data_raw = trim($data_raw, '"');
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
 
