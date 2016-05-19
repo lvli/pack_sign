@@ -13,6 +13,7 @@
                 <th>使用过的签名ID</th>
                 <th>扫描时间</th>
                 <th>邮件发送状态</th>
+                <th>最后一次扫毒结果</th>
             </tr>
             <volist name="list" id="data">
                 <tr>
@@ -24,6 +25,7 @@
                     <td>{$data.sign_used}</td>
                     <td>{$data.scan_time}</td>
                     <td><if condition="$data.email_status eq 0">未发送<else />已发送</if></td>
+                    <td>{$data.last_virus_result}</td>
                 </tr>
             </volist>
                 <tr>
