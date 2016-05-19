@@ -209,12 +209,11 @@ class CronCommonController extends CommonController {
         }
 
         $this->log(sprintf("邮件列表为%s", json_encode($this->email_list)),  'info');
-        if(!empty($this->email_list)){
+        $email_id_str = trim($email_id_str, ',');
+
+        if(!empty($email_id_str)){
             $this->log(sprintf("发邮件，email:%s,签名池通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
             $this->send_email("签名池通知", $this->sign_email_body, $this->email_list);
-        }
-        $email_id_str = trim($email_id_str, ',');
-        if(!empty($email_id_str)){
             M($this->table_list)->where('id IN ('.$email_id_str . ' )')->data(array(
                 'email_status' => 1,
             ))->save();
