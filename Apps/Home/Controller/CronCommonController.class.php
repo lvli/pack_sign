@@ -78,6 +78,10 @@ class CronCommonController extends CommonController {
             );
             M($this->table_detail)->data($data)->add();
             $this->log(sprintf("记录到%s表中的信息为:",$this->table_detail, json_encode($data)),  'info');
+
+            M($this->table_list)->where("id=".$v['id'])->data(array(
+                "status" => STATUS_DEAL,
+            ))->save();
         }
         $this->post($post_url, $post_arr);
     }

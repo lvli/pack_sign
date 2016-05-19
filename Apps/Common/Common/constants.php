@@ -25,6 +25,7 @@ const STATUS_SIGN_STILL_VIRUS_NO_CHECK = 6;//签名后依然有毒,需要用微�
 const STATUS_SIGN_STILL_VIRUS_CHECKED = 7;//确认签名有毒,需要更换签名再次扫描的
 const STATUS_CDN_UPLOADED = 8;//新文件已上传CDN
 const STATUS_CRON_DEAL = 9;//定时任务处理中
+const STATUS_DEAL = 10;//处理中
 
 //mains表状态
 const MAINS_STATUS_INIT = 0;//初始化;
