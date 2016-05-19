@@ -173,6 +173,7 @@ class CronCommonController extends CommonController {
             //小于等于n(默认为3)个，发报警邮件 不处理这个签名
             if(count($sign_list) <= $this->config['min_sign_email']){
                 $email_id_str = $v['id'] . ',';
+                $this->log("小于等于n(默认为3)个，发报警邮件 不处理这个签名",  'info');
                 continue;
             }
 
@@ -194,6 +195,7 @@ class CronCommonController extends CommonController {
         //统一修改签名后的表状态
         $id_str = implode(',', rtrim($id_list, ','));
         if(!empty($id_str)){
+            $this->log(sprintf("统一修改签名后的表状态,id_str=%s,status=%s", $id_str, STATUS_SIGN),  'info');
             M($this->table_list)->where('id IN ('.$id_str . ' )')->data(array(
                 'status' => STATUS_SIGN,
             ))->save();
@@ -206,6 +208,7 @@ class CronCommonController extends CommonController {
             }
         }
 
+        $this->log(sprintf("邮件列表为%s", json_encode($this->email_list)),  'info');
         if(!empty($email_list)){
             $this->log(sprintf("发邮件，email:%s,签名池通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
             send_email("签名池通知", $this->sign_email_body, $this->email_list);
