@@ -84,7 +84,7 @@ ENGINE=InnoDB;
 
 
 用户名:admin 密码:admin
-INSERT INTO `ps_admin` (`id`, `user`, `password`, `status`, `addtime`) VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0, 1463039879);
+INSERT INTO `ps_admin` (`id`, `name`, `password`, `status`, `addtime`) VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0, 1463039879);
 
 
 CREATE TABLE `ps_detail_cron` (
