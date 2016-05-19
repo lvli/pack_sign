@@ -11,6 +11,7 @@ class CommonController extends Controller {
         $exclude_actions = array(
             'User/login',
             'User/login_up',
+            'Callback',
         );
 
         $jump_flag = false;
