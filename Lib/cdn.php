@@ -17,12 +17,14 @@ class CDN{
         $this->_cf = CloudFrontClient::factory(array(
             'version' => 'latest',
             'credentials' => $credentials,
-            'region' => 'us-east-1'
+            'region' => 'us-east-1',
+            'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
         ));
         $this->_s3 = S3Client::factory(array(
             'version' => 'latest',
             'credentials' => $credentials,
-            'region' => 'us-west-2'
+            'region' => 'us-west-2',
+            'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
         ));
     }
 
