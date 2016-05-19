@@ -6,7 +6,7 @@ use Think\Controller;
 class CronVirusController extends CronCommonController {
     protected $table_detail = 'detail_new';
     protected $table_list = 'list_new';
-    protected $log_prefix = 'cron_';
+    protected $log_prefix = 'cronnew';
 
     public function run(){
         $this->init();

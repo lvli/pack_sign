@@ -303,13 +303,7 @@ class CronCommonController extends CommonController {
     }
 
     protected function log($log, $level = 'info'){
-        if($level ==  'info'){
-            $level = \Think\Log::INFO;
-        }elseif($level ==  'error'){
-            $level = \Think\Log::ERR;
-        }else{}
-        $destination = C('LOG_PATH') .$this->log_prefix . date('y_m_d').'.log';
-        \Think\Log::write($log,  $level, '', $destination);
+        $this->log_to_table($log, $level, $this->log_prefix);
     }
 
     private function get_sign_cmd($sign_path, $sign_pwd, $sign_method, $file_path) {

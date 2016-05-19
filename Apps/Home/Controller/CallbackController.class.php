@@ -3,6 +3,8 @@ namespace Home\Controller;
 use Think\Controller;
 
 class CallbackController extends CommonController {
+    protected $log_prefix = 'callback';
+
     //获取扫毒后的结果
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
@@ -121,12 +123,6 @@ class CallbackController extends CommonController {
     }
 
     private function log($log, $level = 'info'){
-        if($level ==  'info'){
-            $level = \Think\Log::INFO;
-        }elseif($level ==  'error'){
-            $level = \Think\Log::ERR;
-        }else{}
-        $destination = C('LOG_PATH') .'callback_' . date('y_m_d').'.log';
-        \Think\Log::write($log,  $level, '', $destination);
+        $this->log_to_table($log, $level, $this->log_prefix);
     }
 }

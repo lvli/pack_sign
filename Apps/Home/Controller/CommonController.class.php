@@ -32,4 +32,15 @@ class CommonController extends Controller {
         $menu_hl = $params[2] . '_' . $params[3];
         $this->assign('menu_hl', $menu_hl);
     }
+
+    protected function log_to_table($content, $level = 'error', $type = ''){
+        return M('Log')->data(array(
+            'type' => $type,
+            'level' => strtolower($level),
+            'content' => $content,
+            'url' => $_SERVER['REQUEST_URI'],
+            'ip' => get_client_ip(1, true),
+            'addtime' => time(),
+        ))->add();
+    }
 }

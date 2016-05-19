@@ -6,7 +6,7 @@ use Think\Controller;
 class CronVirusUploadedController extends CronCommonController {
     protected $table_detail = 'detail_cron';
     protected $table_list = 'list_cron';
-    protected $log_prefix = 'cron_uploaded_';
+    protected $log_prefix = 'cron';
 
     public function run(){
         $this->init();
