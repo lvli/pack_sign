@@ -23,7 +23,7 @@ class CronVirusUploadedController extends CronCommonController {
     }
 
     private function save_list(){
-        $list = M('list_new')->where('status=' . MAINS_STATUS_UPLOADED_CDN)->select();
+        $list = M('list_new')->where('status=' . STATUS_CDN_UPLOADED)->select();
         $time = time();
         foreach($list as $v) {
             M($this->table_list)->data(array('mains_id' => $v['id'], 'file_path' => DOWNLOAD_MAIN_URL . $v['path'], 'status' => 0, 'scan_time' => $time, 'email_status' => 0,))->add();
