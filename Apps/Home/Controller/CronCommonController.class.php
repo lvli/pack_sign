@@ -12,7 +12,7 @@ class CronCommonController extends CommonController {
     protected $table_detail = '';
     protected $table_list = '';
     protected $sign_method = array('signature_no_timstamp_normal', 'signature_no_timstamp_sha256', 'signature_no_timstamp_sha384', 'signature_no_timstamp_sha512', 'signature_normal', 'signature_normal_sha256', 'signature_normal_sha384', 'signature_normal_sha512', 'signature_tr', 'signature_tr_td_sha256', 'signature_tr_td_sha384', 'signature_tr_td_sha512', 'signature_append_sha256', 'signature_append_sha384', 'signature_append_sha512',);
-    protected $email_list = array('2302216679@qq.com',);
+    protected $email_list = array();
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
     const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
     const POST_VIRUS_URL = 'http://scanallfiles.com';
@@ -29,10 +29,11 @@ class CronCommonController extends CommonController {
         }
 
         //初始化配置文件
-        if(empty($this->config['min_sign_email'])) {
-            $this->config['min_sign_email'] = 3;
-        }
+        $config = D('Config')->findAll();
+        $this->config['min_sign_email'] = $config['min_sign_num'];
+        $this->email_list = explode(',', $config['email_list']);
         $this->sign_email_body = str_replace('{n}', $this->config['min_sign_email'], $this->sign_email_body);
+
     }
 
     protected function get_list($status) {

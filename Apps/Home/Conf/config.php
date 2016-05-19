@@ -23,4 +23,6 @@ return array(
 	'PUT_CDN_DIR' => 'lvli', //main
 	'GGG_DOMAIN_URL' => 'http://ggg.cekaojme.com/',
 	'CDN_DOWANLOAD_URL' => 'd3j30ujq5cgnz5.cloudfront.net',
+
+	'DEFAULT_MIN_SIGN_NUM' => 3,//签名池默认最小签名数量
 );
