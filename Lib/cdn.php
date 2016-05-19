@@ -18,15 +18,15 @@ class CDN{
             'version' => 'latest',
             'credentials' => $credentials,
             'region' => 'us-east-1',
-            //'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
-            'scheme' => 'http',
+            'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
+            //'scheme' => 'http',
         ));
         $this->_s3 = S3Client::factory(array(
             'version' => 'latest',
             'credentials' => $credentials,
             'region' => 'us-west-2',
-           // 'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
-            'scheme' => 'http',
+            'ssl.certificate_authority' => 'D:\wamp\bin\php\php5.5.12\cacert.pem',
+            //'scheme' => 'http',
         ));
     }
 
