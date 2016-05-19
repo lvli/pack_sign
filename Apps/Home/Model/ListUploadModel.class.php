@@ -19,9 +19,21 @@ class ListUploadModel extends Model{
 			$list = $this->table->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
 		}
 		if(!empty($list)){
+			$sign_list_arr = M('sign_pool')->where('status=0')->field('id,sign_name')->select();
+			$sign_list = array();
+			foreach($sign_list_arr as $s){
+				$sign_list[$s['id']] = $s['sign_name'];
+			}
 			foreach($list as &$v){
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
 				$v['status'] = $this->get_status_name($v['status']);
+				$v['url'] = sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
+				$sign_used_arr = explode(',', $v['sign_used']);
+				$sign_used = '';
+				foreach($sign_used_arr as $u){
+					$sign_used .= ','. $sign_list[$u];
+				}
+				$v['sign_used'] = trim($sign_used, ',');
 			}
 			return array(
 				"list" => $list,
@@ -45,6 +57,7 @@ class ListUploadModel extends Model{
 			STATUS_SIGN_VIRUS => '签名有毒',
 			STATUS_SIGN_STILL_VIRUS_NO_CHECK => '签名后依然有毒,需要用微软程序验证签名是否有毒',
 			STATUS_SIGN_STILL_VIRUS_CHECKED => '确认签名有毒,需要更换签名再次扫描的',
+			STATUS_CDN_UPLOADED => '已上传CDN',
 		);
 
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';

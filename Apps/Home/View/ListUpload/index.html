@@ -7,6 +7,7 @@
             <tr>
                 <th>ID</th>
                 <th>mains表ID</th>
+                <th>文件URL</th>
                 <th>文件路径</th>
                 <th>文件状态</th>
                 <th>使用过的签名ID</th>
@@ -17,6 +18,7 @@
                 <tr>
                     <th>{$data.id}</th>
                     <td>{$data.mains_id}</td>
+                    <td><a href="{$data.url}">{$data.url}</a></td>
                     <td>{$data.file_path}</td>
                     <td>{$data.status}</td>
                     <td>{$data.sign_used}</td>

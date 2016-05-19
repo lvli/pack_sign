@@ -19,9 +19,20 @@ class ListCronModel extends Model{
 			$list = $this->table->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
 		}
 		if(!empty($list)){
+			$sign_list_arr = M('sign_pool')->where('status=0')->field('id,sign_name')->select();
+			$sign_list = array();
+			foreach($sign_list_arr as $s){
+				$sign_list[$s['id']] = $s['sign_name'];
+			}
 			foreach($list as &$v){
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
 				$v['status'] = $this->get_status_name($v['status']);
+				$sign_used_arr = explode(',', $v['sign_used']);
+				$sign_used = '';
+				foreach($sign_used_arr as $u){
+					$sign_used .= ','. $sign_list[$u];
+				}
+				$v['sign_used'] = trim($sign_used, ',');
 			}
 			return array(
 				"list" => $list,
