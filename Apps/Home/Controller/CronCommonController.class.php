@@ -179,7 +179,7 @@ class CronCommonController extends CommonController {
 
             $v['sign_path'] = $sign_list[0]['sign_path'];
             $v['sign_pwd'] = $sign_list[0]['sign_pwd'];
-            $sign_cmd = sprintf("%s sign /f %s /fd %s /p %s %s", self::BASE_SIGN_URL, $v['sign_path'], $v['sign_method'], $v['sign_pwd'], $v['file_path']);
+            $sign_cmd = sprintf("%s sign /f %s /fd %s /p %s %s", self::BASE_SIGN_URL, $v['sign_path'], $this->sign_method[$v['sign_method']], $v['sign_pwd'], $v['file_path']);
             system($sign_cmd, $ret);
             $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
             if($ret !== FALSE){
