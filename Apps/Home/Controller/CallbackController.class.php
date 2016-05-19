@@ -6,6 +6,7 @@ class CallbackController extends CommonController {
     //获取扫毒后的结果
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
+        $data_raw = str_replace('\'', '"', $data_raw);
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . $data_raw,  'info');
 
@@ -52,6 +53,7 @@ class CallbackController extends CommonController {
     //获取签名扫毒后的结果
     public function SignResult(){
         $data_raw = $_REQUEST['data'];
+        $data_raw = str_replace('\'', '"', $data_raw);
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
 
@@ -82,6 +84,7 @@ class CallbackController extends CommonController {
     //CDN上文件的扫描
     public function cdnVirusResult(){
         $data_raw = $_REQUEST['data'];
+        $data_raw = str_replace('\'', '"', $data_raw);
         $data = json_decode($data_raw, true);
         $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
 
