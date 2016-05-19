@@ -7,7 +7,7 @@ class CallbackController extends CommonController {
     public function newVirusResult(){
         $data_raw = $_REQUEST['data'];
         $data = json_decode($data_raw, true);
-        $this->log("获取到的接口数据为:" . json_encode($data_raw),  'info');
+        $this->log("获取到的接口数据为:" . $data_raw,  'info');
 
         if(!empty($data) && !empty($data['name'])){
             if($data['status'] == 0){
@@ -16,12 +16,16 @@ class CallbackController extends CommonController {
                 $status = 2;//有毒
             }
             $detail = M('detail_new')->where("file_md5='{$data['name']}'")->find();
+            $this->log("detail_new中查询到的数据为:" . json_encode($detail),  'info');
             M('detail_new')->where("id='{$detail['id']}'")->data(array(
                 'status' => $status,
                 'end_time' => time(),
             ))->add();
+            $this->log("修改detail_new表中id={$detail['id']}的status={$status}",  'info');
 
             $list = M('list_new')->where("id={$detail['list_id']}")->find();
+            $this->log("list_new:" . json_encode($list),  'info');
+
             if($status == 1){ //如果无毒的话
                 if(empty($list['sign_used'])){
                     $list_status = STATUS_PROGRAM_NO_VIRUS;
@@ -41,6 +45,7 @@ class CallbackController extends CommonController {
                 'status' => $list_status,
                 'scan_time' => time(),
             ))->save();
+            $this->log("修改list_new表id={$detail['list_id']}的status={$list_status}" . json_encode($list),  'info');
         }
     }
 
