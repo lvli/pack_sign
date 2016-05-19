@@ -78,8 +78,9 @@ class SignModel extends Model{
 		}
 	}
 
-	function save($sign_path, $sign_pwd, $status, $back, $id = 0){
+	function save($sign_name, $sign_path, $sign_pwd, $status, $back, $id = 0){
 		$data = array(
+			'sign_name' => $sign_name,
 			'sign_path' => $sign_path,
 			'sign_pwd' => $sign_pwd,
 			'status' => $status,
@@ -90,6 +91,9 @@ class SignModel extends Model{
 			$data['addtime'] = time();
 			return $this->table->data($data)->add();
 		}else{
+			if(empty($sign_path)){
+				unset($data['sign_path']);
+			}
 			$data['edittime'] = time();
 			return $this->table->where("id={$id}")->data($data)->save();
 		}

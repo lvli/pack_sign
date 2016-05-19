@@ -60,7 +60,7 @@ class SignController extends CommonController {
 			$sign_path = '';
 		}
 
-		$status = D('Sign')->save($sign_path, $sign_pwd, $status, $back, $id);
+		$status = D('Sign')->save($sign_name, $sign_path, $sign_pwd, $status, $back, $id);
 
 		if($status){
 			if(empty($id)){

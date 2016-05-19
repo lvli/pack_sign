@@ -9,6 +9,7 @@
              <table class="table table-bordered">
             <tr>
                 <th>ID</th>
+                <th>签名名称</th>
                 <th>签名文件路径</th>
                 <th>签名密码</th>
                 <th>状态</th>
@@ -21,6 +22,7 @@
             <volist name="list" id="data">
                 <tr>
                     <th>{$data.id}</th>
+                    <td>{$data.sign_name}</td>
                     <td>{$data.sign_path}</td>
                     <td>{$data.sign_pwd}</td>
                     <td><if condition="$data.status eq 0">可用<else />不可用</if></td>
