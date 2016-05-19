@@ -5,155 +5,120 @@ use Think\Controller;
 //定时任务的基类
 class CronCommonController extends CommonController {
     const CHECK_SIGN_URL = 'c:\windows\notepad.exe';
+    const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
+    const TIMESTAMP_TR_URL = 'http://timestamp.comodoca.com/rfc3161';
 
     protected $log_prefix = '';
     protected $table_detail = '';
     protected $table_list = '';
-    protected $sign_method = array(
-        'signature_no_timstamp_normal',
-        'signature_no_timstamp_sha256',
-        'signature_no_timstamp_sha384',
-        'signature_no_timstamp_sha512',
-        'signature_tr',
-        'signature_tr_td_sha256',
-        'signature_tr_td_sha384',
-        'signature_tr_td_sha512',
-    );
-    protected $email_list = array(
-        '2302216679@qq.com',
-    );
+    protected $sign_method = array('signature_no_timstamp_normal', 'signature_no_timstamp_sha256', 'signature_no_timstamp_sha384', 'signature_no_timstamp_sha512', 'signature_normal', 'signature_normal_sha256', 'signature_normal_sha384', 'signature_normal_sha512', 'signature_tr', 'signature_tr_td_sha256', 'signature_tr_td_sha384', 'signature_tr_td_sha512', 'signature_append_sha256', 'signature_append_sha384', 'signature_append_sha512',);
+    protected $email_list = array('2302216679@qq.com',);
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
     const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
     const POST_VIRUS_URL = 'http://scanallfiles.com';
     const TIMEOUT = 10;
 
-    protected function init(){
-        $this->log("脚本开始运行",  'info');
+    protected function init() {
+        $this->log("脚本开始运行", 'info');
         set_time_limit(0);
         header("Content-type: text/html; charset=utf-8");
-        if(!IS_CLI){
+        if(!IS_CLI) {
             //echo "请在命令行模式下运行此脚本";
-            $this->log("请在命令行模式下运行此脚本",  'info');
+            $this->log("请在命令行模式下运行此脚本", 'info');
             //exit;
         }
 
         //初始化配置文件
-        if(empty($this->config['min_sign_email'])){
+        if(empty($this->config['min_sign_email'])) {
             $this->config['min_sign_email'] = 3;
         }
         $this->sign_email_body = str_replace('{n}', $this->config['min_sign_email'], $this->sign_email_body);
     }
 
-    protected function get_list($status){
-        $list = M($this->table_list)->where('status='.$status)->select();
-        $this->log(sprintf("从%s表查询到status={$status}的数据为:",$this->table_list ,json_encode($list)),  'info');
+    protected function get_list($status) {
+        $list = M($this->table_list)->where('status=' . $status)->select();
+        $this->log(sprintf("从%s表查询到status={$status}的数据为:", $this->table_list, json_encode($list)), 'info');
         return $list;
     }
 
-    protected function scan_virus($list){
+    protected function scan_virus($list) {
         $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
-        $this->log("扫毒接口的url为:" . $post_url,  'info');
+        $this->log("扫毒接口的url为:" . $post_url, 'info');
 
         $post_arr = array();
-        foreach($list as $v){
-            if(class_exists('\CURLFile')){
-                $post_data = array(
-                    "file_path" =>	new \CURLFile($v['file_path']),
-                );
-            }else{
-                $post_data = array(
-                    "file_path" =>	'@' . $v['file_path'],
-                );
+        foreach($list as $v) {
+            if(class_exists('\CURLFile')) {
+                $post_data = array("file_path" => new \CURLFile($v['file_path']),);
+            } else {
+                $post_data = array("file_path" => '@' . $v['file_path'],);
             }
             $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_PS'));
-            $post_data['email_list'] = implode(',',  $post_data['email_list']);
+            $post_data['email_list'] = implode(',', $post_data['email_list']);
             $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
-            $data = array(
-                'list_id' => $v['id'],
-                'file_md5' => md5_file($v['file_path']),
-                'status' => 0,
-                'begin_time' => time(),
-                'sign' => $sign == NULL ? '' : $sign,
-            );
+            $data = array('list_id' => $v['id'], 'file_md5' => md5_file($v['file_path']), 'status' => 0, 'begin_time' => time(), 'sign' => $sign == NULL ? '' : $sign,);
             M($this->table_detail)->data($data)->add();
-            $this->log(sprintf("记录到%s表中的信息为:",$this->table_detail, json_encode($data)),  'info');
+            $this->log(sprintf("记录到%s表中的信息为:", $this->table_detail, json_encode($data)), 'info');
         }
         $this->post($post_url, $post_arr);
     }
 
-    protected function scan_signed_cdn($list){
+    protected function scan_signed_cdn($list) {
         $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
-        $this->log("扫毒接口的url为:" . $post_url,  'info');
+        $this->log("扫毒接口的url为:" . $post_url, 'info');
 
         $post_arr = array();
-        foreach($list as $v){
-            if(class_exists('\CURLFile')){
-                $post_data = array(
-                    "file_path" =>	new \CURLFile($v['file_path']),
-                );
-            }else{
-                $post_data = array(
-                    "file_path" =>	'@' . $v['file_path'],
-                );
+        foreach($list as $v) {
+            if(class_exists('\CURLFile')) {
+                $post_data = array("file_path" => new \CURLFile($v['file_path']),);
+            } else {
+                $post_data = array("file_path" => '@' . $v['file_path'],);
             }
             $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_CDN'));
-            $post_data['email_list'] = implode(',',  $post_data['email_list']);
+            $post_data['email_list'] = implode(',', $post_data['email_list']);
             $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
-            $data = array(
-                'list_id' => $v['id'],
-                'file_md5' => md5_file($v['file_path']),
-                'status' => 0,
-                'begin_time' => time(),
-                'sign' => $sign == NULL ? '' : $sign,
-            );
+            $data = array('list_id' => $v['id'], 'file_md5' => md5_file($v['file_path']), 'status' => 0, 'begin_time' => time(), 'sign' => $sign == NULL ? '' : $sign,);
             M($this->table_detail)->data($data)->add();
-            $this->log(sprintf("记录到%s表中的信息为:",$this->table_detail, json_encode($data)),  'info');
+            $this->log(sprintf("记录到%s表中的信息为:", $this->table_detail, json_encode($data)), 'info');
         }
         $this->post($post_url, $post_arr);
     }
 
-    protected function check_scan($list){
-        if(empty($list)){
+    protected function check_scan($list) {
+        if(empty($list)) {
             return false;
         }
 
         $sign_list = array();//需要验证的签名列表
-        foreach($list as $v){
+        foreach($list as $v) {
             $sign = array_pop(explode(',', $v['sign_used']));
-            if(empty($sign_list[$sign])){
+            if(empty($sign_list[$sign])) {
                 $sign_list[$sign] = M('sign_pool')->where('id={$v}')->find();
             }
         }
 
-        foreach($sign_list as $v){
-            $sign_cmd = sprintf("%s sign /f %s /fd %s /p %s %s", self::BASE_SIGN_URL, $v['sign_path'], $this->sign_method[0], $v['sign_pwd'], self::CHECK_SIGN_URL);
+        foreach($sign_list as $v) {
+            $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[0], self::CHECK_SIGN_URL);
             system($sign_cmd, $ret);
-            if($ret !== FALSE){
+            if($ret !== FALSE) {
                 $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
-                if(class_exists('\CURLFile')){
-                    $post_data = array(
-                        "file_path" =>	new \CURLFile($v['file_path']),
-                    );
-                }else{
-                    $post_data = array(
-                        "file_path" =>	'@' . $v['file_path'],
-                    );
+                if(class_exists('\CURLFile')) {
+                    $post_data = array("file_path" => new \CURLFile($v['file_path']),);
+                } else {
+                    $post_data = array("file_path" => '@' . $v['file_path'],);
                 }
                 $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
-                $post_data['email_list'] = implode(',',  $post_data['email_list']);
-                $data = array(
-                    'sign_pool_id' => $v['id'],
-                    'status' => 0,//0=未开始 1=无毒 2=有毒
-                    'begin_time' => time(),
-                );
+                $post_data['email_list'] = implode(',', $post_data['email_list']);
+                $data = array('sign_pool_id' => $v['id'], 'status' => 0,//0=未开始 1=无毒 2=有毒
+                    'begin_time' => time(),);
                 M('check_sign')->data($data)->add();
                 $this->post($post_url, array($post_data));
             }
         }
+        return true;
     }
 
     protected function scan_sign($list){
@@ -179,7 +144,7 @@ class CronCommonController extends CommonController {
 
             $v['sign_path'] = $sign_list[0]['sign_path'];
             $v['sign_pwd'] = $sign_list[0]['sign_pwd'];
-            $sign_cmd = sprintf("%s sign /f %s /fd %s /p %s %s", self::BASE_SIGN_URL, $v['sign_path'], $this->sign_method[$v['sign_method']], $v['sign_pwd'], $v['file_path']);
+            $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
             system($sign_cmd, $ret);
             $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
             if($ret !== FALSE){
@@ -345,6 +310,42 @@ class CronCommonController extends CommonController {
         }else{}
         $destination = C('LOG_PATH') .$this->log_prefix . date('y_m_d').'.log';
         \Think\Log::write($log,  $level, '', $destination);
+    }
+
+    private function get_sign_cmd($sign_path, $sign_pwd, $sign_method, $file_path) {
+        $sign_cmd = '';
+        if($sign_method == 'signature_no_timstamp_normal') {
+            $sign_cmd = sprintf("%s sign /f %s /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
+        } elseif($sign_method == 'signature_no_timstamp_sha256') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
+        } elseif($sign_method == 'signature_no_timstamp_sha384') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
+        } elseif($sign_method == 'signature_no_timstamp_sha512') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
+        } elseif($sign_method == 'signature_normal') {
+            $sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+        } elseif($sign_method == 'signature_normal_sha256') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+        } elseif($sign_method == 'signature_normal_sha384') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+        } elseif($sign_method == 'signature_normal_sha512') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+        } elseif($sign_method == 'signature_tr') {
+            $sign_cmd = sprintf("%s sign /f %s /p %s /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        } elseif($sign_method == 'signature_tr_td_sha256') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /td sha256 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        } elseif($sign_method == 'signature_tr_td_sha384') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        } elseif($sign_method == 'signature_tr_td_sha512') {
+            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        } elseif($sign_method == 'signature_append_sha256') {
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha256 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        } elseif($sign_method == 'signature_append_sha384') {
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        }elseif($sign_method == 'signature_append_sha512') {
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+        }
+        return $sign_cmd;
     }
 
     /**
