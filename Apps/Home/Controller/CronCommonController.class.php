@@ -37,7 +37,7 @@ class CronCommonController extends CommonController {
 
     protected function get_list($status) {
         $list = M($this->table_list)->where('status=' . $status)->select();
-        $this->log(sprintf("从%s表查询到status={$status}的数据为:", $this->table_list, json_encode($list)), 'info');
+        $this->log(sprintf("从%s表查询到status=%s的数据为:%s", $this->table_list, $status, json_encode($list)), 'info');
         return $list;
     }
 
@@ -119,6 +119,7 @@ class CronCommonController extends CommonController {
                 $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
                 $post_data['email_list'] = implode(',', $post_data['email_list']);
                 $data = array(
+                    'sign_md5' => md5_file($v['sign_path']),
                     'sign_pool_id' => $v['id'],
                     'status' => 0,//0=未开始 1=无毒 2=有毒
                     'begin_time' => time(),

@@ -68,20 +68,32 @@ class CallbackController extends CommonController {
             }else{
                 $status = 2;//有毒
             }
-            $data = array(
+            $save_data = array(
                 'status' => $status,
                 'end_time' => time(),
             );
-            M('check_sign')->where("sign_md5='{$data['name']}'")->data($data)->save();
+            M('check_sign')->where("sign_md5='{$data['name']}'")->data($save_data)->save();
             $sign_pool_id = M('check_sign')->where("sign_md5='{$data['name']}'")->getField('sign_pool_id');
 
             //停用有问题的签名
-            if($status == 1){
+            if($status == 2){
                 M('sign_pool')->where("id='{$sign_pool_id}'")->data(array(
                     'status' => 1,
                     'edittime' => time(),
                     'back' => '签名报毒已被系统停用',
                 ))->save();
+            }
+
+            $list = M('list_new')->where('status=' . STATUS_SIGN_STILL_VIRUS_NO_CHECK)->select();
+            $this->log(sprintf("从%s表查询到status=%s的数据为:%s", $this->table_list, STATUS_SIGN_STILL_VIRUS_NO_CHECK, json_encode($list)), 'info');
+            if(!empty($list))    foreach($list as $v){
+                $sign = array_pop(explode(',', $v['sign_used']));
+                if($sign == $sign_pool_id){
+                    M('list_new')->where("id={$v['id']}")->data(array(
+                        'status' => STATUS_PROGRAM_VIRUS,
+                        'edittime' => time(),
+                    ))->save();
+                }
             }
         }
     }
