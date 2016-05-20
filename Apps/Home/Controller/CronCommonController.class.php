@@ -24,7 +24,7 @@ class CronCommonController extends CommonController {
         header("Content-type: text/html; charset=utf-8");
         if(!IS_CLI) {
             //echo "请在命令行模式下运行此脚本";
-            $this->log("请在命令行模式下运行此脚本", 'info');
+            //$this->log("请在命令行模式下运行此脚本", 'info');
             //exit;
         }
 

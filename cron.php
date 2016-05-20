@@ -1,5 +1,6 @@
 <?php
 set_time_limit(0);
+header("Content-type: text/html; charset=utf-8");
 if(PHP_SAPI != 'cli'){
 	exit('请在命令行执行');
 }
