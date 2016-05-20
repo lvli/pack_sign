@@ -305,6 +305,7 @@ class CronCommonController extends CommonController {
             fwrite($fp, $res[$i]);
             fclose($fp);
             unset($res[$i]);
+            $this->log("下载文件{$i} error:" . curl_error($conn[$i]));
             curl_close($conn[$i]);
         }
         $this->log("下载文件结束",  'info');
