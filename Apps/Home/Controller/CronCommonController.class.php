@@ -4,7 +4,7 @@ use Think\Controller;
 
 //定时任务的基类
 class CronCommonController extends CommonController {
-    const CHECK_SIGN_URL = 'c:\windows\notepad.exe';
+    const CHECK_SIGN_URL = 'c:\windows\explorer.exe';
     const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
     const TIMESTAMP_TR_URL = 'http://timestamp.comodoca.com/rfc3161';
 
