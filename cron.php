@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 if(PHP_SAPI != 'cli'){
 	exit('请在命令行执行');
 }
@@ -22,7 +23,7 @@ function curl_cron($url){
 	curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($conn, CURLOPT_FOLLOWLOCATION, 1);
 	curl_setopt($conn, CURLOPT_FAILONERROR, 1);
-	curl_setopt($conn, CURLOPT_TIMEOUT, 30);
+	curl_setopt($conn, CURLOPT_TIMEOUT, 300);
 	$result = array(
 		'return' => curl_exec($conn),
 		'error_no' => curl_errno($conn),
