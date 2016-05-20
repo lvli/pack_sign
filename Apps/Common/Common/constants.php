@@ -2,6 +2,7 @@
 define('UPLOAD_DIR', ROOT_PATH . 'Upload/');
 define('DOWNLOAD_URL', ROOT_PATH . 'Download/Cdn');
 define('DOWNLOAD_MAIN_URL', ROOT_PATH . 'Download/Unsign/');
+define('DOWNLOAD_MAIN_SIGN_URL', ROOT_PATH . 'Download/sign/');
 
 //任务运行状态
 const TASK_STATUS_INIT = 0;

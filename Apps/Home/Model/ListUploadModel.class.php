@@ -32,7 +32,7 @@ class ListUploadModel extends Model{
 				}else{
 					$v['url'] = '';
 				}
-			
+
 				$sign_used_arr = explode(',', $v['sign_used']);
 				$sign_used = '';
 				foreach($sign_used_arr as $u){

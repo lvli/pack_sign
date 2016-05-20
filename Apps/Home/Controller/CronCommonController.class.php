@@ -240,10 +240,6 @@ class CronCommonController extends CommonController {
     }
 
     protected function downloadUSigned($file_list){
-        foreach($file_list as &$v){
-            $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
-            $v['save_path'] = DOWNLOAD_URL . $v['path'];
-        }
         $this->download($file_list);
     }
 
