@@ -22,9 +22,10 @@ class CallbackController extends CommonController {
             $detail = M('detail_new')->where("file_md5='{$data['name']}'")->find();
             $this->log("detail_new中查询到的数据为:" . json_encode($detail),  'info');
             M('detail_new')->where("id='{$detail['id']}'")->data(array(
+                'virus_result' => $data_raw,
                 'status' => $status,
                 'end_time' => time(),
-            ))->add();
+            ))->save();
             $this->log("修改detail_new表中id={$detail['id']}的status={$status}",  'info');
 
             $list = M('list_new')->where("id={$detail['list_id']}")->find();
@@ -104,6 +105,7 @@ class CallbackController extends CommonController {
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
                 M('list_new')->where("id={$id}")->data(array(
+                    'virus_result' => $data_raw,
                     'status' => STATUS_INIT,
                     'scan_time' => $time,
                 ))->save();
