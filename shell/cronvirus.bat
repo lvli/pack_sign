@@ -1,0 +1,1 @@
+D:\wamp\bin\php\php5.5.12\php.exe D:\wamp\www\pack_sign\cron.php /Home/CronVirus/run >>d:\wamp\logs\cronvirus.log

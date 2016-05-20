@@ -12,6 +12,7 @@ class CommonController extends Controller {
             'User/login',
             'User/login_up',
             'Callback',
+            'Cron',
         );
 
         $jump_flag = false;
