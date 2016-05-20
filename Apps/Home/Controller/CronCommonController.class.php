@@ -257,6 +257,7 @@ class CronCommonController extends CommonController {
     protected function downloadUnSign($file_list){
         $ggg_domain_url = C('GGG_DOMAIN_URL');
         foreach($file_list as &$v){
+            $v['path'] = str_replace('/var/app/ins_upload', '', $v['path']);
             $v['download_url'] = $ggg_domain_url . $v['path'];
             $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
         }
