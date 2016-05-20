@@ -10,6 +10,7 @@ class CronController extends CommonController {
     private $post_virus_arr = array();
 
     public function run(){
+        exit;
         $this->init();
 
         $this->pack();
