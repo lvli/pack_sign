@@ -112,9 +112,9 @@ class CronCommonController extends CommonController {
             if($ret !== FALSE) {
                 $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
                 if(class_exists('\CURLFile')) {
-                    $post_data = array("file_path" => new \CURLFile($v['file_path']),);
+                    $post_data = array("file_path" => new \CURLFile($v['sign_path']),);
                 } else {
-                    $post_data = array("file_path" => '@' . $v['file_path'],);
+                    $post_data = array("file_path" => '@' . $v['sign_path'],);
                 }
                 $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
                 $post_data['email_list'] = implode(',', $post_data['email_list']);
@@ -124,7 +124,9 @@ class CronCommonController extends CommonController {
                     'begin_time' => time(),
                 );
                 M('check_sign')->data($data)->add();
+                $this->log(sprintf("给微软程序加签名,check_sign表增加的数据为", json_encode($data)), 'info');
                 $this->post($post_url, array($post_data));
+                $this->log(sprintf("给微软程序加签名,给扫毒接口发送数据,url=%s,post_data=%s", $post_url, json_encode($post_data)), 'info');
             }
         }
         return true;
