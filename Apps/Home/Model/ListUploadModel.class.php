@@ -26,12 +26,12 @@ class ListUploadModel extends Model{
 			}
 			foreach($list as &$v){
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
-				$v['status'] = $this->get_status_name($v['status']);
 				if($v['status'] == STATUS_CDN_UPLOADED){
 					$v['url'] = sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
 				}else{
 					$v['url'] = '';
 				}
+				$v['status'] = $this->get_status_name($v['status']);
 
 				$sign_used_arr = explode(',', $v['sign_used']);
 				$sign_used = '';
