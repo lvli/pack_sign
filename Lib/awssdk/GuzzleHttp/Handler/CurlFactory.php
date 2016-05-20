@@ -51,6 +51,8 @@ class CurlFactory implements CurlFactoryInterface
         }
 
         $conf[CURLOPT_HEADERFUNCTION] = $this->createHeaderFn($easy);
+        $conf[CURLOPT_SSL_VERIFYPEER] = FALSE;
+        $conf[CURLOPT_SSL_VERIFYHOST] = FALSE;
         $easy->handle = $this->handles
             ? array_pop($this->handles)
             : curl_init();
