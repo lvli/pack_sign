@@ -97,7 +97,7 @@ class CronCommonController extends CommonController {
         foreach($list as $v) {
             $sign = array_pop(explode(',', $v['sign_used']));
             if(empty($sign_list[$sign])) {
-                $sign_list[$sign] = M('sign_pool')->where('id={$v}')->find();
+                $sign_list[$sign] = M('sign_pool')->where("id={$sign}")->find();
             }
         }
 
@@ -113,8 +113,11 @@ class CronCommonController extends CommonController {
                 }
                 $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
                 $post_data['email_list'] = implode(',', $post_data['email_list']);
-                $data = array('sign_pool_id' => $v['id'], 'status' => 0,//0=未开始 1=无毒 2=有毒
-                    'begin_time' => time(),);
+                $data = array(
+                    'sign_pool_id' => $v['id'],
+                    'status' => 0,//0=未开始 1=无毒 2=有毒
+                    'begin_time' => time(),
+                );
                 M('check_sign')->data($data)->add();
                 $this->post($post_url, array($post_data));
             }
