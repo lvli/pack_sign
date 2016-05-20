@@ -9,7 +9,6 @@ $action = $argv[1];
 if(empty($action)){
 	exit('参数错误');
 }
-$action =  'Home/CronVirus/run';
 
 $domian = 'http://www.packsign.com/';
 $result = curl_cron($domian . $action);
