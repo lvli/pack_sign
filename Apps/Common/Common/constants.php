@@ -3,6 +3,8 @@ define('UPLOAD_DIR', ROOT_PATH . 'Upload/');
 define('DOWNLOAD_URL', ROOT_PATH . 'Download/Cdn');
 define('DOWNLOAD_MAIN_URL', ROOT_PATH . 'Download/Unsign/');
 define('DOWNLOAD_MAIN_SIGN_URL', ROOT_PATH . 'Download/sign/');
+define('CHECK_SIGN_URL', 'c:\windows\explorer.exe');
+define('CHECK_SIGN_URL_MICROSOFT', ROOT_PATH . 'Download/Check/explorer.exe');
 
 //任务运行状态
 const TASK_STATUS_INIT = 0;

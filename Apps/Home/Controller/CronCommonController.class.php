@@ -4,7 +4,6 @@ use Think\Controller;
 
 //定时任务的基类
 class CronCommonController extends CommonController {
-    const CHECK_SIGN_URL = 'c:\windows\explorer.exe';
     const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
     const TIMESTAMP_TR_URL = 'http://timestamp.comodoca.com/rfc3161';
 
@@ -102,8 +101,10 @@ class CronCommonController extends CommonController {
         }
 
         foreach($sign_list as $v) {
-            $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[0], self::CHECK_SIGN_URL);
+            copy(CHECK_SIGN_URL, CHECK_SIGN_URL_MICROSOFT);
+            $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[0], CHECK_SIGN_URL);
             system($sign_cmd, $ret);
+            $this->log(sprintf("给微软程序加签名命令为%s,返回值为:%s", $sign_cmd, $ret), 'info');
             if($ret !== FALSE) {
                 $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
                 if(class_exists('\CURLFile')) {
