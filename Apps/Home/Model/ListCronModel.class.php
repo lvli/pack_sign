@@ -37,6 +37,7 @@ class ListCronModel extends Model{
 				if(empty($v['last_virus_result'])){
 					$v['last_virus_result'] = '';
 				}
+				$v['url'] = sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
 			}
 			return array(
 				"list" => $list,

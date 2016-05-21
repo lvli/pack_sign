@@ -114,6 +114,16 @@ class CallbackController extends CommonController {
 
         $time = time();
         if(!empty($data) && !empty($data['name'])){
+            if($data['status'] == 0){
+                $status = 1;//无毒
+            }else{
+                $status = 2;//有毒
+            }
+            M('detail_new')->where("file_md5='{$data['name']}'")->data(array(
+               'virus_result' => $data_raw,
+               'status' => $status,
+               'end_time' => time(),
+            ))->save();
             $id = M('detail_new')->where("file_md5='{$data['name']}'")->getField('list_id');
             $list_new = M('list_cron')->where("id={$id}")->find();
             $cron_id = M('list_cron')->where("mains_id={$list_new['mains_id']}")->order('id DESC')->limit(1)->getField('id');
