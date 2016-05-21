@@ -40,6 +40,7 @@ class CronCommonController extends CommonController {
                 unset($list[$k]);
            }
         }
+        $this->log(sprintf("从%s表去掉正在处理的数据以后，剩下的数据%s", $this->table_list, json_encode($list)), 'info');
         return $list;
     }
 

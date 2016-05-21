@@ -25,6 +25,15 @@ class CronVirusUploadedController extends CronCommonController {
     private function save_list(){
         $list = M('list_new')->where('status=' . STATUS_CDN_UPLOADED)->select();
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
+        //去掉正在处理的数据
+        foreach($list as $k => $v){
+            $id =  M($this->table_list)->where("mains_id={$v['mains_id']} AND status = 0")->getField('id');
+            if(!empty($id)){
+                unset($list[$k]);
+            }
+        }
+        $this->log(sprintf("从%s表去掉正在处理的数据以后，剩下的数据%s", $this->table_list, json_encode($list)), 'info');
+
         $time = time();
         foreach($list as &$v) {
             $v['save_path'] = str_replace('Unsign', 'Sign', $v['file_path']);
