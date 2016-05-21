@@ -16,8 +16,12 @@ class CronVirusController extends CronCommonController {
         $file_list = $this->save_list();
 
         $this->log("开始下载文件",  'info');
-        $this->downloadUnSign($file_list);
+        $file_list = $this->downloadUnSign($file_list);
         $this->log("下载文件结束",  'info');
+
+        $this->log("开始检查下载文件是否正常",  'info');
+        $this->CheckUnSign($file_list);
+        $this->log("检查下载文件是否正常结束",  'info');
 
         //进行未签名的扫毒
         $this->log("进行未签名文件的扫毒",  'info');
@@ -60,6 +64,11 @@ class CronVirusController extends CronCommonController {
 
         $time = time();
         if(!empty($file_list))    foreach($file_list as $v){
+            $v['path'] = str_replace('/var/app/ins_upload', '', $v['path']);
+            if(strpos($v['path'], '/') !== 0){
+                $v['path'] = '/' . $v['path'];
+            }
+
             M('list_new')->data(array(
                 'mains_id' => $v['id'],
                 'file_path' => DOWNLOAD_MAIN_URL . $v['path'],

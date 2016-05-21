@@ -10,7 +10,7 @@ class CronCommonController extends CommonController {
     protected $log_prefix = '';
     protected $table_detail = '';
     protected $table_list = '';
-    protected $sign_method = array('signature_no_timstamp_normal', 'signature_no_timstamp_sha256', 'signature_no_timstamp_sha384', 'signature_no_timstamp_sha512', 'signature_normal', 'signature_normal_sha256', 'signature_normal_sha384', 'signature_normal_sha512', 'signature_tr', 'signature_tr_td_sha256', 'signature_tr_td_sha384', 'signature_tr_td_sha512', 'signature_append_sha256', 'signature_append_sha384', 'signature_append_sha512',);
+    protected $sign_method = array('signature_normal', 'signature_normal_sha256', 'signature_normal_sha384', 'signature_normal_sha512', 'signature_tr', 'signature_tr_td_sha256', 'signature_tr_td_sha384', 'signature_tr_td_sha512', 'signature_append_sha256', 'signature_append_sha384', 'signature_append_sha512',);
     protected $email_list = array();
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
     const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
@@ -21,11 +21,6 @@ class CronCommonController extends CommonController {
         $this->log("脚本开始运行", 'info');
         set_time_limit(0);
         header("Content-type: text/html; charset=utf-8");
-        if(!IS_CLI) {
-            //echo "请在命令行模式下运行此脚本";
-            //$this->log("请在命令行模式下运行此脚本", 'info');
-            //exit;
-        }
 
         //初始化配置文件
         $config = D('Config')->findAll();
@@ -59,7 +54,7 @@ class CronCommonController extends CommonController {
             $sign = array_pop(explode('', $v['sign_used']));
             $data = array('list_id' => $v['id'], 'file_md5' => md5_file($v['file_path']), 'status' => 0, 'begin_time' => time(), 'sign' => $sign == NULL ? '' : $sign,);
             M($this->table_detail)->data($data)->add();
-            $this->log(sprintf("记录到%s表中的信息为:", $this->table_detail, json_encode($data)), 'info');
+            $this->log(sprintf("记录到%s表中的信息为:%s", $this->table_detail, json_encode($data)), 'info');
         }
         $this->post($post_url, $post_arr);
     }
@@ -254,19 +249,31 @@ class CronCommonController extends CommonController {
         $this->download($file_list);
     }
 
+    protected function CheckUnSign($file_list){
+        foreach($file_list as $v){
+            if(!is_file($v['save_path']) || filesize($v['save_path']) == 0){
+                $this->log(sprintf("这个文件没有下载成功，要删掉。save_path=%s,id=%s,mains_id=%s",$v['save_path'], $v['id']), $v['mains_id'],  'info');
+                M('list_new')->where('id='.$v['id'])->delete();
+                $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
+                $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
+
+            /*    M('mains', NULL, $connection)->where("id=".$v['mains_id'])->data(array(
+                    "sign_status" => 0,
+                ))->save();*/
+            }
+        }
+    }
+
     protected function downloadUnSign($file_list){
         $ggg_domain_url = C('GGG_DOMAIN_URL');
         foreach($file_list as &$v){
-            $v['path'] = str_replace('/var/app/ins_upload', '', $v['path']);
-            if(strpos($v['path'], '/') !== 0){
-                $v['path'] = '/' . $v['path'];
-            }
             $v['download_url'] = $ggg_domain_url . $v['path'];
             $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
             $v['save_path'] = str_replace('//', '/', $v['save_path']);
             $v['save_path'] = str_replace('\\', '/', $v['save_path']);
         }
         $this->download($file_list);
+        return $file_list;
     }
 
     protected function download($file_list){
@@ -322,15 +329,7 @@ class CronCommonController extends CommonController {
 
     private function get_sign_cmd($sign_path, $sign_pwd, $sign_method, $file_path) {
         $sign_cmd = '';
-        if($sign_method == 'signature_no_timstamp_normal') {
-            $sign_cmd = sprintf("%s sign /f %s /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
-        } elseif($sign_method == 'signature_no_timstamp_sha256') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
-        } elseif($sign_method == 'signature_no_timstamp_sha384') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
-        } elseif($sign_method == 'signature_no_timstamp_sha512') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, $file_path);
-        } elseif($sign_method == 'signature_normal') {
+        if($sign_method == 'signature_normal') {
             $sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
         } elseif($sign_method == 'signature_normal_sha256') {
             $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
