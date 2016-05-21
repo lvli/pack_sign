@@ -96,7 +96,8 @@ class CronCommonController extends CommonController {
         }
 
         foreach($sign_list as $v) {
-            copy(CHECK_SIGN_URL, CHECK_SIGN_URL_MICROSOFT);
+            $check_sign_path = CHECK_SIGN_URL_MICROSOFT . '_' . $v['id'];
+            copy(CHECK_SIGN_URL, $check_sign_path);
             if(!is_file(CHECK_SIGN_URL_MICROSOFT)){
                 $this->log(sprintf("给微软程序加签名,微软程序不存在,路径为%s", CHECK_SIGN_URL_MICROSOFT), 'error');
                 return false;
@@ -107,14 +108,14 @@ class CronCommonController extends CommonController {
             if($ret !== FALSE) {
                 $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
                 if(class_exists('\CURLFile')) {
-                    $post_data = array("file_path" => new \CURLFile($v['sign_path']),);
+                    $post_data = array("file_path" => new \CURLFile($check_sign_path),);
                 } else {
-                    $post_data = array("file_path" => '@' . $v['sign_path'],);
+                    $post_data = array("file_path" => '@' . $check_sign_path,);
                 }
                 $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
                 $post_data['email_list'] = implode(',', $post_data['email_list']);
                 $data = array(
-                    'sign_md5' => md5_file($v['sign_path']),
+                    'sign_md5' => md5_file($check_sign_path),
                     'sign_pool_id' => $v['id'],
                     'status' => 0,//0=未开始 1=无毒 2=有毒
                     'begin_time' => time(),
@@ -229,6 +230,7 @@ class CronCommonController extends CommonController {
             curl_setopt($conn[$i], CURLOPT_TIMEOUT, self::TIMEOUT);
             curl_setopt($conn[$i], CURLOPT_POST, 1);
             curl_setopt($conn[$i], CURLOPT_POSTFIELDS, $post_data);
+            curl_setopt($conn[$i], CURLINFO_CONTENT_LENGTH_UPLOAD, strlen($post_data));
             curl_multi_add_handle($mh, $conn[$i]);
             $this->log(sprintf("url为%s,CURL POST数据为%s:", $post_url, json_encode($post_data)),  'info');
         }
@@ -239,6 +241,7 @@ class CronCommonController extends CommonController {
 
         foreach ($post_arr as $i => $v) {
             $res[$i] = curl_multi_getcontent($conn[$i]);
+            $this->log(sprintf("CURL POST返回结果为:%s,error为:%s", $res[$i], curl_error($conn[$i])),  'info');
             curl_close($conn[$i]);
         }
 
@@ -257,9 +260,9 @@ class CronCommonController extends CommonController {
                 $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
-            /*    M('mains', NULL, $connection)->where("id=".$v['mains_id'])->data(array(
-                    "sign_status" => 0,
-                ))->save();*/
+                M('mains', NULL, $connection)->where("id=".$v['mains_id'])->data(array(
+                    "sign_status" => MAINS_STATUS_INIT,
+                ))->save();
             }
         }
     }

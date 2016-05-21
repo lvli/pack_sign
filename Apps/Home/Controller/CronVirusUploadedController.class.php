@@ -27,9 +27,10 @@ class CronVirusUploadedController extends CronCommonController {
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
         $time = time();
         foreach($list as &$v) {
-            $v['save_path'] = str_replace(DOWNLOAD_MAIN_URL, DOWNLOAD_MAIN_SIGN_URL, $v['file_path']);
-            $v['download_url'] =  sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
+            $v['save_path'] = str_replace('Unsign', 'Sign', $v['file_path']);
+            $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
             M($this->table_list)->data(array('mains_id' => $v['id'], 'file_path' => $v['save_path'], 'status' => 0, 'scan_time' => $time, 'email_status' => 0,))->add();
+            $this->log(sprintf("save_path=%s,download_url=%s", $v['save_path'],  $v['download_url']),  'info');
         }
         $this->downloadUSigned($list);
 

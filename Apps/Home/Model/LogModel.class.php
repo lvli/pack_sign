@@ -22,6 +22,7 @@ class LogModel extends Model{
 			foreach($list as &$v){
 				$v['ip'] = long2ip($v['ip']);
 				$v['addtime'] = date('Y-m-d H:i:s', $v['addtime']);
+				$v['content'] = htmlspecialchars($v['content']);
 			}
 			return array(
 				"list" => $list,

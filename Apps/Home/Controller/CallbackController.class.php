@@ -85,12 +85,18 @@ class CallbackController extends CommonController {
             }
 
             $list = M('list_new')->where('status=' . STATUS_SIGN_STILL_VIRUS_NO_CHECK)->select();
-            $this->log(sprintf("从%s表查询到status=%s的数据为:%s", $this->table_list, STATUS_SIGN_STILL_VIRUS_NO_CHECK, json_encode($list)), 'info');
+            $this->log(sprintf("从list_new表查询到status=%s的数据为:%s", STATUS_SIGN_STILL_VIRUS_NO_CHECK, json_encode($list)), 'info');
             if(!empty($list))    foreach($list as $v){
                 $sign = array_pop(explode(',', $v['sign_used']));
+                $this->log(sprintf("sign=%s,sign_pool_id=%s", $sign, $sign_pool_id), 'info');
                 if($sign == $sign_pool_id){
+                    if($status == 1){
+                        $list_status = STATUS_PROGRAM_NO_VIRUS;
+                    }else{
+                        $list_status = STATUS_PROGRAM_VIRUS;
+                    }
                     M('list_new')->where("id={$v['id']}")->data(array(
-                        'status' => STATUS_PROGRAM_VIRUS,
+                        'status' => $list_status,
                         'edittime' => time(),
                     ))->save();
                 }
