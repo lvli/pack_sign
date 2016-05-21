@@ -63,15 +63,18 @@ class CronVirusController extends CronCommonController {
         $this->log("从mains数据表获取到的新上传文件:" . json_encode($file_list),  'info');
 
         $time = time();
-        if(!empty($file_list))    foreach($file_list as $v){
+        if(!empty($file_list))    foreach($file_list as &$v){
             $v['path'] = str_replace('/var/app/ins_upload', '', $v['path']);
             if(strpos($v['path'], '/') !== 0){
                 $v['path'] = '/' . $v['path'];
             }
 
+            $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
+            $v['save_path'] = str_replace('//', '/', $v['save_path']);
+            $v['save_path'] = str_replace('\\', '/', $v['save_path']);
             M('list_new')->data(array(
                 'mains_id' => $v['id'],
-                'file_path' => DOWNLOAD_MAIN_URL . $v['path'],
+                'file_path' =>  $v['save_path'],
                 'status' => 0,
                 'scan_time' => $time,
                 'email_status' => 0,

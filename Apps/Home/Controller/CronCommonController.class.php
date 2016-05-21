@@ -268,9 +268,6 @@ class CronCommonController extends CommonController {
         $ggg_domain_url = C('GGG_DOMAIN_URL');
         foreach($file_list as &$v){
             $v['download_url'] = $ggg_domain_url . $v['path'];
-            $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
-            $v['save_path'] = str_replace('//', '/', $v['save_path']);
-            $v['save_path'] = str_replace('\\', '/', $v['save_path']);
         }
         $this->download($file_list);
         return $file_list;
