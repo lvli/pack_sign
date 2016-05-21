@@ -33,7 +33,10 @@ class ListCronModel extends Model{
 					$sign_used .= ','. $sign_list[$u];
 				}
 				$v['sign_used'] = trim($sign_used, ',');
-				$v['last_virus_result'] = M('detail_cron')->where('list_id='.$v['id'])->order('id DESC')->getField('virus_result');
+				$v['last_virus_result'] = M('detail_cron')->where("list_id={$v['id']} AND virus_result <> '' ")->order('id DESC')->getField('virus_result');
+				if(empty($v['last_virus_result'])){
+					$v['last_virus_result'] = '';
+				}
 			}
 			return array(
 				"list" => $list,

@@ -33,6 +33,13 @@ class CronCommonController extends CommonController {
     protected function get_list($status) {
         $list = M($this->table_list)->where('status=' . $status)->select();
         $this->log(sprintf("从%s表查询到status=%s的数据为:%s", $this->table_list, $status, json_encode($list)), 'info');
+        //去掉正在处理的数据
+        foreach($list as $k => $v){
+           $id =  M($this->table_detail)->where("list_id={$v['id']} AND status = 0")->getField('id');
+           if(!empty($id)){
+                unset($list[$k]);
+           }
+        }
         return $list;
     }
 
