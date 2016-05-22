@@ -85,7 +85,7 @@ class CronCommonController extends CommonController {
             $sign = array_pop(explode('', $v['sign_used']));
             $data = array('list_id' => $v['cron_id'], 'file_md5' => md5_file($v['file_path']), 'status' => 0, 'begin_time' => time(), 'sign' => $sign == NULL ? '' : $sign,);
             M($this->table_detail)->data($data)->add();
-            $this->log(sprintf("记录到%s表中的信息为:", $this->table_detail, json_encode($data)), 'info');
+            $this->log(sprintf("记录到%s表中的信息为:%s", $this->table_detail, json_encode($data)), 'info');
         }
         $this->post($post_url, $post_arr);
     }

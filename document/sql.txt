@@ -182,7 +182,7 @@ CREATE TABLE `ps_log` (
 	`type` VARCHAR(50) NULL DEFAULT '' COMMENT '类别',
 	`level` VARCHAR(50) NULL DEFAULT '' COMMENT '级别',
 	`content` TEXT NULL DEFAULT '' COMMENT '内容',
-	`url` VARCHAR(250) NULL DEFAULT '' COMMENT '访问地址',
+	`url` TEXT NULL DEFAULT '' COMMENT '访问地址',
 	`ip` INT(10) NULL DEFAULT '0' COMMENT '访问ip',
 	`addtime` INT(11) NULL DEFAULT '0' COMMENT '访问时间',
 	PRIMARY KEY (`id`),

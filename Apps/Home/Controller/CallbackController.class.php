@@ -125,24 +125,24 @@ class CallbackController extends CommonController {
                'end_time' => time(),
             ))->save();
 
-            $id = M('detail_new')->where("file_md5='{$data['name']}'")->getField('list_id');
-            $list_new = M('list_cron')->where("id={$id}")->find();
-            $cron_id = M('list_cron')->where("mains_id={$list_new['mains_id']}")->order('id DESC')->limit(1)->getField('id');
+            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->getField('list_id');
+            $list_cron = M('list_cron')->where("id={$id}")->find();
+            $lsit_new_id = M('list_new')->where("id={$list_cron['mains_id']}")->getField('id');
 
             if($data['status'] == 0){ //无毒
-                M('list_cron')->where("id={$cron_id}")->data(array(
+                M('list_cron')->where("id={$id}")->data(array(
                     'status' => STATUS_PROGRAM_NO_VIRUS,
                     'scan_time' => $time,
                 ))->save();
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
-                M('list_new')->where("id={$id}")->data(array(
+                M('list_new')->where("id={$lsit_new_id}")->data(array(
                     'virus_result' => $data_raw,
                     'status' => STATUS_INIT,
                     'end_time' => $time,
                 ))->save();
 
-                M('list_cron')->where("id={$cron_id}")->data(array(
+                M('list_cron')->where("id={$id}")->data(array(
                     'status' => STATUS_PROGRAM_VIRUS,
                     'scan_time' => $time,
                 ))->save();
@@ -150,7 +150,7 @@ class CallbackController extends CommonController {
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
 
-                M('mains', NULL, $connection)->where('id='.$list_new['mains_id'])->data(array(
+                M('mains', NULL, $connection)->where('id='.$list_cron['mains_id'])->data(array(
                     "sign_status" => MAINS_STATUS_PROGRAM_VIRUS,
                 ))->save();
             }
