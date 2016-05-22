@@ -1,0 +1,34 @@
+/*日期控件*/
+.lcui_border { font-size: 12px }
+.lcui_border th, .lcui_border td { padding: 0; margin: 0 }
+.lcui_border a { text-decoration: none }
+.lcui_head { padding: 10px 0; background: #FFF; border-top: 3px solid #1c252f }
+.lcui_head td { padding: 0 6px }
+.lcui_body { padding: 0 15px; background-color: #f6f6f6 }
+.lcui_body th, .lcui_body td { border: 1px solid #DDD }
+.lcui_lt, .lcui_rt, .lcui_lb, .lcui_rb, .lcui_l, .lcui_r, .cui_py, .cui_ny, .cui_pm, .cui_nm { width: 3px; display: none }
+.lcui_lt, .lcui_rt { height: 10px }
+.lcui_lb, .lcui_rb { height: 3px }
+.lcui_t, .lcui_b { font-size: 0; display: none }
+.lcui_body thead { text-align: center; color: #0597db; font-weight: bold; height: 18px }
+.lcui_body thead td { padding: 10px 0; color: #1c252f; background: #F6F6F6; border: none }
+.cui_iy, .cui_im { width: 45px; height: 20px; margin: 0 10px 0 0; padding: 5px; border: 1px solid #CCC; text-align: center; _vertical-align: middle }
+.cui_pm, .cui_py { display: block; border-color: transparent #1c252f transparent transparent; border-style: solid; border-width: 8px 8px 8px 0; width: 0; height: 0 }
+.cui_nm, .cui_ny { display: block; border-color: transparent transparent transparent #1c252f; border-style: solid; border-width: 8px 0 8px 8px; width: 0; height: 0 }
+.cui_db td { background-color: #F6F6F6; color: #999; height: 30px; width: 30px; text-align: center }
+.cui_db a { background: #FFF; color: #333; display: block; line-height: 30px }
+.cui_db .cui_today a { background: #00abeb; color: #FFF }
+.cui_db a:hover { background: #f3f3f3; color: #333 }
+.cui_today a:hover { background: #00abeb; color: #FFF }
+.cui_foot { padding: 10px; background: #EEE; border-bottom: 2px solid #DDD }
+.cui_foot a { padding: 6px 0 }
+.cui_tbtn, .cui_dbtn { display: block; border: 1px solid #CCC; color: #333; text-decoration: none; background-color: #f2f2f2 }
+.cui_tbtn:hover, .cui_dbtn:hover { border: 1px solid #999; background-color: #DDD; color: #333 }
+.lcui_time input { width: 30px; height: 20px; padding: 5px; border: 1px solid #CCC; text-align: center }
+.cui_ymlist { position: absolute; border: 1px solid #1c252f; background-color: #fff; margin-left: -70px }
+.cui_lbox td { text-align: center }
+.cui_lbox a { background: #FFF; color: #333; display: block; line-height: 40px; padding: 0 15px }
+.cui_lbox a:hover { background: #1c252f; color: #fff }
+.cui_ybar { background-color: #f7f7f7 }
+.lcui_border .cui_ybar th, .lcui_border .cui_ybar td { padding: 10px }
+.cui_ybar a { display: block; text-decoration: none; text-align: center; color: #000 }
