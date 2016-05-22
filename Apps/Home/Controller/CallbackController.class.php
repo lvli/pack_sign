@@ -125,7 +125,7 @@ class CallbackController extends CommonController {
                'end_time' => time(),
             ))->save();
 
-            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->getField('list_id');
+            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id desc')->getField('list_id');
             $list_cron = M('list_cron')->where("id={$id}")->find();
             $lsit_new_id = M('list_new')->where("id={$list_cron['mains_id']}")->getField('id');
 
