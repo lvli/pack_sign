@@ -3,6 +3,26 @@
     <div class="row-fluid">
         <include file='Public:menu' />
         <div class="span10" style="text-align: left;">
+            <form class="form-search form-inline" method="get" action="/Home/Log/index">
+
+                <b>类别 </b>:  <select name="type">
+                <option value="">全部</option>
+                    <option  value="cronnew" <if condition="isset($_REQUEST['type']) && $_REQUEST['type'] eq 'cronnew'">selected</if>>新文件扫描(cronnew)</option>
+                    <option  value="cron" <if condition="isset($_REQUEST['type']) && $_REQUEST['type'] eq 'cron'">selected</if>>定时任务(cron)</option>
+                    <option  value="callback" <if condition="isset($_REQUEST['type']) && $_REQUEST['type'] eq 'callback'">selected</if>>接口(callback)</option>
+                </option></select>&nbsp;
+
+                <b>级别 </b>:  <select name="level">
+                <option value="">全部</option>
+                <option  value="info" <if condition="isset($_REQUEST['level']) && $_REQUEST['level'] eq 'info'">selected</if>>信息(info)</option>
+                <option  value="error" <if condition="isset($_REQUEST['level']) && $_REQUEST['level'] eq 'error'">selected</if>>错误(error)</option>
+                </option></select>&nbsp;
+
+                <b>请求时间 </b>:
+                <input type='text' class="date_input" id="date_input_min" name='begin_time' value='{$_REQUEST['begin_time']}' />&nbsp;-&nbsp;
+                <input type='text' class="date_input" id="date_input_max" name='end_time' value='{$_REQUEST['end_time']}' />&nbsp;
+                <button type="submit" class="btn btn-primary">筛选</button>
+            </form>
             <table class="table table-bordered">
                 <tr>
                     <th>ID</th>
