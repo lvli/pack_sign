@@ -19,7 +19,7 @@ class CallbackController extends CommonController {
             }else{
                 $status = 2;//有毒
             }
-            $detail = M('detail_new')->where("file_md5='{$data['name']}'")->find();
+            $detail = M('detail_new')->order('id DESC')->where("file_md5='{$data['name']}'")->find();
             $this->log("detail_new中查询到的数据为:" . json_encode($detail),  'info');
             M('detail_new')->where("id='{$detail['id']}'")->data(array(
                 'virus_result' => $data_raw,
@@ -72,7 +72,7 @@ class CallbackController extends CommonController {
                 'status' => $status,
                 'end_time' => time(),
             );
-            M('check_sign')->where("sign_md5='{$data['name']}'")->data($save_data)->save();
+            M('check_sign')->where("sign_md5='{$data['name']}'")->order('id DESC')->data($save_data)->save();
             $sign_pool_id = M('check_sign')->where("sign_md5='{$data['name']}'")->getField('sign_pool_id');
 
             //停用有问题的签名
@@ -90,10 +90,10 @@ class CallbackController extends CommonController {
                 $sign = array_pop(explode(',', $v['sign_used']));
                 $this->log(sprintf("sign=%s,sign_pool_id=%s", $sign, $sign_pool_id), 'info');
                 if($sign == $sign_pool_id){
-                    if($status == 1){
-                        $list_status = STATUS_PROGRAM_NO_VIRUS;
-                    }else{
+                    if($status == 1){ //签名无毒，说明程序有毒
                         $list_status = STATUS_PROGRAM_VIRUS;
+                    }else{
+                        $list_status = STATUS_SIGN_STILL_VIRUS_CHECKED;
                     }
                     M('list_new')->where("id={$v['id']}")->data(array(
                         'status' => $list_status,
@@ -125,7 +125,7 @@ class CallbackController extends CommonController {
                'end_time' => time(),
             ))->save();
 
-            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id desc')->getField('list_id');
+            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id DESC')->getField('list_id');
             $list_cron = M('list_cron')->where("id={$id}")->find();
             $lsit_new_id = M('list_new')->where("id={$list_cron['mains_id']}")->getField('id');
 
