@@ -35,6 +35,11 @@
                 echo $_SERVER['SERVER_ADDR'];
             </php>
           </span>
+              <span class="brand">管理员 :
+            <php>
+                echo $_SESSION['admin_name'];
+            </php>
+          </span>
             <if condition="$_SESSION['isafe_user_name']">
                 <ul class="nav pull-right"><li><a href="javascript:void(0)">{$_SESSION['isafe_user_name']}</a></li><li><a href="/User/logout"><i class="icon-off"></i>退出</a></li></ul>
             </if>
