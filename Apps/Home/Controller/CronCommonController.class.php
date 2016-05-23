@@ -113,7 +113,7 @@ class CronCommonController extends CommonController {
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[0], $check_sign_path);
             system($sign_cmd, $ret);
             $this->log(sprintf("给微软程序加签名命令为%s,返回值为:%s", $sign_cmd, $ret), 'info');
-            if($ret !== FALSE) {
+            if($ret === 0) {
                 $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
                 if(class_exists('\CURLFile')) {
                     $post_data = array("file_path" => new \CURLFile($check_sign_path),);
@@ -164,7 +164,7 @@ class CronCommonController extends CommonController {
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
             system($sign_cmd, $ret);
             $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
-            if($ret !== FALSE){
+            if($ret === 0){
                 $id_list[] .= $v['id'] . ',';
                 //记录使用过的签名
                 $sign_used = trim($v['sign_used'] . ',' . $sign_list[$sign_key]['id'], ',');
