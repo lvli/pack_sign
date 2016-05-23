@@ -3,6 +3,8 @@ namespace Home\Controller;
 use Think\Controller;
 
 class SignController extends CommonController {
+	const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
+	const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
     const SUCCESS_URL = '/Home/Sign/index';
 
 	public function index(){
@@ -34,9 +36,14 @@ class SignController extends CommonController {
 			$this->error('签名密码不能为空');
 		}
 
+		$sign_info = D('Sign')->find($id);
+		if(empty($sign_info)){
+			$this->error('签名不存在');
+		}
+
 		$is_upload = false;
 		if(!empty($id)){
-			$old_sign_path = D('Sign')->find($id);
+			$old_sign_path = $sign_info['sign_path'];
 			if(!empty($sign_path) && $old_sign_path != $sign_path){
 				$is_upload = true;
 			}
@@ -58,6 +65,17 @@ class SignController extends CommonController {
 			$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
 		}else{
 			$sign_path = '';
+		}
+
+		if(!empty($sign_path)){
+			$check_sign_path = CHECK_SIGN_URL_MICROSOFT . '_' .time();
+			copy(CHECK_SIGN_URL, $check_sign_path);
+			$sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $check_sign_path);
+			system($sign_cmd, $ret);
+			if($ret !== 0) {
+				unlink($sign_path);
+				$this->error('签名错误(比如密码)');
+			}
 		}
 
 		$status = D('Sign')->save($sign_name, $sign_path, $sign_pwd, $status, $back, $id);
