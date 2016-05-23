@@ -158,15 +158,16 @@ class CronCommonController extends CommonController {
                 continue;
             }
 
-            $v['sign_path'] = $sign_list[0]['sign_path'];
-            $v['sign_pwd'] = $sign_list[0]['sign_pwd'];
+            $sign_key = array_rand($sign_list);
+            $v['sign_path'] = $sign_list[$sign_key]['sign_path'];
+            $v['sign_pwd'] = $sign_list[$sign_key]['sign_pwd'];
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
             system($sign_cmd, $ret);
             $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
             if($ret !== FALSE){
                 $id_list[] .= $v['id'] . ',';
                 //记录使用过的签名
-                $sign_used = trim($v['sign_used'] . ',' . $sign_list[0]['id'], ',');
+                $sign_used = trim($v['sign_used'] . ',' . $sign_list[$sign_key]['id'], ',');
                 M($this->table_list)->where('id='.$v['id'])->data(array(
                     'sign_used' => $sign_used,
                 ))->save();
