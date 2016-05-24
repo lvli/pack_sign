@@ -32,6 +32,7 @@ class ListUploadModel extends CommonModel{
 				}else{
 					$v['url'] = '';
 				}
+				$v['status_int'] = 	$v['status'];
 				$v['status'] = $this->get_status_name($v['status']);
 
 				$sign_used_arr = explode(',', $v['sign_used']);
@@ -40,6 +41,7 @@ class ListUploadModel extends CommonModel{
 					$sign_used .= ','. $sign_list[$u];
 				}
 				$v['sign_used'] = trim($sign_used, ',');
+				$v['confirm_sign']  = $sign_list[$v['confirm_sign']];
 			}
 			return array(
 				"list" => $list,
@@ -75,6 +77,28 @@ class ListUploadModel extends CommonModel{
 		return $list;
 	}
 
+	public function jump_step($id){
+		$old_status = M('list_new')->where("id={$id}")->getField('status');
+		if($old_status == STATUS_PROGRAM_VIRUS){
+			$status = STATUS_PROGRAM_VIRUS_JUMP;
+		}elseif($old_status == STATUS_SIGN_VIRUS){
+			$status = STATUS_SIGN_VIRUS_JUMP;
+		}else{
+			return false;
+		}
+		$status = M('list_new')->where("id={$id}")->data(array(
+			'status' => $status,
+		))->save();
+		return $status;
+	}
+
+	public  function confirm_sign($id, $sign){
+		$status = M('list_new')->where("id={$id}")->data(array(
+			'confirm_sign' => $sign,
+		))->save();
+		return $status;
+	}
+
 	private function get_status_name($status){
 		$status_arr = array(
 			STATUS_INIT => '尚未开始',
@@ -86,11 +110,12 @@ class ListUploadModel extends CommonModel{
 			STATUS_SIGN_STILL_VIRUS_NO_CHECK => '签名后有毒,需要用微软程序验证签名是否有毒',
 			STATUS_SIGN_STILL_VIRUS_CHECKED => '确认签名有毒,需要更换签名再次扫描的',
 			STATUS_CDN_UPLOADED => '已上传CDN',
+			STATUS_PROGRAM_VIRUS_JUMP => '程序有毒也要签名的',
+			STATUS_SIGN_VIRUS_JUMP => '签名有毒也要上传的',
 		);
 
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';
 	}
-
 
 
 }

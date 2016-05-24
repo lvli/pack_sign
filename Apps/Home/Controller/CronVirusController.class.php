@@ -31,6 +31,8 @@ class CronVirusController extends CronCommonController {
         //签名,然后扫毒
         $this->log("签名,然后扫毒",  'info');
         $list = $this->get_list(STATUS_PROGRAM_NO_VIRUS);
+        $list_jump = $this->get_list(STATUS_PROGRAM_VIRUS_JUMP);
+        $list = array_merge($list, $list_jump);
         $this->scan_sign($list);
         $this->scan_virus($list);
 
@@ -47,6 +49,8 @@ class CronVirusController extends CronCommonController {
         //签名之后没有问题，上传CDN
         $this->log("签名之后没有问题的文件，上传CDN",  'info');
         $list =  $this->get_list(STATUS_SIGN_NO_VIRUS);
+        $list_jump = $this->get_list(STATUS_SIGN_VIRUS_JUMP);
+        $list = array_merge($list, $list_jump);
         $this->up_cdn($list);
 
         $this->log("脚本结束运行",  'info');

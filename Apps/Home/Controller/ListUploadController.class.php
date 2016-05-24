@@ -36,4 +36,54 @@ class ListUploadController extends CommonController {
 		$this->display();
 	}
 
+	public function jump_step(){
+		$id = I('get.id', 0, 'int');
+
+		if(empty($id)){
+			$this->error('记录不存在');
+		}
+
+		$status = D('ListUpload')->jump_step($id);
+		if($status){
+			$this->success('修改成功');
+		}else{
+			$this->error('修改失败');
+		}
+	}
+
+	public function confirm_sign(){
+		$id = I('get.id', 0, 'int');
+		if(empty($id)){
+			$this->error('记录不存在');
+		}
+
+		$list = D('ListUpload')->find($id);
+		$sign_list = M('sign_pool')->where('status = 0')->order('id ASC')->select();
+
+		if(empty($list)){
+			$this->error('记录不存在');
+		}
+		$list['file_name'] = basename($list['file_path']);
+		$this->assign('list', $list);
+		$this->assign('sign_list', $sign_list);
+		$this->assign('id', $id);
+		$this->display();
+	}
+
+	public function confirm_sign_up(){
+		$id = I('post.id', 0, 'int');
+		$sign = I('post.sign', '', 'string');
+
+		if(empty($id) || empty($sign)){
+			$this->error('参数错误');
+		}
+
+		$status = D('ListUpload')->confirm_sign($id, $sign);
+		if($status){
+			$this->success('修改成功');
+		}else{
+			$this->error('修改失败');
+		}
+	}
+
 }

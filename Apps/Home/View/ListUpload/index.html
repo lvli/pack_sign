@@ -12,6 +12,7 @@
                 <th>文件状态</th>
                 <th>使用过的签名</th>
                 <th>扫描时间</th>
+                <th>指定的签名</th>
                 <th>操作</th>
             </tr>
             <volist name="list" id="data">
@@ -23,7 +24,16 @@
                     <td>{$data.status}</td>
                     <td>{$data.sign_used}</td>
                     <td>{$data.scan_time}</td>
-                    <td><a href="/Home/ListUpload/virus/id/{$data.id}" target="_blank">查看扫毒结果</a></td>
+                    <td>{$data.confirm_sign}</td>
+                    <td>
+                        <a href="/Home/ListUpload/virus/id/{$data.id}" target="_blank" class="btn btn-info">查看扫毒结果</a>
+                        <if condition="$data.status_int eq STATUS_PROGRAM_VIRUS">
+                            <a href="/Home/ListUpload/confirm_sign/id/{$data.id}" target="_blank" class="btn btn-primary">指定签名</a>
+                        </if>
+                        <if condition="($data.status_int eq STATUS_PROGRAM_VIRUS) OR ($data.status_int eq STATUS_SIGN_VIRUS)">
+                            <a href="/Home/ListUpload/jump_step/id/{$data.id}" onclick="if(confirm('确定跳过本步骤?')==false)return false;" class="btn btn-danger">跳过</a>
+                        </if>
+                    </td>
                 </tr>
             </volist>
                 <tr>

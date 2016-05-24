@@ -147,7 +147,7 @@ class CronCommonController extends CommonController {
 
             //获取未使用的签名
             $this->log("之前已使用过的签名，在签名池中的ID为:" . $v['sign_used'],  'info');
-            $sign_list = M('sign_pool')->where('status=0')->select();
+            $sign_list = M('sign_pool')->where('status=0')->order('id ASC')->select();
             //小于等于n(默认为3)个，发报警邮件 不处理这个签名
             if(count($sign_list) <= $this->config['min_sign_email']){
                 $email_id_str = $v['id'] . ',';
@@ -155,7 +155,13 @@ class CronCommonController extends CommonController {
                 continue;
             }
 
-            $sign_key = array_rand($sign_list);
+            if(empty($v['confirm_sign'])){
+                $sign_key = array_rand($sign_list);
+            }else{
+                $sign_key = $v['confirm_sign'];
+                $this->log("用户指定的签名ID为:" . $sign_key,  'info');
+            }
+
             $this->log("sign_key:" . json_encode($sign_key),  'info');
             $v['sign_path'] = $sign_list[$sign_key]['sign_path'];
             $v['sign_pwd'] = $sign_list[$sign_key]['sign_pwd'];

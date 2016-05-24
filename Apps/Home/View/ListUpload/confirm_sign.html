@@ -1,0 +1,25 @@
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+        <form action="/Home/ListUpload/confirm_sign_up" method="post">
+            <div class="form-group">
+                <label>文件名称:</label>
+                <input type="text" class="form-control" value="{$list.file_name}" disabled="disabled">
+            </div>
+            <div class="form-group">
+                <label>指定签名:</label>
+                <select name="sign">
+                    <volist name="sign_list" id="data">
+                        <option  value="{$data.id}" <if condition="$list.confirm_sign eq $data.id">selected='selected' </if>>{$data.sign_name}</option>
+                    </volist>
+                </option></select>&nbsp;
+            </div>
+            <input type="hidden" value="{$id}" name="id">
+            <button type="submit" class="btn btn-default">指定签名</button>
+        </form>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" />
