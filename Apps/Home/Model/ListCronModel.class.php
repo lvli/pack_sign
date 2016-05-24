@@ -59,7 +59,11 @@ class ListCronModel extends CommonModel{
 		foreach($list as &$v){
 			$v['virus_count'] = $this->get_virus_result_count($v['virus_result']);
 			$v['begin_time'] = date('Y-m-d H:i:s', $v['begin_time']);
-			$v['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
+			if(empty($v['end_time'])){
+				$v['end_time'] = '处理中';
+			}else{
+				$v['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
+			}
 		}
 		return $list;
 	}
