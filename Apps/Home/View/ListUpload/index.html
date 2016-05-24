@@ -27,9 +27,7 @@
                     <td>{$data.confirm_sign}</td>
                     <td>
                         <a href="/Home/ListUpload/virus/id/{$data.id}" target="_blank" class="btn btn-info">查看扫毒结果</a>
-                        <if condition="$data.status_int eq STATUS_PROGRAM_VIRUS">
-                            <a href="/Home/ListUpload/confirm_sign/id/{$data.id}" target="_blank" class="btn btn-primary">指定签名</a>
-                        </if>
+                        <a href="/Home/ListUpload/confirm_sign/id/{$data.id}" target="_blank" class="btn btn-primary">指定签名</a>
                         <if condition="($data.status_int eq STATUS_PROGRAM_VIRUS) OR ($data.status_int eq STATUS_SIGN_VIRUS)">
                             <a href="/Home/ListUpload/jump_step/id/{$data.id}" onclick="if(confirm('确定跳过本步骤?')==false)return false;" class="btn btn-danger">跳过</a>
                         </if>

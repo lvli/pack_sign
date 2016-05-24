@@ -93,9 +93,20 @@ class ListUploadModel extends CommonModel{
 	}
 
 	public  function confirm_sign($id, $sign){
-		$status = M('list_new')->where("id={$id}")->data(array(
+		$list_status =  M('list_new')->where("id={$id}")->getField('status');
+		$data = array(
 			'confirm_sign' => $sign,
-		))->save();
+		);
+		$status_arr = array(
+			STATUS_INIT,
+			STATUS_PROGRAM_NO_VIRUS,
+			STATUS_PROGRAM_VIRUS,
+			STATUS_PROGRAM_VIRUS_JUMP,
+		);
+		if(!in_array($list_status, $status_arr)){
+			$data['status'] = STATUS_INIT;
+		}
+		$status = M('list_new')->where("id={$id}")->data($data)->save();
 		return $status;
 	}
 
