@@ -55,7 +55,7 @@ class ListCronModel extends CommonModel{
 	}
 
 	public function virus($id){
-		$list = M('detail_cron')->where("list_id={$id}")->order('id DESC')->find();
+		$list = M('detail_cron')->where("list_id={$id}")->order('id DESC')->select();
 		foreach($list as &$v){
 			$v['virus_count'] = $this->get_virus_result_count($v['virus_result']);
 			$v['begin_time'] = date('Y-m-d H:i:s', $v['begin_time']);
