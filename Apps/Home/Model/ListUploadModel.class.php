@@ -108,7 +108,7 @@ class ListUploadModel extends CommonModel{
 			STATUS_PROGRAM_VIRUS_JUMP,
 		);
 		if(!in_array($list_status, $status_arr)){
-			$data['status'] = STATUS_INIT;
+			$data['status'] = STATUS_SIGN_STILL_VIRUS_CHECKED;
 		}
 		$status = M('list_new')->where("id={$id}")->data($data)->save();
 		return $status;
@@ -123,7 +123,7 @@ class ListUploadModel extends CommonModel{
 			STATUS_PROGRAM_VIRUS => '程序有毒',
 			STATUS_SIGN_VIRUS => '签名有毒',
 			STATUS_SIGN_STILL_VIRUS_NO_CHECK => '签名后有毒,需要用微软程序验证签名是否有毒',
-			STATUS_SIGN_STILL_VIRUS_CHECKED => '确认签名有毒,需要更换签名再次扫描的',
+			STATUS_SIGN_STILL_VIRUS_CHECKED => '需要更换签名再次扫描的',
 			STATUS_CDN_UPLOADED => '已上传CDN',
 			STATUS_PROGRAM_VIRUS_JUMP => '程序有毒也要签名的',
 			STATUS_SIGN_VIRUS_JUMP => '签名有毒也要上传的',

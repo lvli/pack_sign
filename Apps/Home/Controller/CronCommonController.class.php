@@ -147,34 +147,40 @@ class CronCommonController extends CommonController {
 
             //获取未使用的签名
             $this->log("之前已使用过的签名，在签名池中的ID为:" . $v['sign_used'],  'info');
-            $sign_list = M('sign_pool')->where('status=0')->order('id ASC')->select();
+            $sign_list = M('sign_pool')->where('status=0')->select();
+            $sign_arr = array();
+            foreach($sign_list as $s){
+                $sign_arr[$s['id']] = $s;
+            }
             //小于等于n(默认为3)个，发报警邮件 不处理这个签名
-            if(count($sign_list) <= $this->config['min_sign_email']){
+            if(count($sign_arr) <= $this->config['min_sign_email']){
                 $email_id_str = $v['id'] . ',';
                 $this->log("小于等于n(默认为3)个，发报警邮件 不处理这个签名",  'info');
                 continue;
             }
 
             if(empty($v['confirm_sign'])){
-                $sign_key = array_rand($sign_list);
+                $sign_key = array_rand($sign_arr);
             }else{
                 $sign_key = $v['confirm_sign'];
                 $this->log("用户指定的签名ID为:" . $sign_key,  'info');
             }
 
             $this->log("sign_key:" . json_encode($sign_key),  'info');
-            $v['sign_path'] = $sign_list[$sign_key]['sign_path'];
-            $v['sign_pwd'] = $sign_list[$sign_key]['sign_pwd'];
+            $v['sign_path'] = $sign_arr[$sign_key]['sign_path'];
+            $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
-            system($sign_cmd, $ret);
+            $error_info = system($sign_cmd, $ret);
             $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
             if($ret === 0){
                 $id_list[] .= $v['id'] . ',';
                 //记录使用过的签名
-                $sign_used = trim($v['sign_used'] . ',' . $sign_list[$sign_key]['id'], ',');
+                $sign_used = trim($v['sign_used'] . ',' . $sign_arr[$sign_key]['id'], ',');
                 M($this->table_list)->where('id='.$v['id'])->data(array(
                     'sign_used' => $sign_used,
                 ))->save();
+            }else{
+                $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
             }
         }
 
