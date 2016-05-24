@@ -2,7 +2,7 @@
 namespace Home\Model;
 use Think\Model;
 
-class ListUploadModel extends Model{
+class ListUploadModel extends CommonModel{
 	protected $tableName = 'list_new';
 	protected  $table;
 
@@ -25,6 +25,7 @@ class ListUploadModel extends Model{
 				$sign_list[$s['id']] = $s['sign_name'];
 			}
 			foreach($list as &$v){
+				$v['file_path'] = basename($v['file_path']);
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
 				if($v['status'] == STATUS_CDN_UPLOADED){
 					$v['url'] = sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
@@ -39,10 +40,6 @@ class ListUploadModel extends Model{
 					$sign_used .= ','. $sign_list[$u];
 				}
 				$v['sign_used'] = trim($sign_used, ',');
-				$v['last_virus_result'] = M('detail_new')->where("list_id={$v['id']} AND virus_result <> '' ")->order('id DESC')->getField('virus_result');
-				if(empty($v['last_virus_result'])){
-					$v['last_virus_result'] = '';
-				}
 			}
 			return array(
 				"list" => $list,
@@ -54,6 +51,28 @@ class ListUploadModel extends Model{
 				"pagination" => '',
 			);
 		}
+	}
+
+	public function find($id){
+		$info = M('list_new')->where("id={$id}")->find();
+		$info['file_name'] = basename($info['file_path']);
+		return $info;
+	}
+
+	public function virus($id){
+		$list = M('detail_new')->where("list_id={$id}")->order('id DESC')->find();
+		foreach($list as &$v){
+			$v['virus_count'] = $this->get_virus_result_count($v['virus_result']);
+			$v['begin_time'] = date('Y-m-d H:i:s', $v['begin_time']);
+			$v['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
+		}
+		return $list;
+	}
+
+	public function virus_detail($id){
+		$list = M('detail_new')->where("id={$id}")->find();
+		$list['virus_result'] = $this->format_virus_result($list['virus_result']);
+		return $list;
 	}
 
 	private function get_status_name($status){
@@ -71,5 +90,7 @@ class ListUploadModel extends Model{
 
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';
 	}
+
+
 
 }

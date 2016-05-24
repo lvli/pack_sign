@@ -46,7 +46,7 @@ class SignModel extends Model{
 		$count = $this->table->count();
 		if(!empty($count)){
 			$page = new \Org\Util\Page($count, $pageCount);
-			$list = $this->table->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
+			$list = $this->table->where('is_del=0')->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
 		}
 		if(!empty($list)){
 			$admin_arr = array();
@@ -100,7 +100,14 @@ class SignModel extends Model{
 	}
 
 	function delete($id){
-		return $this->table->where("id={$id}")->delete();
+		$info =  $this->table->where("id={$id}")->find();
+		copy($info['sign_path'], $info['sign_path'] . '_del');
+		unlink($info['sign_path']);
+		$status = $this->table->where("id={$id}")->data(array(
+				'status' => 1,
+				'is_del' => 1,
+		))->save();
+		return $status;
 	}
 
 }

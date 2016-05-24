@@ -55,8 +55,7 @@ class CronCommonController extends CommonController {
             } else {
                 $post_data = array("file_path" => '@' . $v['file_path'],);
             }
-            $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_PS'));
-            $post_data['email_list'] = implode(',', $post_data['email_list']);
+            $post_data['email_list'] = 'JSON_API_PS';
             $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
@@ -78,8 +77,7 @@ class CronCommonController extends CommonController {
             } else {
                 $post_data = array("file_path" => '@' . $v['file_path'],);
             }
-            $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_CDN'));
-            $post_data['email_list'] = implode(',', $post_data['email_list']);
+            $post_data['email_list'] = 'JSON_API_CDN';
             $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
@@ -120,8 +118,7 @@ class CronCommonController extends CommonController {
                 } else {
                     $post_data = array("file_path" => '@' . $check_sign_path,);
                 }
-                $post_data['email_list'] = array_merge($this->email_list, array('JSON_API_SIGN'));
-                $post_data['email_list'] = implode(',', $post_data['email_list']);
+                $post_data['email_list'] = 'JSON_API_SIGN';
                 $data = array(
                     'sign_md5' => md5_file($check_sign_path),
                     'sign_pool_id' => $v['id'],

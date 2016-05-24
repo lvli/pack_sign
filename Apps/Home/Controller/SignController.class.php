@@ -42,11 +42,11 @@ class SignController extends CommonController {
 		}
 
 		$is_upload = false;
-		$save_path =  sprintf("%s/%s/%s/", date('Y'), date('m'),  date('d'));
+		$save_path =  'Sign/';
 		$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
+		$old_sign_path = $sign_info['sign_path'];
 		if(!empty($id)){
-			$old_sign_path = $sign_info['sign_path'];
-			if(!empty($sign_path) && $old_sign_path != $sign_path){
+			if(!empty($_FILES['sign_path']['name']) && $old_sign_path != $sign_path){
 				$is_upload = true;
 			}
 		}else{
@@ -54,6 +54,11 @@ class SignController extends CommonController {
 		}
 
 		if($is_upload){
+			$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
+			if($old_sign_path == $sign_path){
+				$this->error('签名文件已存在，请编辑已有签名');
+			}
+
 			$upload = new \Think\Upload();
 			$upload->autoSub = false;
 			$upload->rootPath = UPLOAD_DIR;
@@ -63,6 +68,7 @@ class SignController extends CommonController {
 			if(!$info){
 				$this->error($upload->getError());
 			}
+
 		}else{
 			$sign_path = '';
 		}

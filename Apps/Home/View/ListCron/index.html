@@ -8,13 +8,10 @@
                 <th>ID</th>
                 <th>mains表ID</th>
                 <th>文件URL</th>
-                <th>文件路径</th>
+                <th>文件名称</th>
                 <th>文件状态</th>
-            <!--    <th>使用过的签名</th>-->
                 <th>扫描时间</th>
-                <!--<th>邮件发送状态</th>-->
-            <!--    <th>是否签名</th>-->
-                <th>最后一次扫毒结果</th>
+                <th>操作</th>
             </tr>
             <volist name="list" id="data">
                 <tr>
@@ -23,11 +20,8 @@
                     <td><a href="{$data.url}">{$data.url}</a></td>
                     <td>{$data.file_path}</td>
                     <td>{$data.status}</td>
-                <!--    <td>{$data.sign_used}</td>-->
                     <td>{$data.scan_time}</td>
-                  <!--  <td><if condition="$data.email_status eq 0">未发送<else />已发送</if></td>-->
-                <!--    <td><if condition="$data.is_sign eq 0">是<else />否</if></td>-->
-                    <td>{$data.last_virus_result}</td>
+                    <td><a href="/Home/ListCron/virus/id/{$data.id}" target="_blank">查看扫毒结果</a></td>
                 </tr>
             </volist>
                 <tr>

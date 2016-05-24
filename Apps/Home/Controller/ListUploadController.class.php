@@ -10,5 +10,30 @@ class ListUploadController extends CommonController {
 		$this->display();
 	}
 
+	public function virus(){
+		$id = I('get.id', 0, 'int');
+
+		if(empty($id)){
+			$this->error('扫毒结果不存在');
+		}
+
+		$info = D('ListUpload')->find($id);
+		$list = D('ListUpload')->virus($id);
+		$this->assign('list', $list);
+		$this->assign('info', $info);
+		$this->display();
+	}
+
+	public function virus_detail(){
+		$id = I('get.id', 0, 'int');
+
+		if(empty($id)){
+			$this->error('扫毒结果不存在');
+		}
+
+		$list = D('ListUpload')->virus_detail($id);
+		$this->assign('list', $list);
+		$this->display();
+	}
 
 }
