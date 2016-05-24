@@ -37,7 +37,7 @@ class SignController extends CommonController {
 		}
 
 		$sign_info = D('Sign')->find($id);
-		if(empty($sign_info)){
+		if(!empty($id) && empty($sign_info)){
 			$this->error('签名不存在');
 		}
 
