@@ -42,6 +42,8 @@ class SignController extends CommonController {
 		}
 
 		$is_upload = false;
+		$save_path =  sprintf("%s/%s/%s/", date('Y'), date('m'),  date('d'));
+		$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
 		if(!empty($id)){
 			$old_sign_path = $sign_info['sign_path'];
 			if(!empty($sign_path) && $old_sign_path != $sign_path){
@@ -52,7 +54,6 @@ class SignController extends CommonController {
 		}
 
 		if($is_upload){
-			$save_path =  sprintf("%s/%s/%s/", date('Y'), date('m'),  date('d'));
 			$upload = new \Think\Upload();
 			$upload->autoSub = false;
 			$upload->rootPath = UPLOAD_DIR;
@@ -62,7 +63,6 @@ class SignController extends CommonController {
 			if(!$info){
 				$this->error($upload->getError());
 			}
-			$sign_path = UPLOAD_DIR . $save_path .  $_FILES['sign_path']['name'];
 		}else{
 			$sign_path = '';
 		}

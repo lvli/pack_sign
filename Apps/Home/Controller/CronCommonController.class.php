@@ -159,6 +159,7 @@ class CronCommonController extends CommonController {
             }
 
             $sign_key = array_rand($sign_list);
+            $this->log("sign_key:" . json_encode($sign_key),  'info');
             $v['sign_path'] = $sign_list[$sign_key]['sign_path'];
             $v['sign_pwd'] = $sign_list[$sign_key]['sign_pwd'];
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
