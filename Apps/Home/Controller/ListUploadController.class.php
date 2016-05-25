@@ -71,6 +71,7 @@ class ListUploadController extends CommonController {
 	}
 
 	public function confirm_sign_up(){
+		$p = I('post.p', 1, 'int');
 		$id = I('post.id', 0, 'int');
 		$sign = I('post.sign', '', 'string');
 
@@ -80,7 +81,7 @@ class ListUploadController extends CommonController {
 
 		$status = D('ListUpload')->confirm_sign($id, $sign);
 		if($status){
-			$this->success('修改成功');
+			$this->success('修改成功', '/Home/ListUpload/index/p/' . $p);
 		}else{
 			$this->error('修改失败');
 		}
