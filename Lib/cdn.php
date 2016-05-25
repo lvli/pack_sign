@@ -35,7 +35,7 @@ class CDN{
         $key = "zips/{$cdn_dir}/" . basename($file);
         $status = $this->put_file($file, $key, $this->_bucket);
 
-        $did_arr = array('E3LGYSST79LKBZ', 'E23UAJGEZSW65H', 'ECY8I9R9M4QO5');
+        $did_arr = array('EEWU8GHWXFNRZ', 'E3LGYSST79LKBZ', 'E23UAJGEZSW65H', 'ECY8I9R9M4QO5');
         foreach($did_arr as $did){
             $this->sync2cf(array("/{$cdn_dir}/" . basename($file)), $did);
         }
