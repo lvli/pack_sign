@@ -3,7 +3,6 @@ namespace Home\Controller;
 use Think\Controller;
 
 //获取已经在CDN上的文件 每6个小时执行一次
-set_time_limit(0);
 class CronVirusUploadedController extends CronCommonController {
     const DEAL_TIMEOUT = 300;
     protected $table_detail = 'detail_cron';

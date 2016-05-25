@@ -386,7 +386,7 @@ class CronCommonController extends CommonController {
      * @param  [type] $addresses [description]
      * @return [type]            [description]
      */
-    private function send_email($subject, $body, $addresses, $path = "") {
+    protected function send_email($subject, $body, $addresses, $path = "") {
 
         if (empty($addresses)) {
             return false;
