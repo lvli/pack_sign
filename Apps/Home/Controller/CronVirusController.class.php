@@ -64,7 +64,7 @@ class CronVirusController extends CronCommonController {
         $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
         $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
-        $file_list = M('mains', NULL, $connection)->where('status=1 AND signed=0 AND sign_status=0')->field('id,path')->select();
+        $file_list = M('mains', NULL, $connection)->where('status=1 AND signed=0 AND sign_status=0')->field('id,path,ver,description')->select();
         M('mains', NULL, $connection)->where('status=1 AND signed=0 AND sign_status=0')->data(array(
             "sign_status" => MAINS_STATUS_DEAL,
         ))->save();
