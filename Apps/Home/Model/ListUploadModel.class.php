@@ -41,6 +41,7 @@ class ListUploadModel extends CommonModel{
 					$sign_used .= ','. $sign_list[$u];
 				}
 				$v['sign_used'] = trim($sign_used, ',');
+				$v['sign_used_now'] = array_pop(explode(',', $v['sign_used']));
 				$v['confirm_sign']  = $sign_list[$v['confirm_sign']];
 			}
 			return array(
