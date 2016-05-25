@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-//获取新上传的文件 每10分钟执行一次
+//获取新上传的文件 每1分钟执行一次
 class CronVirusController extends CronCommonController {
     protected $table_detail = 'detail_new';
     protected $table_list = 'list_new';
@@ -55,8 +55,7 @@ class CronVirusController extends CronCommonController {
 
         //清除ggg平台删掉的文件
         $this->log("清除ggg平台删掉的文件",  'info');
-        $this->sync_ggg_del($list);
-
+        $this->sync_ggg_del();
 
         $this->log("脚本结束运行",  'info');
     }
@@ -108,7 +107,5 @@ class CronVirusController extends CronCommonController {
             M('list_new')->where("mains_id IN ($id_str)")->delete();
             $this->log("删掉list_new表中的记录ID为:{$id_str}",  'info');
         }
-
     }
-
 }
