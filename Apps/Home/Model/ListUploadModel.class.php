@@ -125,8 +125,8 @@ class ListUploadModel extends CommonModel{
 			STATUS_SIGN_STILL_VIRUS_NO_CHECK => '签名后有毒,需要用微软程序验证签名是否有毒',
 			STATUS_SIGN_STILL_VIRUS_CHECKED => '需要更换签名再次扫描的',
 			STATUS_CDN_UPLOADED => '已上传CDN',
-			STATUS_PROGRAM_VIRUS_JUMP => '程序有毒也要签名的',
-			STATUS_SIGN_VIRUS_JUMP => '签名有毒也要上传的',
+			STATUS_PROGRAM_VIRUS_JUMP => '跳过程序扫毒步骤开始签名',
+			STATUS_SIGN_VIRUS_JUMP => '跳过签名扫毒步骤开始上传CDN',
 		);
 
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';
