@@ -87,4 +87,44 @@ class ListUploadController extends CommonController {
 		}
 	}
 
+	public function upload(){
+		$sign_list = M('sign_pool')->where('status = 0')->order('id ASC')->select();
+		$this->assign('sign_list', $sign_list);
+		$this->display();
+	}
+
+	public function upload_up(){
+		$name = I('post.name', 0, 'string');
+		$ver = I('post.ver', '', 'string');
+		$sign = I('post.sign', '', 'string');
+		$description = I('post.description', '', 'string');
+
+		if(empty($name)){
+			$this->error('名称不能为空');
+		}
+
+		$save_path =  'Mains/';
+		$file_path = UPLOAD_DIR . $save_path .  $_FILES['file_path']['name'];
+
+
+		$upload = new \Think\Upload();
+		$upload->autoSub = false;
+		$upload->rootPath = UPLOAD_DIR;
+		$upload->savePath = $save_path;
+		$upload->saveName = '';
+		$info = $upload->uploadOne($_FILES['file_path']);
+		if(!$info){
+			$this->error($upload->getError());
+		}
+
+		$status = D('ListUpload')->upload($name, $ver, $description, $file_path, $sign);
+
+		if($status){
+			$this->success('添加成功');
+		}else{
+			$this->error('添加失败');
+		}
+
+	}
+
 }

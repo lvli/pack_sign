@@ -114,6 +114,21 @@ class ListUploadModel extends CommonModel{
 		return $status;
 	}
 
+	public function upload($name, $ver, $description, $file_path, $sign){
+		$data = array(
+			'mains_id' => 0,
+			'name' => $name,
+			'ver' => $ver,
+			'description' => $description,
+			'file_path' => $file_path,
+			'confirm_sign' => $sign,
+			'status' => 0,
+			'scan_time' => time(),
+			'email_status' => 0,
+		);
+		return $this->table->data($data)->add();
+	}
+
 	private function get_status_name($status){
 		$status_arr = array(
 			STATUS_INIT => '尚未开始',

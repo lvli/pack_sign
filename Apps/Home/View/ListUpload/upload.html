@@ -1,0 +1,45 @@
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+        <form action="/Home/ListUpload/upload_up" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>名称:</label>
+                <input type="text" class="form-control" name="name" placeholder="名称" value="{$data.name}">
+            </div>
+            <div class="form-group">
+                <label>平台:</label>
+                <select name="platform">
+                    <option  value="" selected='selected'>Installer后台主程序(ggg)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>版本:</label>
+                <input type="text" class="form-control" name="ver" placeholder="版本" value="{$data.ver}">
+            </div>
+            <div class="form-group">
+                <label>描述:</label>
+                <input type="text" class="form-control" name="description" placeholder="描述" value="{$data.description}">
+            </div>
+            <div class="form-group">
+                <label>指定签名:</label>
+                <select name="sign">
+                    <option  value="" ></option>
+                    <volist name="sign_list" id="data">
+                        <option  value="{$data.id}" >{$data.sign_name}</option>
+                    </volist>
+                </select>&nbsp;
+            </div>
+            <div class="form-group">
+                <label>路径:</label>
+                <input type="file" class="form-control" name="file_path">
+            </div>
+            <!--<input type="hidden" value="{$data.id}" name="id">-->
+            <br/>
+            <button type="submit" class="btn btn-default">添加</button>
+        </form>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" />

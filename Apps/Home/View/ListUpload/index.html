@@ -3,12 +3,18 @@
     <div class="row-fluid">
         <include file='Public:menu' />
         <div class="span10" style="text-align: left;">
+            <form method='get' action="">
+                <a class="btn btn-success" href="/Home/ListUpload/upload">添加</a>
+            </form>
             <table class="table table-bordered">
             <tr>
                 <th>ID</th>
                 <th>mains表ID</th>
                 <th>文件URL</th>
                 <th>文件名称</th>
+                <th>版本</th>
+                <th>描述</th>
+                <th>平台</th>
                 <th>文件状态</th>
                 <th>使用过的签名</th>
                 <th>扫描时间</th>
@@ -21,6 +27,9 @@
                     <td>{$data.mains_id}</td>
                     <td><a href="{$data.url}">{$data.url}</a></td>
                     <td>{$data.file_path}</td>
+                    <td>{$data.ver}</td>
+                    <td>{$data.description}</td>
+                    <td>Installer后台主程序(ggg)</td>
                     <td>{$data.status}</td>
                     <td>{$data.sign_used}</td>
                     <td>{$data.scan_time}</td>
