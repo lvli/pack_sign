@@ -4,6 +4,7 @@ use Think\Controller;
 
 //定时任务的基类
 class CronCommonController extends CommonController {
+    const SEND_EMAIL_TIME_RANGE = 3600;
     const DEAL_TIMEOUT = 300;
     const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
     const TIMESTAMP_TR_URL = 'http://timestamp.comodoca.com/rfc3161';
@@ -209,11 +210,23 @@ class CronCommonController extends CommonController {
         $email_id_str = trim($email_id_str, ',');
 
         if(!empty($email_id_str)){
-            $this->log(sprintf("发邮件，email:%s,签名池通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
-            $this->send_email("签名池通知", $this->sign_email_body, $this->email_list);
-            M($this->table_list)->where('id IN ('.$email_id_str . ' )')->data(array(
-                'email_status' => 1,
-            ))->save();
+            $last_send_email_time =  (int)M('send_email_history')->order('id DESC')->limit(1)->getField('addtime');
+            $now = time();
+            $this->log(sprintf("当前时间:%s,上次邮件发送时间:%s,最小间隔%s", $now, $last_send_email_time, self::SEND_EMAIL_TIME_RANGE),  'info');
+            if($now - $last_send_email_time >= self::SEND_EMAIL_TIME_RANGE){
+                $this->log(sprintf("发邮件，email:%s,签名池通知,内容为:", $this->email_list, $this->sign_email_body),  'info');
+                $this->send_email("签名池通知", $this->sign_email_body, $this->email_list);
+                M($this->table_list)->where('id IN ('.$email_id_str . ' )')->data(array(
+                    'email_status' => 1,
+                ))->save();
+
+                //记录邮件发送历史
+                M('send_email_history')->data(array(
+                    'content' => $this->sign_email_body,
+                    'email_list' => $this->email_list,
+                    'addtime' => time(),
+                ))->add();
+            }
         }
     }
 
