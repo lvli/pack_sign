@@ -21,7 +21,7 @@ class UserController extends CommonController {
 
         $status = D('User')->login($user, $password);
         if($status){
-            $this->success('登录成功', '/Home/Project/index/');
+            $this->success('登录成功', '/Home/ListUpload/index/');
         }else{
             $this->error('登录失败');
         }
@@ -93,7 +93,7 @@ class UserController extends CommonController {
 
         $status = D('User')->edit($password);
         if($status){
-            $this->success('修改成功', '/Home/Project/index/');
+            $this->success('修改成功', '/Home/ListUpload/index/');
         }else{
             $this->error('修改失败');
         }
