@@ -94,6 +94,7 @@ class ListUploadController extends CommonController {
 	}
 
 	public function upload_up(){
+		$p = I('post.p', 1, 'int');
 		$name = I('post.name', 0, 'string');
 		$ver = I('post.ver', '', 'string');
 		$sign = I('post.sign', '', 'string');
@@ -120,7 +121,7 @@ class ListUploadController extends CommonController {
 		$status = D('ListUpload')->upload($name, $ver, $description, $file_path, $sign);
 
 		if($status){
-			$this->success('添加成功');
+			$this->success('添加成功', '/index.php/Home/ListUpload/index/p/' . $p);
 		}else{
 			$this->error('添加失败');
 		}
