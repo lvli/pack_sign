@@ -147,5 +147,9 @@ class ListUploadModel extends CommonModel{
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';
 	}
 
+	function delete($id){
+		$status = $this->table->where("id={$id}")->delete();
+		return $status;
+	}
 
 }

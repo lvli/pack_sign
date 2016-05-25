@@ -107,7 +107,6 @@ class ListUploadController extends CommonController {
 		$save_path =  'Mains/';
 		$file_path = UPLOAD_DIR . $save_path .  $_FILES['file_path']['name'];
 
-
 		$upload = new \Think\Upload();
 		$upload->autoSub = false;
 		$upload->rootPath = UPLOAD_DIR;
@@ -125,7 +124,28 @@ class ListUploadController extends CommonController {
 		}else{
 			$this->error('添加失败');
 		}
-
 	}
+
+	public function delete(){
+		$p = I('post.p', 1, 'int');
+		$id = I('get.id', 0, 'int');
+		if(empty($id)){
+			$this->error('删除失败');
+		}
+
+		$mains_id = (int)M('list_new')->where("id={$id}")->getField('mains_id');
+		if($mains_id > 0){
+			$this->error('请去ggg后台删除');
+		}
+
+		$status = D('ListUpload')->delete($id);
+
+		if($status){
+			$this->success('删除成功', '/index.php/Home/ListUpload/index/p/' . $p);
+		}else{
+			$this->error('删除失败');
+		}
+	}
+
 
 }
