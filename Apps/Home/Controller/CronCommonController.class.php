@@ -108,7 +108,7 @@ class CronCommonController extends CommonController {
         }
 
         foreach($sign_list as $v) {
-            $check_sign_path = CHECK_SIGN_URL_MICROSOFT . '_' . $v['id'];
+            $check_sign_path = CHECK_SIGN_URL_MICROSOFT;
             copy(CHECK_SIGN_URL, $check_sign_path);
             if(!is_file($check_sign_path)){
                 $this->log(sprintf("给微软程序加签名,微软程序不存在,路径为%s", $check_sign_path), 'error');
