@@ -171,18 +171,25 @@ class CronCommonController extends CommonController {
             $this->log("sign_key:" . json_encode($sign_key),  'info');
             $v['sign_path'] = $sign_arr[$sign_key]['sign_path'];
             $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
-            $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
-            $error_info = system($sign_cmd, $ret);
-            $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
-            if($ret === 0){
-                $id_list[] .= $v['id'] . ',';
-                //记录使用过的签名
-                $sign_used = trim($v['sign_used'] . ',' . $sign_arr[$sign_key]['id'], ',');
-                M($this->table_list)->where('id='.$v['id'])->data(array(
-                    'sign_used' => $sign_used,
-                ))->save();
+
+            $new_save_path = str_replace('Unsign', 'Sign', $v['save_path']);
+            if(!is_file($new_save_path)){
+                $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path),  'error');
             }else{
-                $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
+                copy($new_save_path, $v['file_path']);
+                $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
+                $error_info = system($sign_cmd, $ret);
+                $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
+                if($ret === 0){
+                    $id_list[] .= $v['id'] . ',';
+                    //记录使用过的签名
+                    $sign_used = trim($v['sign_used'] . ',' . $sign_arr[$sign_key]['id'], ',');
+                    M($this->table_list)->where('id='.$v['id'])->data(array(
+                        'sign_used' => $sign_used,
+                    ))->save();
+                }else{
+                    $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
+                }
             }
         }
 

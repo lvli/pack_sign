@@ -19,6 +19,10 @@ class CronVirusController extends CronCommonController {
         $file_list = $this->downloadUnSign($file_list);
         $this->log("下载文件结束",  'info');
 
+        $this->log("复制未签名的文件",  'info');
+        $this->CopyUnSign($file_list);
+        $this->log("复制未签名文件结束",  'info');
+
         $this->log("开始检查下载文件是否正常",  'info');
         $this->CheckUnSign($file_list);
         $this->log("检查下载文件是否正常结束",  'info');
@@ -77,7 +81,7 @@ class CronVirusController extends CronCommonController {
                 $v['path'] = '/' . $v['path'];
             }
 
-            $v['save_path'] = DOWNLOAD_MAIN_URL . $v['path'];
+            $v['save_path'] = DOWNLOAD_MAIN_SIGN_URL . $v['path'];
             $v['save_path'] = str_replace('//', '/', $v['save_path']);
             $v['save_path'] = str_replace('\\', '/', $v['save_path']);
             M('list_new')->data(array(
@@ -91,6 +95,16 @@ class CronVirusController extends CronCommonController {
             ))->add();
         }
         return $file_list;
+    }
+
+    private function CopyUnSign($file_list){
+        foreach($file_list as $v){
+            $new_save_path = str_replace('Sign', 'Unsign', $v['save_path']);
+            copy($v['save_path'], $new_save_path);
+            if(!is_file($new_save_path)){
+                $this->log(sprintf("文件复制失败,原路径=%s,新路径=%s", $v['save_path'], $new_save_path),  'error');
+            }
+        }
     }
 
     private function sync_ggg_del(){
