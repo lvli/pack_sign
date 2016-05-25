@@ -5,6 +5,7 @@ use Think\Controller;
 //获取已经在CDN上的文件 每6个小时执行一次
 set_time_limit(0);
 class CronVirusUploadedController extends CronCommonController {
+    const DEAL_TIMEOUT = 300;
     protected $table_detail = 'detail_cron';
     protected $table_list = 'list_cron';
     protected $log_prefix = 'cron';
@@ -28,8 +29,11 @@ class CronVirusUploadedController extends CronCommonController {
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
         //去掉正在处理的数据
         foreach($list as $k => $v){
-            $id =  M($this->table_list)->where("mains_id={$v['mains_id']} AND status = 0")->getField('id');
-            if(!empty($id)){
+            $info =  M($this->table_list)->where("mains_id={$v['mains_id']} AND status = 0")->order('id DESC')->find();
+            if(time() - $info['begin_time'] >= self::DEAL_TIMEOUT){
+                M($this->table_detail)->where("list_id={$v['id']} AND status = 0")->delete();
+                $this->log(sprintf("从%s表去掉超时的数据,time=%s,begin_time=%s,id=%s,deal_timeout=%s", $this->table_detail, time(), $info['begin_time'], $info['id'], self::DEAL_TIMEOUT),  'info');
+            }elseif(!empty($info['id'])){
                 unset($list[$k]);
             }
         }
