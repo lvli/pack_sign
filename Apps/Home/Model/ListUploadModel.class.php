@@ -85,7 +85,7 @@ class ListUploadModel extends CommonModel{
 		$old_status = M('list_new')->where("id={$id}")->getField('status');
 		if($old_status == STATUS_PROGRAM_VIRUS){
 			$status = STATUS_PROGRAM_VIRUS_JUMP;
-		}elseif($old_status == STATUS_SIGN_VIRUS){
+		}elseif($old_status == STATUS_SIGN_VIRUS || $old_status == STATUS_SIGN_STILL_VIRUS_NO_CHECK || $old_status == STATUS_SIGN_STILL_VIRUS_CHECKED){
 			$status = STATUS_SIGN_VIRUS_JUMP;
 		}else{
 			return false;
