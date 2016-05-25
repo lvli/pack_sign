@@ -54,6 +54,11 @@ class CronVirusController extends CronCommonController {
         $list = array_merge($list, $list_jump);
         $this->up_cdn($list);
 
+        //清除ggg平台删掉的文件
+        $this->log("清除ggg平台删掉的文件",  'info');
+        $this->sync_ggg_del($list);
+
+
         $this->log("脚本结束运行",  'info');
     }
 
@@ -86,6 +91,23 @@ class CronVirusController extends CronCommonController {
             ))->add();
         }
         return $file_list;
+    }
+
+    private function sync_ggg_del(){
+        $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
+        $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
+
+        $file_list = M('mains', NULL, $connection)->where('status=0 AND signed=0')->field('id,path')->select();
+        $id_arr = array();
+        foreach($file_list as $v){
+            $id_arr[] = $v['id'];
+        }
+        $id_str = trim(implode(',', $id_arr));
+        if(!empty($id_str)){
+            M('list_new')->where("mains_id IN ($id_str)")->delete();
+            $this->log("删掉list_new表中的记录ID为:{$id_str}",  'info');
+        }
+
     }
 
 }
