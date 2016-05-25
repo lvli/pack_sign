@@ -38,7 +38,7 @@ class CronCommonController extends CommonController {
                 M($this->table_detail)->where("list_id={$v['id']} AND status = 0")->delete();
                 $this->log(sprintf("从%s表去掉超时的数据,time=%s,begin_time=%s,id=%s,deal_timeout=%s", $this->table_detail, time(), $info['begin_time'], $info['id'], self::DEAL_TIMEOUT),  'info');
             }else
-           if(!empty($id)){
+           if(!empty($info['id'])){
                 unset($list[$k]);
            }
         }
@@ -172,7 +172,7 @@ class CronCommonController extends CommonController {
             $v['sign_path'] = $sign_arr[$sign_key]['sign_path'];
             $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
 
-            $new_save_path = str_replace('Unsign', 'Sign', $v['save_path']);
+            $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             if(!is_file($new_save_path)){
                 $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path),  'error');
             }else{

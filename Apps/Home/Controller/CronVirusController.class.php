@@ -100,8 +100,11 @@ class CronVirusController extends CronCommonController {
     private function CopyUnSign($file_list){
         foreach($file_list as $v){
             $new_save_path = str_replace('Sign', 'Unsign', $v['save_path']);
-            copy($v['save_path'], $new_save_path);
-            if(!is_file($new_save_path)){
+            if(!is_dir(dirname($new_save_path))){
+                mkdir(dirname($new_save_path), 0755, true);
+            }
+            $ret = copy($v['save_path'], $new_save_path);
+            if(!$ret || !is_file($new_save_path)){
                 $this->log(sprintf("文件复制失败,原路径=%s,新路径=%s", $v['save_path'], $new_save_path),  'error');
             }
         }
