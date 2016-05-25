@@ -12,7 +12,7 @@
                 <label>指定签名:</label>
                 <select name="sign">
                     <volist name="sign_list" id="data">
-                        <option  value="{$data.id}" <if condition="$list.confirm_sign eq $data.id">selected='selected' </if>>{$data.sign_name}</option>
+                        <option  value="{$data.id}" <if condition="$list.confirm_sign eq $data['id']">selected='selected' </if>>{$data.sign_name}</option>
                     </volist>
                 </option></select>&nbsp;
             </div>

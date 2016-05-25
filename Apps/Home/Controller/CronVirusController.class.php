@@ -3,6 +3,7 @@ namespace Home\Controller;
 use Think\Controller;
 
 //获取新上传的文件 每10分钟执行一次
+set_time_limit(0);
 class CronVirusController extends CronCommonController {
     protected $table_detail = 'detail_new';
     protected $table_list = 'list_new';
