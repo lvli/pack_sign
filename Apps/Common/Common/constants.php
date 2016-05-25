@@ -3,8 +3,12 @@ define('UPLOAD_DIR', ROOT_PATH . 'Upload/');
 define('DOWNLOAD_URL', ROOT_PATH . 'Download/Cdn');
 define('DOWNLOAD_MAIN_URL', ROOT_PATH . 'Download/Unsign/');
 define('DOWNLOAD_MAIN_SIGN_URL', ROOT_PATH . 'Download/sign/');
-define('CHECK_SIGN_URL', 'c:\windows\explorer.exe');
+define('CHECK_SIGN_URL', ROOT_PATH . 'tool/explorer.exe');
 define('CHECK_SIGN_URL_MICROSOFT', ROOT_PATH . 'Download/Check/explorer.exe');
+define('BASE_SIGN_URL', ROOT_PATH . 'tool/signtool.exe');
+define('TIMESTAMP_URL',  'http://timestamp.verisign.com/scripts/timstamp.dll');
+define('TIMESTAMP_TR_URL',  'http://timestamp.comodoca.com/rfc3161');
+define('POST_VIRUS_URL',  'http://scanallfiles.com');
 
 //任务运行状态
 const TASK_STATUS_INIT = 0;

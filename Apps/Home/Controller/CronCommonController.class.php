@@ -6,8 +6,6 @@ use Think\Controller;
 class CronCommonController extends CommonController {
     const SEND_EMAIL_TIME_RANGE = 3600;
     const DEAL_TIMEOUT = 300;
-    const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
-    const TIMESTAMP_TR_URL = 'http://timestamp.comodoca.com/rfc3161';
 
     protected $log_prefix = '';
     protected $table_detail = '';
@@ -15,8 +13,6 @@ class CronCommonController extends CommonController {
     protected $sign_method = array('signature_normal', 'signature_normal_sha256', 'signature_normal_sha384', 'signature_normal_sha512', 'signature_tr', 'signature_tr_td_sha256', 'signature_tr_td_sha384', 'signature_tr_td_sha512', 'signature_append_sha256', 'signature_append_sha384', 'signature_append_sha512',);
     protected $email_list = array();
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
-    const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
-    const POST_VIRUS_URL = 'http://scanallfiles.com';
     const TIMEOUT = 10;
 
     protected function init() {
@@ -51,7 +47,7 @@ class CronCommonController extends CommonController {
     }
 
     protected function scan_virus($list) {
-        $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
+        $post_url = POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
         $this->log("扫毒接口的url为:" . $post_url, 'info');
 
         $post_arr = array();
@@ -73,7 +69,7 @@ class CronCommonController extends CommonController {
     }
 
     protected function scan_signed_cdn($list) {
-        $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
+        $post_url = POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
         $this->log("扫毒接口的url为:" . $post_url, 'info');
 
         $post_arr = array();
@@ -118,7 +114,7 @@ class CronCommonController extends CommonController {
             system($sign_cmd, $ret);
             $this->log(sprintf("给微软程序加签名命令为%s,返回值为:%s", $sign_cmd, $ret), 'info');
             if($ret === 0) {
-                $post_url = self::POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
+                $post_url = POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
                 if(class_exists('\CURLFile')) {
                     $post_data = array("file_path" => new \CURLFile($check_sign_path),);
                 } else {
@@ -367,27 +363,27 @@ class CronCommonController extends CommonController {
     private function get_sign_cmd($sign_path, $sign_pwd, $sign_method, $file_path) {
         $sign_cmd = '';
         if($sign_method == 'signature_normal') {
-            $sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_URL, $file_path);
         } elseif($sign_method == 'signature_normal_sha256') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /t %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_URL, $file_path);
         } elseif($sign_method == 'signature_normal_sha384') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /t %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_URL, $file_path);
         } elseif($sign_method == 'signature_normal_sha512') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /t %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_URL, $file_path);
         } elseif($sign_method == 'signature_tr') {
-            $sign_cmd = sprintf("%s sign /f %s /p %s /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /p %s /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         } elseif($sign_method == 'signature_tr_td_sha256') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /td sha256 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha256 /p %s /td sha256 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         } elseif($sign_method == 'signature_tr_td_sha384') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         } elseif($sign_method == 'signature_tr_td_sha512') {
-            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         } elseif($sign_method == 'signature_append_sha256') {
-            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha256 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha256 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         } elseif($sign_method == 'signature_append_sha384') {
-            $sign_cmd = sprintf("%s sign /as /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha384 /p %s /td sha384 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         }elseif($sign_method == 'signature_append_sha512') {
-            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_TR_URL, $file_path);
+            $sign_cmd = sprintf("%s sign /as /f %s /fd sha512 /p %s /td sha512 /tr %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_TR_URL, $file_path);
         }
         return $sign_cmd;
     }

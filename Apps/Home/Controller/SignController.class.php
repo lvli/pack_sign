@@ -3,8 +3,6 @@ namespace Home\Controller;
 use Think\Controller;
 
 class SignController extends CommonController {
-	const TIMESTAMP_URL = 'http://timestamp.verisign.com/scripts/timstamp.dll';
-	const BASE_SIGN_URL = 'C:\Users\Administrator\Desktop\tool\signtool.exe';
     const SUCCESS_URL = '/Home/Sign/index';
 
 	public function index(){
@@ -76,7 +74,7 @@ class SignController extends CommonController {
 		if(!empty($sign_path)){
 			$check_sign_path = CHECK_SIGN_URL_MICROSOFT . '_' .time();
 			copy(CHECK_SIGN_URL, $check_sign_path);
-			$sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", self::BASE_SIGN_URL, $sign_path, $sign_pwd, self::TIMESTAMP_URL, $check_sign_path);
+			$sign_cmd = sprintf("%s sign /f %s /p %s /t %s, %s", BASE_SIGN_URL, $sign_path, $sign_pwd, TIMESTAMP_URL, $check_sign_path);
 			system($sign_cmd, $ret);
 			if($ret !== 0) {
 				unlink($sign_path);
