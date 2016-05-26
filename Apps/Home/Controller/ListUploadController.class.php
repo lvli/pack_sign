@@ -106,17 +106,26 @@ class ListUploadController extends CommonController {
 			$this->error('名称不能为空');
 		}
 
-		$save_path =  'Mains/';
-		$file_path = UPLOAD_DIR . $save_path .  $_FILES['file_path']['name'];
+		$save_path =  '';
+		$file_path = DOWNLOAD_MAIN_SIGN_URL . $save_path .  $_FILES['file_path']['name'];
 
 		$upload = new \Think\Upload();
 		$upload->autoSub = false;
-		$upload->rootPath = UPLOAD_DIR;
+		$upload->rootPath = DOWNLOAD_MAIN_SIGN_URL;
 		$upload->savePath = $save_path;
 		$upload->saveName = '';
 		$info = $upload->uploadOne($_FILES['file_path']);
 		if(!$info){
 			$this->error($upload->getError());
+		}
+
+		$new_save_path = str_replace('Sign', 'Unsign', $file_path);
+		if(!is_dir(dirname($new_save_path))){
+			mkdir(dirname($new_save_path), 0755, true);
+		}
+		$ret = copy($file_path, $new_save_path);
+		if(!$ret || !is_file($new_save_path)){
+			$this->error('添加失败');
 		}
 
 		$status = D('ListUpload')->upload($name, $ver, $description, $file_path, $sign);
