@@ -115,6 +115,7 @@ class ListUploadController extends CommonController {
 		$upload->rootPath = DOWNLOAD_MAIN_SIGN_URL;
 		$upload->savePath = $save_path;
 		$upload->saveName = '';
+		$upload->uploadReplace = true;
 		$info = $upload->uploadOne($_FILES['file_path']);
 		if(!$info){
 			$this->error($upload->getError());
