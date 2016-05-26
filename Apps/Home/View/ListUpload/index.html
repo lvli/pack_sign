@@ -4,7 +4,9 @@
         <include file='Public:menu' />
         <div class="span10" style="text-align: left;">
             <form method='get' action="">
-                <a class="btn btn-success" href="/Home/ListUpload/upload">添加</a>
+                <input type='text' name='search_name' value='{$search_name}' />&nbsp;
+                <button type="submit" class="btn btn-primary">搜索</button>&nbsp;&nbsp;
+                <a class="btn btn-success" href="/Home/ListUpload/upload">添加</a>&nbsp;
             </form>
             <table class="table table-bordered">
             <tr>

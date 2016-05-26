@@ -4,9 +4,11 @@ use Think\Controller;
 
 class ListUploadController extends CommonController {
 	public function index(){
-		$result = D('ListUpload')->findAll(30);
+		$search_name = I('get.search_name', '', 'string');
+		$result = D('ListUpload')->findAll(30, $search_name);
 		$this->assign('list', $result['list']);
 		$this->assign('pagination', $result['pagination']);
+		$this->assign('search_name', $search_name);
 		$this->display();
 	}
 
@@ -95,7 +97,7 @@ class ListUploadController extends CommonController {
 
 	public function upload_up(){
 		$p = I('post.p', 1, 'int');
-		$name = I('post.name', 0, 'string');
+		$name = I('post.name', '', 'string');
 		$ver = I('post.ver', '', 'string');
 		$sign = I('post.sign', '', 'string');
 		$description = I('post.description', '', 'string');
