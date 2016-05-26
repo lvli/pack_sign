@@ -38,8 +38,8 @@ class ListUploadModel extends CommonModel{
 				}
 				$v['status_int'] = 	$v['status'];
 				$v['status'] = $this->get_status_name($v['status']);
-				if(!empty($v['confirm_sign']) && $v['status_int'] = STATUS_SIGN_STILL_VIRUS_CHECKED){
-					$v['status_int'] = '指定的签名有毒';
+				if(!empty($v['confirm_sign']) && $v['status_int'] == STATUS_SIGN_STILL_VIRUS_CHECKED){
+					$v['status'] = '指定的签名有毒';
 				}
 
 				$sign_used_arr = explode(',', $v['sign_used']);
