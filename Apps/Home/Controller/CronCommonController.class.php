@@ -52,6 +52,13 @@ class CronCommonController extends CommonController {
 
         $post_arr = array();
         foreach($list as $v) {
+            $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
+            if(!is_file($new_save_path)){
+                $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path),  'error');
+                continue;
+            }
+
+            copy($new_save_path, $v['file_path']);
             if(class_exists('\CURLFile')) {
                 $post_data = array("file_path" => new \CURLFile($v['file_path']),);
             } else {
