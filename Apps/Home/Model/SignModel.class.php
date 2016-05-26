@@ -2,7 +2,7 @@
 namespace Home\Model;
 use Think\Model;
 
-class SignModel extends Model{
+class SignModel extends CommonModel{
 	protected $tableName = 'sign_pool';
 	protected  $table;
 
@@ -110,4 +110,23 @@ class SignModel extends Model{
 		return $status;
 	}
 
+	public function virus($id){
+		$list = M('check_sign')->where("sign_pool_id={$id}")->order('id DESC')->select();
+		foreach($list as &$v){
+			$v['virus_count'] = $this->get_virus_result_count($v['virus_result']);
+			$v['begin_time'] = date('Y-m-d H:i:s', $v['begin_time']);
+			if(empty($v['end_time'])){
+				$v['end_time'] = '处理中';
+			}else{
+				$v['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
+			}
+		}
+		return $list;
+	}
+
+	public function virus_detail($id){
+		$list = M('check_sign')->where("id={$id}")->find();
+		$list['virus_result'] = $this->format_virus_result($list['virus_result']);
+		return $list;
+	}
 }

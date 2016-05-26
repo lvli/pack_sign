@@ -114,5 +114,30 @@ class SignController extends CommonController {
 		}
 	}
 
+	public function virus(){
+		$id = I('get.id', 0, 'int');
+
+		if(empty($id)){
+			$this->error('扫毒结果不存在');
+		}
+
+		$info = D('Sign')->find($id);
+		$list = D('Sign')->virus($id);
+		$this->assign('list', $list);
+		$this->assign('info', $info);
+		$this->display();
+	}
+
+	public function virus_detail(){
+		$id = I('get.id', 0, 'int');
+
+		if(empty($id)){
+			$this->error('扫毒结果不存在');
+		}
+
+		$list = D('Sign')->virus_detail($id);
+		$this->assign('list', $list);
+		$this->display();
+	}
 
 }
