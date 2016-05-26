@@ -104,13 +104,13 @@ class ListUploadModel extends CommonModel{
 		);
 		$status_arr = array(
 			STATUS_INIT,
-			STATUS_PROGRAM_NO_VIRUS,
 			STATUS_PROGRAM_VIRUS,
-			STATUS_PROGRAM_VIRUS_JUMP,
 		);
 		if(!in_array($list_status, $status_arr)){
-			$data['status'] = STATUS_SIGN_STILL_VIRUS_CHECKED;
+			$data['status'] = STATUS_INIT;
+			$data['sign_used'] = '';
 		}
+		M('detail_new')->where("list_id={$id} AND status=0")->delete();
 		$status = M('list_new')->where("id={$id}")->data($data)->save();
 		return $status;
 	}
