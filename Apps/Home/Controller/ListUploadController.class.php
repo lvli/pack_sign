@@ -106,7 +106,7 @@ class ListUploadController extends CommonController {
 			$this->error('名称不能为空');
 		}
 
-		$save_path =  '';
+		$save_path =  'Mains/';
 		$file_path = DOWNLOAD_MAIN_SIGN_URL . $save_path .  $_FILES['file_path']['name'];
 
 		$upload = new \Think\Upload();
