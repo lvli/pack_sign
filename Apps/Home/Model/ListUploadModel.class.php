@@ -25,7 +25,6 @@ class ListUploadModel extends CommonModel{
 				$sign_list[$s['id']] = $s['sign_name'];
 			}
 			foreach($list as &$v){
-				$v['file_path'] = basename($v['file_path']);
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
 				if($v['status'] == STATUS_CDN_UPLOADED){
 					$v['url'] = sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
