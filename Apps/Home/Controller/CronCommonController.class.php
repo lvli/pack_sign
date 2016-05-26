@@ -226,7 +226,7 @@ class CronCommonController extends CommonController {
                 //记录邮件发送历史
                 M('send_email_history')->data(array(
                     'content' => $this->sign_email_body,
-                    'email_list' => $this->email_list,
+                    'email_list' => json_encode($this->email_list),
                     'addtime' => time(),
                 ))->add();
             }
