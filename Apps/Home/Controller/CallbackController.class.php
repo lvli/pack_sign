@@ -79,6 +79,7 @@ class CallbackController extends CommonController {
             if($status == 2){
                 M('sign_pool')->where("id='{$sign_pool_id}'")->data(array(
                     'status' => 1,
+                    'virus_result' => $data_raw,
                     'edittime' => time(),
                     'back' => '签名报毒已被系统停用',
                 ))->save();

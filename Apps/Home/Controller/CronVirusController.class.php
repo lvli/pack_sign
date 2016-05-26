@@ -87,6 +87,7 @@ class CronVirusController extends CronCommonController {
             M('list_new')->data(array(
                 'mains_id' => $v['id'],
                 'file_path' =>  $v['save_path'],
+                'file_name' =>  basename($v['save_path']),
                 'ver' =>  $v['ver'],
                 'description' =>  $v['description'],
                 'status' => 0,

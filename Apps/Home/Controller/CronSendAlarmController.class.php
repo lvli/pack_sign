@@ -14,12 +14,12 @@ class CronSendAlarmController extends CronCommonController {
         //程序报毒
         $this->log("获取程序报毒的文件",  'info');
         $list = $this->get_list(STATUS_PROGRAM_VIRUS);
-        $program_content = $this->get_virus_result($list);
+        $program_content = $this->get_virus_result($list, true);
 
         //签名报毒
         $this->log("获取签名报毒的文件",  'info');
-        $list = $this->get_list(STATUS_SIGN_VIRUS);
-        $sign_content = $this->get_virus_result($list);
+        $list = $this->get_list_sign();
+        $sign_content = $this->get_virus_result($list, false);
 
         //发邮件
         $this->email($program_content, $sign_content);
@@ -27,14 +27,29 @@ class CronSendAlarmController extends CronCommonController {
         $this->log("脚本结束运行",  'info');
     }
 
-    private function get_virus_result($list){
+    protected function get_list_sign() {
+        $list = M('sign_pool')->where('status=1')->select();
+        $this->log(sprintf("从sign_pool表查询到status=1的数据为:%s", json_encode($list)), 'info');
+        return $list;
+    }
+
+    private function get_one_virus_result($id, $type){
+        if($type){
+            $virus_result = M('detail_new')->where("list_id={$id} AND virus_result<>''")->order('id DESC')->limit(1)->getField('virus_result');
+        }else{
+            $virus_result = M('check_sign')->where("sign_pool_id={$id} AND virus_result<>''")->order('id DESC')->limit(1)->getField('virus_result');
+        }
+        return $virus_result;
+    }
+
+    private function get_virus_result($list, $type){
         if(empty($list)){
             return '';
         }
 
         $result = '';
         foreach($list as $v){
-            $virus_result = M('detail_new')->where("list_id={$v['id']} AND virus_result<>''")->order('id DESC')->limit(1)->getField('virus_result');
+            $virus_result = $this->get_one_virus_result($v['id'], $type);
             if(!empty($virus_result)){
                 $virus_result = json_decode($virus_result, true);
                 $virus_engine = array();
