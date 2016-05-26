@@ -82,7 +82,7 @@ class ListUploadController extends CommonController {
 		}
 
 		$status = D('ListUpload')->confirm_sign($id, $sign);
-		if($status){
+		if($status !== false){
 			$this->success('修改成功', '/Home/ListUpload/index/p/' . $p);
 		}else{
 			$this->error('修改失败');
