@@ -60,11 +60,16 @@ class CronSendAlarmController extends CronCommonController {
                 }
                 if(!empty($virus_engine)){
                     //ID_名称  报毒杀软
-                    $result[] = array(
+                    $one = array(
                         'id' => $v['id'],
-                        'name' => basename($v['file_path']),
                         'virus_engine' => $virus_engine,
                     );
+                    if($type){
+                        $one['name'] = basename($v['file_path']);
+                    }else{
+                        $one['name'] = $v['sign_name'];
+                    }
+                    $result[] = $one;
                 }
             }
         }
@@ -93,7 +98,7 @@ class CronSendAlarmController extends CronCommonController {
             $email_body .= $program_content;
         }
         if(!empty($sign_content)){
-            $email_body .= '<br/><hr>签名报毒的文件:<br/>';
+            $email_body .= '<br/>签名报毒的文件:<br/>';
             $email_body .= $sign_content;
         }
         if(!empty($email_body)){
