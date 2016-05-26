@@ -126,6 +126,7 @@ class ListUploadModel extends CommonModel{
 			'ver' => $ver,
 			'description' => $description,
 			'file_path' => $file_path,
+			'file_name' => basename($file_path),
 			'confirm_sign' => $sign,
 			'status' => 0,
 			'scan_time' => time(),
