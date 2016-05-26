@@ -75,8 +75,8 @@ class Local{
 
         /* 不覆盖同名文件 */ 
         if (!$replace && is_file($filename)) {
-            $this->error = '存在同名文件' . $file['savename'];
-            return false;
+           // $this->error = '存在同名文件' . $file['savename'];
+           // return false;
         }
 
         /* 移动文件 */
