@@ -73,6 +73,7 @@ class ListUploadController extends CommonController {
 	}
 
 	public function confirm_sign_up(){
+		set_time_limit(0);
 		$p = I('post.p', 1, 'int');
 		$id = I('post.id', 0, 'int');
 		$sign = I('post.sign', '', 'string');
