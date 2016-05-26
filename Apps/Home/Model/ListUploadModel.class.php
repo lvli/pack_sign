@@ -13,8 +13,9 @@ class ListUploadModel extends CommonModel{
 
 	function findAll($pageCount, $search_name = ''){
 		$where = '1=1';
+		$search_name = strtoupper($search_name);
 		if(!empty($search_name)){
-			$where .= " AND file_name LIKE '%{$search_name}%'";
+			$where .= " AND upper(`file_name`) LIKE '%{$search_name}%'";
 		}
 		import('ORG.Util.Page');
 		$count = $this->table->where($where)->count();
