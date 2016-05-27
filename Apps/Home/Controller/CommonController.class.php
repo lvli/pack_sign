@@ -35,6 +35,10 @@ class CommonController extends Controller {
     }
 
     protected function log_to_table($content, $level = 'error', $type = ''){
+        if(!LOG_VERBOSE && $level == 'info'){
+            return false;
+        }
+
         return M('Log')->data(array(
             'type' => $type,
             'level' => strtolower($level),

@@ -42,3 +42,4 @@ const MAINS_STATUS_PROGRAM_VIRUS = 2;//程序有毒
 const MAINS_STATUS_SIGN_VIRUS = 3;//签名有毒
 const MAINS_STATUS_UPLOADED_CDN = 4;//已上传CDN
 
+const LOG_VERBOSE = 1; //是否记录info级别的信息到log表中
