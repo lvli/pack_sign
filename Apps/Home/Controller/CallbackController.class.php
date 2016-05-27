@@ -127,7 +127,7 @@ class CallbackController extends CommonController {
 
             $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id DESC')->getField('list_id');
             $list_cron = M('list_cron')->where("id={$id}")->find();
-            $list_new_id = M('list_new')->where("mains_id={$list_cron['mains_id']}")->getField('id');
+            $list_new_id = M('list_new')->where("id={$list_cron['new_id']}")->getField('id');
 
             if($data['status'] == 0){ //无毒
                 M('list_cron')->where("id={$id}")->data(array(

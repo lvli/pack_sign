@@ -28,11 +28,11 @@ class CronVirusUploadedController extends CronCommonController {
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
         //去掉正在处理的数据
         foreach($list as $k => $v){
-            $info =  M($this->table_list)->where("mains_id={$v['mains_id']} AND status = 0")->order('id DESC')->find();
+            $info =  M($this->table_list)->where("new_id={$v['id']} AND status = 0")->order('id DESC')->find();
             if(time() - $info['scan_time'] >= self::DEAL_TIMEOUT){
-                M($this->table_list)->where("mains_id={$v['id']} AND status = 0")->delete();
+                M($this->table_list)->where("new_id={$v['id']} AND status = 0")->delete();
                 $this->log(sprintf("从%s表去掉超时的数据,time=%s,begin_time=%s,id=%s,deal_timeout=%s", $this->table_list, time(), $info['scan_time'], $info['id'], self::DEAL_TIMEOUT),  'info');
-            }elseif(!empty($info['id'])){
+            }elseif(!empty($info['new_id'])){
                 unset($list[$k]);
             }
         }
@@ -44,6 +44,7 @@ class CronVirusUploadedController extends CronCommonController {
             $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
             $cron_id = M($this->table_list)->data(array(
                 'mains_id' => $v['mains_id'],
+                'new_id' => $v['id'],
                 'file_path' => $v['save_path'],
                 'file_name' =>  basename($v['save_path']),
                 'status' => 0,
