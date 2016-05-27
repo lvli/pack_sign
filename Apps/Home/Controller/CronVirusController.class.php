@@ -37,7 +37,7 @@ class CronVirusController extends CronCommonController {
         $list = $this->get_list(STATUS_PROGRAM_NO_VIRUS);
         $list_jump = $this->get_list(STATUS_PROGRAM_VIRUS_JUMP);
         $list = array_merge($list, $list_jump);
-        $this->scan_sign($list);
+        $list = $this->scan_sign($list);
         $this->scan_virus($list);
 
         //用微软的程序验证签名本身是否有毒

@@ -201,6 +201,7 @@ class CronCommonController extends CommonController {
 
                     if(!empty($v['is_jump'])){
                         $status = STATUS_SIGN_VIRUS_JUMP;
+                        unset($list[$k]);
                     }else{
                         $status = STATUS_SIGN;
                     }
