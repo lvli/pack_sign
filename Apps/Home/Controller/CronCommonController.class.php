@@ -14,6 +14,7 @@ class CronCommonController extends CommonController {
     protected $email_list = array();
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
     const TIMEOUT = 10;
+    const POST_TIME_INTERVEL = 500000;//0.5秒 单位为毫秒
 
     protected function init() {
         $this->log("脚本开始运行", 'info');
@@ -81,7 +82,6 @@ class CronCommonController extends CommonController {
         $post_url = POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
         $this->log("扫毒接口的url为:" . $post_url, 'info');
 
-        $post_arr = array();
         foreach($list as $v) {
             if(class_exists('\CURLFile')) {
                 $post_data = array("file_path" => new \CURLFile($v['file_path']),);
@@ -89,14 +89,17 @@ class CronCommonController extends CommonController {
                 $post_data = array("file_path" => '@' . $v['file_path'],);
             }
             $post_data['email_list'] = 'JSON_API_CDN';
-            $post_arr[] = $post_data;
 
             $sign = array_pop(explode('', $v['sign_used']));
             $data = array('list_id' => $v['cron_id'], 'file_md5' => md5_file($v['file_path']), 'status' => 0, 'begin_time' => time(), 'sign' => $sign == NULL ? '' : $sign,);
             M($this->table_detail)->data($data)->add();
             $this->log(sprintf("记录到%s表中的信息为:%s", $this->table_detail, json_encode($data)), 'info');
+
+            //批量扫描cdn上的文件，间隔时间不能太短
+            $this->post($post_url, array($post_data));
+            usleep(self::POST_TIME_INTERVEL);
         }
-        $this->post($post_url, $post_arr);
+
     }
 
     protected function check_scan($list) {
