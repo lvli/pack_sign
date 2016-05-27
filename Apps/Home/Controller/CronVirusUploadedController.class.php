@@ -4,7 +4,7 @@ use Think\Controller;
 
 //获取已经在CDN上的文件 每6个小时执行一次
 class CronVirusUploadedController extends CronCommonController {
-    const DEAL_TIMEOUT = 300;
+    const DEAL_TIMEOUT = 600;
     protected $table_detail = 'detail_cron';
     protected $table_list = 'list_cron';
     protected $log_prefix = 'cron';
@@ -29,9 +29,9 @@ class CronVirusUploadedController extends CronCommonController {
         //去掉正在处理的数据
         foreach($list as $k => $v){
             $info =  M($this->table_list)->where("mains_id={$v['mains_id']} AND status = 0")->order('id DESC')->find();
-            if(time() - $info['begin_time'] >= self::DEAL_TIMEOUT){
-                M($this->table_detail)->where("list_id={$v['id']} AND status = 0")->delete();
-                $this->log(sprintf("从%s表去掉超时的数据,time=%s,begin_time=%s,id=%s,deal_timeout=%s", $this->table_detail, time(), $info['begin_time'], $info['id'], self::DEAL_TIMEOUT),  'info');
+            if(time() - $info['scan_time'] >= self::DEAL_TIMEOUT){
+                M($this->table_list)->where("mains_id={$v['id']} AND status = 0")->delete();
+                $this->log(sprintf("从%s表去掉超时的数据,time=%s,begin_time=%s,id=%s,deal_timeout=%s", $this->table_list, time(), $info['scan_time'], $info['id'], self::DEAL_TIMEOUT),  'info');
             }elseif(!empty($info['id'])){
                 unset($list[$k]);
             }
@@ -40,7 +40,7 @@ class CronVirusUploadedController extends CronCommonController {
 
         $time = time();
         foreach($list as &$v) {
-            $v['save_path'] = str_replace('Unsign', 'Sign', $v['file_path']);
+            $v['save_path'] = str_replace('Sign', 'Cdn', $v['file_path']);
             $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
             $cron_id = M($this->table_list)->data(array(
                 'mains_id' => $v['mains_id'],
