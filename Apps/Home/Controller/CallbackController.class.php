@@ -127,7 +127,7 @@ class CallbackController extends CommonController {
 
             $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id DESC')->getField('list_id');
             $list_cron = M('list_cron')->where("id={$id}")->find();
-            $lsit_new_id = M('list_new')->where("id={$list_cron['mains_id']}")->getField('id');
+            $list_new_id = M('list_new')->where("mains_id={$list_cron['mains_id']}")->getField('id');
 
             if($data['status'] == 0){ //无毒
                 M('list_cron')->where("id={$id}")->data(array(
@@ -136,7 +136,7 @@ class CallbackController extends CommonController {
                 ))->save();
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
-                M('list_new')->where("id={$lsit_new_id}")->data(array(
+                M('list_new')->where("id={$list_new_id}")->data(array(
                     'status' => STATUS_INIT,
                     'scan_time' => $time,
                 ))->save();
