@@ -166,6 +166,7 @@ class CronCommonController extends CommonController {
             if(count($sign_arr) <= $this->config['min_sign_email']){
                 $email_id_str = $v['id'] . ',';
                 $this->log("小于等于n(默认为3)个，发报警邮件 不处理这个签名",  'info');
+                unset($list[$k]);
                 continue;
             }
 
@@ -186,7 +187,7 @@ class CronCommonController extends CommonController {
                 $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path), 'error');
             }elseif(empty($v['sign_path']) || empty(  $v['sign_pwd'])){
                 unset($list[$k]);
-                $this->log(sprintf("指定的签名已经被停用，不处理了,sign_key=%s", $sign_key), 'info');
+                $this->log(sprintf("指定的签名已经被停用或者签名池中已经无签名可用了，不处理了,sign_key=%s", $sign_key), 'info');
             }else{
                 copy($new_save_path, $v['file_path']);
                 $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
