@@ -137,9 +137,8 @@ class CallbackController extends CommonController {
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
                 M('list_new')->where("id={$lsit_new_id}")->data(array(
-                    'virus_result' => $data_raw,
                     'status' => STATUS_INIT,
-                    'end_time' => $time,
+                    'scan_time' => $time,
                 ))->save();
 
                 M('list_cron')->where("id={$id}")->data(array(
