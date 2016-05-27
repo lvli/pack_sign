@@ -29,6 +29,9 @@ class CommonController extends Controller {
             }
         }
 
+        //记录操作日志
+        $this->action_log();
+
         $params = explode('/', __SELF__);
         $menu_hl = $params[2] . '_' . $params[3];
         $this->assign('menu_hl', $menu_hl);
@@ -39,11 +42,35 @@ class CommonController extends Controller {
             return false;
         }
 
-        return M('Log')->data(array(
+        return M('log')->data(array(
             'type' => $type,
             'level' => strtolower($level),
             'content' => $content,
             'url' => $_SERVER['REQUEST_URI'],
+            'ip' => get_client_ip(1, true),
+            'addtime' => time(),
+        ))->add();
+    }
+
+    private function action_log(){
+        $exclude_actions = array(
+            'User/login',
+            'User/login_up',
+            'Callback',
+            'Cron',
+            'Action/index',
+        );
+
+        if(!empty($exclude_actions))    foreach($exclude_actions as $actions){
+            if(stripos(__SELF__, $actions) !== false){
+                return false;
+            }
+        }
+
+        return M('action_log')->data(array(
+            'url' => $_SERVER['REQUEST_URI'],
+            'post' => json_encode($_POST),
+            'admin_id' => session('admin_id'),
             'ip' => get_client_ip(1, true),
             'addtime' => time(),
         ))->add();

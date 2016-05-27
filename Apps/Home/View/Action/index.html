@@ -1,0 +1,38 @@
+<include file="Public:header" />
+<div id="content" align="center" class="container-fluid">
+    <div class="row-fluid">
+        <include file='Public:menu' />
+        <div class="span10" style="text-align: left;">
+            <form class="form-search form-inline" method="get" action="/Home/Action/index">
+                <b>访问时间 </b>:
+                <input type='text' class="date_input" id="date_input_min" name='begin_time' value='{$_REQUEST['begin_time']}' />&nbsp;-&nbsp;
+                <input type='text' class="date_input" id="date_input_max" name='end_time' value='{$_REQUEST['end_time']}' />&nbsp;
+                <button type="submit" class="btn btn-primary">筛选</button>
+            </form>
+            <table class="table table-bordered">
+                <tr>
+                    <th>ID</th>
+                    <th>管理员</th>
+                    <th>访问地址</th>
+                    <th>POST参数</th>
+                    <th>访问IP</th>
+                    <th>访问时间</th>
+                </tr>
+                <volist name="list" id="data">
+                    <tr>
+                        <th>{$data.id}</th>
+                        <th>{$data.admin}</th>
+                        <td>{$data.url}</td>
+                        <td>{$data.post}</td>
+                        <td>{$data.ip}</td>
+                        <td>{$data.addtime}</td>
+                    </tr>
+                </volist>
+                <tr>
+                    <td colspan="5" class="pagination">{$pagination}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" />
