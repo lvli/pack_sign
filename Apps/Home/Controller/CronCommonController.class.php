@@ -183,8 +183,10 @@ class CronCommonController extends CommonController {
 
             $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             if(!is_file($new_save_path)) {
+                unset($list[$k]);
                 $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path), 'error');
             }elseif(empty($v['sign_path']) || empty(  $v['sign_pwd'])){
+                unset($list[$k]);
                 $this->log(sprintf("指定的签名已经被停用，不处理了,sign_key=%s", $sign_key), 'info');
             }else{
                 copy($new_save_path, $v['file_path']);
@@ -199,6 +201,7 @@ class CronCommonController extends CommonController {
                         'sign_used' => $sign_used,
                     ))->save();
                 }else{
+                    unset($list[$k]);
                     $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
                 }
             }
@@ -242,6 +245,8 @@ class CronCommonController extends CommonController {
                 ))->add();
             }
         }
+
+        return $list;
     }
 
     protected function up_cdn($list){
