@@ -182,8 +182,10 @@ class CronCommonController extends CommonController {
             $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
 
             $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
-            if(!is_file($new_save_path)){
-                $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path),  'error');
+            if(!is_file($new_save_path)) {
+                $this->log(sprintf("未签名文件的路径不存在，路径为%s", $new_save_path), 'error');
+            }elseif(empty($v['sign_path']) || empty(  $v['sign_pwd'])){
+                $this->log(sprintf("指定的签名已经被停用，不处理了,sign_key=%s", $sign_key), 'info');
             }else{
                 copy($new_save_path, $v['file_path']);
                 $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[$v['sign_method']], $v['file_path']);
