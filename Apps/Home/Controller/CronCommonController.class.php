@@ -310,7 +310,7 @@ class CronCommonController extends CommonController {
     }
 
     protected function CheckUnSign($file_list){
-        foreach($file_list as $v){
+        foreach($file_list as $k => $v){
             if(!is_file($v['save_path']) || filesize($v['save_path']) == 0){
                 $this->log(sprintf("这个文件没有下载成功，要删掉。save_path=%s,id=%s,mains_id=%s",$v['save_path'], $v['id']), $v['mains_id'],  'info');
                 M('list_new')->where('id='.$v['id'])->delete();
@@ -320,8 +320,10 @@ class CronCommonController extends CommonController {
                 M('mains', NULL, $connection)->where("id=".$v['mains_id'])->data(array(
                     "sign_status" => MAINS_STATUS_INIT,
                 ))->save();
+                unset($file_list[$k]);
             }
         }
+        return $file_list;
     }
 
     protected function downloadUnSign($file_list){
