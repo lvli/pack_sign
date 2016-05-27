@@ -48,7 +48,6 @@ class CallbackController extends CommonController {
             //修改list表
             M('list_new')->where("id={$detail['list_id']}")->data(array(
                 'status' => $list_status,
-                'scan_time' => time(),
             ))->save();
             $this->log("修改list_new表id={$detail['list_id']}的status={$list_status}" . json_encode($list),  'info');
         }
