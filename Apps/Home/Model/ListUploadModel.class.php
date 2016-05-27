@@ -37,7 +37,8 @@ class ListUploadModel extends CommonModel{
 					$v['url'] = '';
 				}
 				$v['status_int'] = 	$v['status'];
-				$v['status'] = $this->get_status_name($v['status']);
+				$v['status'] = $this->get_status_name($v['status_int']);
+				$v['status_real'] = $this->get_status_real_name($v['status_int']);
 				if(!empty($v['confirm_sign']) && $v['status_int'] == STATUS_SIGN_STILL_VIRUS_CHECKED){
 					$v['status'] = '指定的签名有毒';
 				}
@@ -149,9 +150,29 @@ class ListUploadModel extends CommonModel{
 			STATUS_SIGN_VIRUS => '签名有毒',
 			STATUS_SIGN_STILL_VIRUS_NO_CHECK => '处理中',
 			STATUS_SIGN_STILL_VIRUS_CHECKED => '处理中',
+			STATUS_CRON_DEAL => '定时任务处理中',
 			STATUS_CDN_UPLOADED => '已上传CDN',
 			STATUS_PROGRAM_VIRUS_JUMP => '处理中',
 			STATUS_SIGN_VIRUS_JUMP => '处理中',
+		);
+
+		return isset($status_arr[$status]) ? $status_arr[$status] : '';
+	}
+
+	private function get_status_real_name($status){
+		$status_arr = array(
+				STATUS_INIT => '尚未开始',
+				STATUS_PROGRAM_NO_VIRUS => '程序无毒',
+				STATUS_SIGN => '签名',
+				STATUS_SIGN_NO_VIRUS => '签名无毒',
+				STATUS_PROGRAM_VIRUS => '程序有毒',
+				STATUS_SIGN_VIRUS => '签名有毒',
+				STATUS_SIGN_STILL_VIRUS_NO_CHECK => '签名后依然有毒,需要用微软程序验证签名是否有毒',
+				STATUS_SIGN_STILL_VIRUS_CHECKED => '确认签名有毒,需要更换签名再次扫描的',
+				STATUS_CRON_DEAL => '定时任务处理中',
+				STATUS_CDN_UPLOADED => '已上传CDN',
+				STATUS_PROGRAM_VIRUS_JUMP => '跳过程序扫毒步骤开始签名',
+				STATUS_SIGN_VIRUS_JUMP => '跳过签名扫毒步骤开始上传CDN',
 		);
 
 		return isset($status_arr[$status]) ? $status_arr[$status] : '';
