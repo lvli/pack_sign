@@ -100,6 +100,7 @@ class ListUploadModel extends CommonModel{
 		}
 		$status = M('list_new')->where("id={$id}")->data(array(
 			'status' => $status,
+			'is_jump' => 1,
 		))->save();
 		return $status;
 	}

@@ -148,7 +148,6 @@ class CronCommonController extends CommonController {
     protected function scan_sign($list){
         //C:\Users\Administrator\Desktop\tool\signtool.exe sign /f C:\Users\Administrator\Desktop\tool\lizhuo1008.pfx /fd sha256 /p worktogether C:\Users\Administrator\Desktop\mssign32.dll
         $this->log("签名池中的最小签名个数(min_sign_email):" . $this->config['min_sign_email'],  'info');
-        $id_list = array();
         $email_id_str = '';
         if(!empty($list))    foreach($list as $k => $v){
             $this->log("当前处理的数据，在list表中的信息为:" . json_encode($v),  'info');
@@ -194,26 +193,26 @@ class CronCommonController extends CommonController {
                 $error_info = system($sign_cmd, $ret);
                 $this->log(sprintf("签名执行的命令为%s,返回值为%s",$sign_cmd, $ret),  'info');
                 if($ret === 0){
-                    $id_list[] .= $v['id'] . ',';
                     //记录使用过的签名
                     $sign_used = trim($v['sign_used'] . ',' . $sign_arr[$sign_key]['id'], ',');
                     M($this->table_list)->where('id='.$v['id'])->data(array(
                         'sign_used' => $sign_used,
                     ))->save();
+
+                    if(!empty($v['is_jump'])){
+                        $status = STATUS_SIGN_VIRUS_JUMP;
+                    }else{
+                        $status = STATUS_SIGN;
+                    }
+                    M($this->table_list)->where('id='.$v['id'])->data(array(
+                        'status' => $status,
+                    ))->save();
+                    $this->log(sprintf("修改签名后的表状态,id=%s,status=%s", $v['id'], $status),  'info');
                 }else{
                     unset($list[$k]);
                     $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
                 }
             }
-        }
-
-        //统一修改签名后的表状态
-        $id_str = implode(',', rtrim($id_list, ','));
-        if(!empty($id_str)){
-            $this->log(sprintf("统一修改签名后的表状态,id_str=%s,status=%s", $id_str, STATUS_SIGN),  'info');
-            M($this->table_list)->where('id IN ('.$id_str . ' )')->data(array(
-                'status' => STATUS_SIGN,
-            ))->save();
         }
 
         //统一发邮件
@@ -256,6 +255,7 @@ class CronCommonController extends CommonController {
             $cdn->put_cdn_file($v['file_path']);
             M($this->table_list)->where('id=' . $v['id'])->data(array(
                 'status' => STATUS_CDN_UPLOADED,
+                'is_jump' => 0,
             ))->save();
 
             //修改main表上的状态为已上传CDN

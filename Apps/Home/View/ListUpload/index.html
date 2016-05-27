@@ -42,11 +42,7 @@
                         <a href="/Home/ListUpload/confirm_sign/id/{$data.id}" class="btn btn-primary">指定签名</a>
                         <if condition="($data.status_int eq STATUS_PROGRAM_VIRUS) OR ($data.status_int eq STATUS_SIGN_VIRUS) OR ($data.status_int eq STATUS_SIGN_STILL_VIRUS_NO_CHECK) OR ($data.status_int eq STATUS_SIGN_STILL_VIRUS_CHECKED)">
                             <a href="/Home/ListUpload/jump_step/id/{$data.id}" onclick="if(confirm('确定吗?')==false)return false;" class="btn btn-danger">
-                                <if condition="($data.status_int eq STATUS_PROGRAM_VIRUS)">
-                                    打签名
-                                <else />
-                                    上传CDN
-                                </if>
+                                上传CDN
                             </a>
                         </if>
                         <if condition="($data.mains_id eq 0)">
