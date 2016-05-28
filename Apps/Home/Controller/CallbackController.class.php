@@ -144,6 +144,7 @@ class CallbackController extends CommonController {
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
                 M('list_new')->where("id={$list_new_id}")->data(array(
                     'status' => STATUS_INIT,
+                    'sign_used' => '',
                     'scan_time' => $time,
                 ))->save();
 

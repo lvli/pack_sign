@@ -47,6 +47,19 @@ class CronCommonController extends CommonController {
         return $list;
     }
 
+    protected function init_list($list){
+        if(empty($list)){
+            return array();
+        }
+
+        foreach($list as $v){
+            M('list_new')->data(array(
+                'sign_used' => '',
+            ))->where("id={$v['id']}")->save();
+        }
+        return $list;
+    }
+
     protected function scan_virus($list, $flag = false) {
         $post_url = POST_VIRUS_URL . '/index.php?m=Upload&a=Upload';
         $this->log("扫毒接口的url为:" . $post_url, 'info');

@@ -30,6 +30,7 @@ class CronVirusController extends CronCommonController {
         //进行未签名的扫毒
         $this->log("进行未签名文件的扫毒",  'info');
         $list = $this->get_list(STATUS_INIT);
+        $list = $this->init_list($list);
         $this->scan_virus($list, true);
 
         //签名,然后扫毒
