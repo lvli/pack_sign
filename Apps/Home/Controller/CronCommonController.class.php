@@ -14,7 +14,7 @@ class CronCommonController extends CommonController {
     protected $email_list = array();
     protected $sign_email_body = '签名池的签名少于{n}个,请尽快增加签名';
     const TIMEOUT = 10;
-    const POST_TIME_INTERVEL = 5000000;//5秒 单位为毫秒
+    const POST_TIME_INTERVEL = 2000000;//2秒 单位为毫秒
 
     protected function init() {
         $this->log("脚本开始运行", 'info');

@@ -125,12 +125,18 @@ class CallbackController extends CommonController {
                'end_time' => time(),
             ))->save();
 
-            $id = M('detail_cron')->where("file_md5='{$data['name']}'")->order('id DESC')->getField('list_id');
-            $list_cron = M('list_cron')->where("id={$id}")->find();
+            $id_arr = M('detail_cron')->where("file_md5='{$data['name']}'")->field('distinct(list_id)')->order('id DESC')->select();
+            $id_str = '';
+            foreach($id_arr as $u){
+                $id_str[] = $u['list_id'];
+            }
+            $id_str = trim(implode(',', $id_str), ',');
+
+            $list_cron = M('list_cron')->where("id IN ({$id_str})")->order('id DESC')->find();
             $list_new_id = M('list_new')->where("id={$list_cron['new_id']}")->getField('id');
 
             if($data['status'] == 0){ //无毒
-                M('list_cron')->where("id={$id}")->data(array(
+                M('list_cron')->where("id IN ({$id_str})")->data(array(
                     'status' => STATUS_PROGRAM_NO_VIRUS,
                     'scan_time' => $time,
                 ))->save();
@@ -141,7 +147,7 @@ class CallbackController extends CommonController {
                     'scan_time' => $time,
                 ))->save();
 
-                M('list_cron')->where("id={$id}")->data(array(
+                M('list_cron')->where("id IN ({$id_str})")->data(array(
                     'status' => STATUS_PROGRAM_VIRUS,
                     'scan_time' => $time,
                 ))->save();
