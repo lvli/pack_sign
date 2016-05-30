@@ -212,18 +212,19 @@ class CronCommonController extends CommonController {
                 if($ret === 0){
                     //记录使用过的签名
                     $sign_used = trim($v['sign_used'] . ',' . $sign_arr[$sign_key]['id'], ',');
-                    M($this->table_list)->where('id='.$v['id'])->data(array(
+                    $data = array(
                         'sign_used' => $sign_used,
-                    ))->save();
+                        'sign_method' => $this->sign_method[$v['sign_method']],
+                    );
 
                     if(!empty($v['is_jump'])){
                         $status = STATUS_SIGN_VIRUS_JUMP;
                         unset($list[$k]);
-                        M($this->table_list)->where('id='.$v['id'])->data(array(
-                            'status' => $status,
-                        ))->save();
+                        $data['status'] = $status;
                         $this->log(sprintf("修改签名后的表状态,id=%s,status=%s", $v['id'], $status),  'info');
                     }
+
+                    M($this->table_list)->where('id='.$v['id'])->data($data)->save();
 
                 }else{
                     unset($list[$k]);
