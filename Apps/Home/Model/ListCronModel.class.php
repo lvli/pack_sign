@@ -11,12 +11,18 @@ class ListCronModel extends CommonModel{
 		$this->table = M($this->tableName);
 	}
 
-	function findAll($pageCount){
+	function findAll($pageCount, $search_name = ''){
+		$where = '1=1';
+		$search_name = strtoupper($search_name);
+		if(!empty($search_name)){
+			$where .= " AND upper(`file_name`) LIKE '%{$search_name}%'";
+		}
+
 		import('ORG.Util.Page');
-		$count = $this->table->count();
+		$count = $this->table->where($where)->count();
 		if(!empty($count)){
 			$page = new \Org\Util\Page($count, $pageCount);
-			$list = $this->table->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
+			$list = $this->table->where($where)->order('id DESC')->limit($page->firstRow . ',' . $page->listRows)->select();
 		}
 		if(!empty($list)){
 			$sign_list_arr = M('sign_pool')->where('status=0')->field('id,sign_name')->select();

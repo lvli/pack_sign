@@ -3,6 +3,11 @@
     <div class="row-fluid">
         <include file='Public:menu' />
         <div class="span10" style="text-align: left;">
+            <form method='get' action="">
+                <b>文件名称:</b>
+                <input type='text' name='search_name' value='{$search_name}' />&nbsp;
+                <button type="submit" class="btn btn-primary">搜索</button>&nbsp;&nbsp;
+            </form>
             <table class="table table-bordered">
             <tr>
                 <th>ID</th>

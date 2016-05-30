@@ -4,9 +4,11 @@ use Think\Controller;
 
 class ListCronController extends CommonController {
 	public function index(){
-		$result = D('ListCron')->findAll(30);
+		$search_name = I('get.search_name', '', 'string');
+		$result = D('ListCron')->findAll(30, $search_name);
 		$this->assign('list', $result['list']);
 		$this->assign('pagination', $result['pagination']);
+		$this->assign('search_name', $search_name);
 		$this->display();
 	}
 
