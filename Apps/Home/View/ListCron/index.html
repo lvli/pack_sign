@@ -6,6 +6,15 @@
             <form method='get' action="">
                 <b>文件名称:</b>
                 <input type='text' name='search_name' value='{$search_name}' />&nbsp;
+
+                <b>扫描次数 </b>:
+                <select name="scan_times">
+                <option value="0">全部</option>
+                    <volist name="scan_times" id="st">
+                        <option  value="{$st}" <if condition="isset($_REQUEST['scan_times']) && $_REQUEST['scan_times'] eq $st">selected</if>>第{$st}次</option>
+                    </volist>
+                </option></select>&nbsp;
+
                 <button type="submit" class="btn btn-primary">搜索</button>&nbsp;&nbsp;
             </form>
             <table class="table table-bordered">
@@ -17,6 +26,7 @@
                 <th>文件名称</th>
                 <th>文件状态</th>
                 <th>扫描时间</th>
+                <th>扫描次数</th>
                 <th>操作</th>
             </tr>
             <volist name="list" id="data">
@@ -28,6 +38,7 @@
                     <td>{$data.file_path}</td>
                     <td>{$data.status}</td>
                     <td>{$data.scan_time}</td>
+                    <td>{$data.scan_times}</td>
                     <td><a href="/Home/ListCron/virus/id/{$data.id}" target="_blank" class="btn btn-info">查看扫毒结果</a></td>
                 </tr>
             </volist>

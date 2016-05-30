@@ -5,10 +5,14 @@ use Think\Controller;
 class ListCronController extends CommonController {
 	public function index(){
 		$search_name = I('get.search_name', '', 'string');
-		$result = D('ListCron')->findAll(30, $search_name);
+		$scan_times = I('get.scan_times', 0, 'int');
+		$result = D('ListCron')->findAll(30, $search_name, $scan_times);
+		$scan_times = D('ListCron')->getScanTimes();
+
 		$this->assign('list', $result['list']);
 		$this->assign('pagination', $result['pagination']);
 		$this->assign('search_name', $search_name);
+		$this->assign('scan_times', $scan_times);
 		$this->display();
 	}
 

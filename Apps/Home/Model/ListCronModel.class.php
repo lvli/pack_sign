@@ -11,11 +11,27 @@ class ListCronModel extends CommonModel{
 		$this->table = M($this->tableName);
 	}
 
-	function findAll($pageCount, $search_name = ''){
+	function getScanTimes(){
+		$scan_times = (int)$this->table->order('id DESC')->getField('scan_times');
+		if($scan_times <= 0){
+			$scan_list = array();
+		}elseif($scan_times == 1){
+			$scan_list = array(1);
+		}else{
+			$scan_list = range(1, $scan_times);
+		}
+		return $scan_list;
+	}
+
+	function findAll($pageCount, $search_name = '', $scan_times = 0){
 		$where = '1=1';
 		$search_name = strtoupper($search_name);
 		if(!empty($search_name)){
 			$where .= " AND upper(`file_name`) LIKE '%{$search_name}%'";
+		}
+
+		if(!empty($scan_times)){
+			$where .= " AND scan_times={$scan_times}";
 		}
 
 		import('ORG.Util.Page');
