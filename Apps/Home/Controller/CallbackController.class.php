@@ -146,20 +146,13 @@ class CallbackController extends CommonController {
             $list_cron_new_id_str = trim(implode(',', $list_cron_new_id_str), ',');
             $list_cron_mains_id_str = trim(implode(',', $list_cron_mains_id_str), ',');
 
-            $list_new_id_arr = M('list_new')->where("id IN ({$list_cron_new_id_str})")->field('id')->select();
-            $id_new_id_str = '';
-            foreach($list_new_id_arr as $t){
-                $id_new_id_str[] = $t['id'];
-            }
-            $id_new_id_str = trim(implode(',', $id_new_id_str), ',');
-
             if($data['status'] == 0){ //无毒
                 M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->data(array(
                     'status' => STATUS_PROGRAM_NO_VIRUS,
                 ))->save();
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
-                M('list_new')->where("id IN ({$id_new_id_str})")->data(array(
+                M('list_new')->where("id IN ({$list_cron_new_id_str})")->data(array(
                     'status' => STATUS_INIT,
                     'sign_used' => '',
                 ))->save();
