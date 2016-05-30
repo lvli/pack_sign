@@ -102,7 +102,6 @@ class ListCronModel extends CommonModel{
 		$status_arr = array(
 			STATUS_INIT => '尚未开始',
 			STATUS_PROGRAM_NO_VIRUS => '程序无毒',
-			STATUS_SIGN => '签名',
 			STATUS_SIGN_NO_VIRUS => '签名无毒',
 			STATUS_PROGRAM_VIRUS => '程序有毒',
 			STATUS_SIGN_VIRUS => '签名有毒',

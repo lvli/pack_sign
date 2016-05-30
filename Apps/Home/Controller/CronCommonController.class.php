@@ -219,13 +219,12 @@ class CronCommonController extends CommonController {
                     if(!empty($v['is_jump'])){
                         $status = STATUS_SIGN_VIRUS_JUMP;
                         unset($list[$k]);
-                    }else{
-                        $status = STATUS_SIGN;
+                        M($this->table_list)->where('id='.$v['id'])->data(array(
+                            'status' => $status,
+                        ))->save();
+                        $this->log(sprintf("修改签名后的表状态,id=%s,status=%s", $v['id'], $status),  'info');
                     }
-                    M($this->table_list)->where('id='.$v['id'])->data(array(
-                        'status' => $status,
-                    ))->save();
-                    $this->log(sprintf("修改签名后的表状态,id=%s,status=%s", $v['id'], $status),  'info');
+
                 }else{
                     unset($list[$k]);
                     $this->log(sprintf("签名失败,签名执行的命令为%s,返回值为%s,error:%s",$sign_cmd, $ret, $error_info),  'error');
