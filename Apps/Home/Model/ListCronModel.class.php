@@ -20,6 +20,8 @@ class ListCronModel extends CommonModel{
 		}else{
 			$scan_list = range(1, $scan_times);
 		}
+		$scan_list = array_reverse($scan_list);
+
 		return $scan_list;
 	}
 
