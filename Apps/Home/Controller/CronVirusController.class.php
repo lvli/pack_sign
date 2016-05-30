@@ -132,14 +132,14 @@ class CronVirusController extends CronCommonController {
 
     private function check_sign($list){
         foreach($list as $k => $v){
-            $new_save_path = str_replace('Sign', 'Unsign', $v['save_path']);
+            $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             $unsign_filesize = filesize($new_save_path);
-            $sign_filesize = filesize($v['save_path']);
+            $sign_filesize = filesize($v['file_path']);
             $unsign_filemtime = filemtime($new_save_path);
-            $sign_filemtime = filemtime($v['save_path']);
+            $sign_filemtime = filemtime($v['file_path']);
             if($unsign_filesize == $sign_filesize || $unsign_filemtime == $sign_filemtime){
                 unset($list[$k]);
-                $this->log(sprintf("list_new表中的记录ID为:%s发生异常,重新处理,unsign_filesize=%s,sign_filesize%s,unsign_filemtime=%s,sign_filemtime=%s", $v['id'], $unsign_filesize, $sign_filesize, $unsign_filemtime, $sign_filemtime),  'error');
+                $this->log(sprintf("list_new表中的记录ID为:%s发生异常,重新处理,unsign_filesize=%s,sign_filesize=%s,unsign_filemtime=%s,sign_filemtime=%s", $v['id'], $unsign_filesize, $sign_filesize, $unsign_filemtime, $sign_filemtime),  'error');
                 M('list_new')->data(array(
                     'status' => STATUS_INIT,
                     'sign_used' => '',
