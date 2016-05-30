@@ -10,8 +10,8 @@
                 <b>扫描次数 </b>:
                 <select name="scan_times">
                 <option value="0">全部</option>
-                    <volist name="scan_times" id="st">
-                        <option  value="{$st}" <if condition="isset($_REQUEST['scan_times']) && $_REQUEST['scan_times'] eq $st">selected</if>>第{$st}次</option>
+                    <volist name="scan_times_list" id="st">
+                        <option  value="{$st}" <if condition="$scan_times eq $st">selected</if>>第{$st}次</option>
                     </volist>
                 </option></select>&nbsp;
 
