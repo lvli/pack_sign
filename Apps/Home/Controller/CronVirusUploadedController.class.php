@@ -39,6 +39,8 @@ class CronVirusUploadedController extends CronCommonController {
         $this->log(sprintf("从%s表去掉正在处理的数据以后，剩下的数据%s", $this->table_list, json_encode($list)), 'info');
 
         $time = time();
+        $scan_times = (int)M($this->table_list)->order('id DESC')->getField('scan_times');
+        $scan_times ++;
         foreach($list as &$v) {
             $v['save_path'] = str_replace('Sign', 'Cdn', $v['file_path']);
             $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
@@ -49,6 +51,7 @@ class CronVirusUploadedController extends CronCommonController {
                 'file_name' =>  basename($v['save_path']),
                 'status' => 0,
                 'scan_time' => $time,
+                'scan_times' => $scan_times,
                 'email_status' => 0,
             ))->add();
             $this->log(sprintf("save_path=%s,download_url=%s", $v['save_path'],  $v['download_url']),  'info');
