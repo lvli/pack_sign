@@ -12,19 +12,19 @@ class CronVirusUploadedController extends CronCommonController {
     public function run(){
         $this->init();
 
-        //从CDN上下载要扫毒的文件
-        $this->log("从CDN上下载要扫毒的文件",  'info');
+        //定时任务下载要扫毒的文件
+        $this->log("定时任务下载要扫毒的文件",  'info');
         $list = $this->save_list();
 
-        //进行CDN上文件的扫毒
-        $this->log("进行CDN上文件的扫毒",  'info');
+        //进行文件的扫毒
+        $this->log("进行文件的扫毒",  'info');
         $this->scan_signed_cdn($list);
 
         $this->log("脚本结束运行",  'info');
     }
 
     private function save_list(){
-        $list = M('list_new')->where('status=' . STATUS_CDN_UPLOADED)->select();
+        $list = M('list_new')->select();
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
         //去掉正在处理的数据
         foreach($list as $k => $v){
