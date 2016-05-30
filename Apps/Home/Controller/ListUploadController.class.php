@@ -107,6 +107,11 @@ class ListUploadController extends CommonController {
 			$this->error('名称不能为空');
 		}
 
+		$old_file_name = M('list_new')->where("file_name='{$_FILES['file_path']['name']}'")->getField('file_name');
+		if($old_file_name ==  $_FILES['file_path']['name']){
+			$this->error('该文件已存在，请先删除再上传');
+		}
+
 		$save_path =  'Mains/';
 		$file_path = DOWNLOAD_MAIN_SIGN_URL . $save_path .  $_FILES['file_path']['name'];
 
