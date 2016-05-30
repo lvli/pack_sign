@@ -271,10 +271,15 @@ class CronCommonController extends CommonController {
         $cdn = new \CDN();
         foreach($list as $v){
             $cdn->put_cdn_file($v['file_path']);
-            M($this->table_list)->where('id=' . $v['id'])->data(array(
+            $data = array(
                 'status' => STATUS_CDN_UPLOADED,
                 'is_jump' => 0,
-            ))->save();
+            );
+            $is_up_cdn = (int)M($this->table_list)->where('id=' . $v['id'])->getField('is_up_cdn');
+            if(empty($is_up_cdn)){
+                $data['is_up_cdn'] = 1;
+            }
+            M($this->table_list)->where('id=' . $v['id'])->data($data)->save();
 
             //修改main表上的状态为已上传CDN
             $this->log('修改main表上的状态为已上传CDN',  'info');

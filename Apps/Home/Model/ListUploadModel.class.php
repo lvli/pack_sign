@@ -31,7 +31,7 @@ class ListUploadModel extends CommonModel{
 			}
 			foreach($list as &$v){
 				$v['scan_time'] = date('Y-m-d H:i:s', $v['scan_time']);
-				if($v['status'] == STATUS_CDN_UPLOADED){
+				if($v['status'] == STATUS_CDN_UPLOADED || $v['is_up_cdn']){
 					$v['url'] = sprintf("https://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
 				}else{
 					$v['url'] = '';
