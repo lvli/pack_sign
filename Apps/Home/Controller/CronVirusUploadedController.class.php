@@ -24,7 +24,7 @@ class CronVirusUploadedController extends CronCommonController {
     }
 
     private function save_list(){
-        $list = M('list_new')->select();
+        $list = M('list_new')->where('status<>' . STATUS_INIT)->select();
         $this->log("从list_new表上获取到的数据为:".json_encode($list),  'info');
         //去掉正在处理的数据
         foreach($list as $k => $v){
