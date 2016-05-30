@@ -117,7 +117,7 @@ class ListUploadController extends CommonController {
 
 		$upload = new \Think\Upload();
 		$upload->autoSub = false;
-		$upload->rootPath = DOWNLOAD_MAIN_SIGN_URL;
+		$upload->rootPath = ROOT_PATH . DOWNLOAD_MAIN_SIGN_URL;
 		$upload->savePath = $save_path;
 		$upload->saveName = '';
 		$upload->replace = true;

@@ -103,6 +103,7 @@ class CronVirusController extends CronCommonController {
 
     private function CopyUnSign($file_list){
         foreach($file_list as $v){
+            $v['save_path'] = $this->get_file_path($v['save_path']);
             $new_save_path = str_replace('Sign', 'Unsign', $v['save_path']);
             if(!is_dir(dirname($new_save_path))){
                 mkdir(dirname($new_save_path), 0755, true);
@@ -132,6 +133,7 @@ class CronVirusController extends CronCommonController {
 
     private function check_sign($list){
         foreach($list as $k => $v){
+            $v['file_path'] = $this->get_file_path($v['file_path']);
             $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             $unsign_filesize = filesize($new_save_path);
             $sign_filesize = filesize($v['file_path']);

@@ -1,8 +1,8 @@
 <?php
-define('UPLOAD_DIR', ROOT_PATH . 'Upload/');
-define('DOWNLOAD_URL', ROOT_PATH . 'Download/Cdn');
-define('DOWNLOAD_MAIN_URL', ROOT_PATH . 'Download/Unsign/');
-define('DOWNLOAD_MAIN_SIGN_URL', ROOT_PATH . 'Download/Sign/');
+define('UPLOAD_DIR', 'Upload/');
+define('DOWNLOAD_URL',  'Download/Cdn');
+define('DOWNLOAD_MAIN_URL',  'Download/Unsign/');
+define('DOWNLOAD_MAIN_SIGN_URL', 'Download/Sign/');
 define('CHECK_SIGN_URL', ROOT_PATH . 'tool/explorer.exe');
 define('CHECK_SIGN_URL_MICROSOFT', ROOT_PATH . 'Download/Check/explorer.exe');
 define('BASE_SIGN_URL', ROOT_PATH . 'tool/signtool.exe');

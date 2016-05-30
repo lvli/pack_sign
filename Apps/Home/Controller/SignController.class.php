@@ -59,7 +59,7 @@ class SignController extends CommonController {
 
 			$upload = new \Think\Upload();
 			$upload->autoSub = false;
-			$upload->rootPath = UPLOAD_DIR;
+			$upload->rootPath = ROOT_PATH . UPLOAD_DIR;
 			$upload->savePath = $save_path;
 			$upload->saveName = '';
 			$info = $upload->uploadOne($_FILES['sign_path']);

@@ -43,6 +43,7 @@ class CronVirusUploadedController extends CronCommonController {
         $scan_times ++;
         foreach($list as &$v) {
             $v['save_path'] = str_replace('Sign', 'Cdn', $v['file_path']);
+            $v['save_path'] = $this->get_file_path($v['save_path']);
             $v['download_url'] =  sprintf("http://%s/%s/%s", C('CDN_DOWANLOAD_URL'), C('PUT_CDN_DIR'), basename($v['file_path']));
             $cron_id = M($this->table_list)->data(array(
                 'mains_id' => $v['mains_id'],

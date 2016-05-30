@@ -79,4 +79,11 @@ class CommonController extends Controller {
             'addtime' => time(),
         ))->add();
     }
+
+    protected function get_file_path($file_path){
+        if(false === strpos($file_path, ROOT_PATH)){
+            $file_path = ROOT_PATH . $file_path;
+        }
+        return $file_path;
+    }
 }

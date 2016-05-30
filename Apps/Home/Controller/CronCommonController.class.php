@@ -66,6 +66,7 @@ class CronCommonController extends CommonController {
 
         $post_arr = array();
         foreach($list as $v) {
+            $v['file_path'] = $this->get_file_path($v['file_path']);
             if($flag){
                 $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
                 if(!is_file($new_save_path)){
@@ -135,6 +136,7 @@ class CronCommonController extends CommonController {
                 $this->log(sprintf("给微软程序加签名,微软程序不存在,路径为%s", $check_sign_path), 'error');
                 return false;
             }
+            $v['sign_path'] = $this->get_file_path($v['sign_path']);
             $sign_cmd = $this->get_sign_cmd($v['sign_path'], $v['sign_pwd'], $this->sign_method[0], $check_sign_path);
             system($sign_cmd, $ret);
             $this->log(sprintf("给微软程序加签名命令为%s,返回值为:%s", $sign_cmd, $ret), 'info');
@@ -195,8 +197,10 @@ class CronCommonController extends CommonController {
 
             $this->log("sign_key:" . json_encode($sign_key),  'info');
             $v['sign_path'] = $sign_arr[$sign_key]['sign_path'];
+            $v['sign_path'] = $this->get_file_path($v['sign_path']);
             $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
 
+            $file_path = $this->get_file_path($v['file_path']);
             $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             if(!is_file($new_save_path)) {
                 unset($list[$k]);
@@ -270,6 +274,7 @@ class CronCommonController extends CommonController {
         require_once(ROOT_PATH .'Lib/cdn.php');
         $cdn = new \CDN();
         foreach($list as $v){
+            $v['file_path'] = $this->get_file_path($v['file_path']);
             $cdn->put_cdn_file($v['file_path']);
             $data = array(
                 'status' => STATUS_CDN_UPLOADED,
@@ -333,8 +338,9 @@ class CronCommonController extends CommonController {
 
     protected function CheckUnSign($file_list){
         foreach($file_list as $k => $v){
+            $v['save_path'] = $this->get_file_path($v['save_path']);
             if(!is_file($v['save_path']) || filesize($v['save_path']) == 0){
-                $this->log(sprintf("这个文件没有下载成功，要删掉。save_path=%s,id=%s,mains_id=%s",$v['save_path'], $v['id']), $v['mains_id'],  'info');
+                $this->log(sprintf("这个文件没有下载成功，要删掉。save_path=%s,id=%s,mains_id=%s", $v['save_path'], $v['id']), $v['mains_id'],  'info');
                 M('list_new')->where('id='.$v['id'])->delete();
                 $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
@@ -389,6 +395,7 @@ class CronCommonController extends CommonController {
         }while($active);
 
         foreach ($file_list as $i => $v) {
+            $v['save_path'] = $this->get_file_path($v['save_path']);
             if (!is_dir(dirname($v['save_path']))) {
                 mkdir(dirname($v['save_path']), 0755, true);
             }
