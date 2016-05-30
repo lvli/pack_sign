@@ -138,19 +138,16 @@ class CallbackController extends CommonController {
             if($data['status'] == 0){ //无毒
                 M('list_cron')->where("id IN ({$id_str})")->data(array(
                     'status' => STATUS_PROGRAM_NO_VIRUS,
-                    'scan_time' => $time,
                 ))->save();
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
                 M('list_new')->where("id={$list_new_id}")->data(array(
                     'status' => STATUS_INIT,
                     'sign_used' => '',
-                    'scan_time' => $time,
                 ))->save();
 
                 M('list_cron')->where("id IN ({$id_str})")->data(array(
                     'status' => STATUS_PROGRAM_VIRUS,
-                    'scan_time' => $time,
                 ))->save();
                 $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
