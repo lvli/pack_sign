@@ -132,12 +132,14 @@ CREATE TABLE `ps_list_cron` (
 	`is_sign` TINYINT(3) NULL DEFAULT '0' COMMENT '是否签名 0=是 1=否',
 	`scan_times` BIGINT(20) NULL DEFAULT '0' COMMENT '扫描次数',
 	PRIMARY KEY (`id`),
-	INDEX `mains_id` (`mains_id`)
+	INDEX `mains_id` (`mains_id`),
+	INDEX `scan_times` (`scan_times`)
 )
 COMMENT='定时扫描文件的签名扫毒列表'
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ROW_FORMAT=COMPACT;
+
 
 
 CREATE TABLE `ps_list_new` (
