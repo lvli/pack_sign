@@ -133,10 +133,11 @@ class CallbackController extends CommonController {
             $id_str = trim(implode(',', $id_str), ',');
 
             $list_cron = M('list_cron')->where("id IN ({$id_str})")->order('id DESC')->find();
+            $scan_times = intval($list_cron['scan_times']);
             $list_new_id = M('list_new')->where("id={$list_cron['new_id']}")->getField('id');
 
             if($data['status'] == 0){ //无毒
-                M('list_cron')->where("id IN ({$id_str})")->data(array(
+                M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->data(array(
                     'status' => STATUS_PROGRAM_NO_VIRUS,
                 ))->save();
             }else{ //有毒
@@ -146,16 +147,18 @@ class CallbackController extends CommonController {
                     'sign_used' => '',
                 ))->save();
 
-                M('list_cron')->where("id IN ({$id_str})")->data(array(
+                M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->data(array(
                     'status' => STATUS_PROGRAM_VIRUS,
                 ))->save();
                 $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
 
-                M('mains', NULL, $connection)->where('id='.$list_cron['mains_id'])->data(array(
-                    "sign_status" => MAINS_STATUS_PROGRAM_VIRUS,
-                ))->save();
+                if(!empty($list_cron['mains_id'])){
+                    M('mains', NULL, $connection)->where('id='.$list_cron['mains_id'])->data(array(
+                        "sign_status" => MAINS_STATUS_PROGRAM_VIRUS,
+                    ))->save();
+                }
             }
         }
     }
