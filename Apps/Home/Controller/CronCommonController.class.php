@@ -200,7 +200,7 @@ class CronCommonController extends CommonController {
             $v['sign_path'] = $this->get_file_path($v['sign_path']);
             $v['sign_pwd'] = $sign_arr[$sign_key]['sign_pwd'];
 
-            $file_path = $this->get_file_path($v['file_path']);
+            $v['file_path'] = $this->get_file_path($v['file_path']);
             $new_save_path = str_replace('Sign', 'Unsign', $v['file_path']);
             if(!is_file($new_save_path)) {
                 unset($list[$k]);
