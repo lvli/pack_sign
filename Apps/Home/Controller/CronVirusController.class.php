@@ -56,6 +56,8 @@ class CronVirusController extends CronCommonController {
         $list =  $this->get_list(STATUS_SIGN_NO_VIRUS);
         $list_jump = $this->get_list(STATUS_SIGN_VIRUS_JUMP);
         $list = array_merge($list, $list_jump);
+        //再检查一下，是否签名了
+        $list = $this->check_sign($list);
         $this->up_cdn($list);
 
         //清除ggg平台删掉的文件
@@ -126,5 +128,25 @@ class CronVirusController extends CronCommonController {
             M('list_new')->where("mains_id IN ($id_str)")->delete();
             $this->log("删掉list_new表中的记录ID为:{$id_str}",  'info');
         }
+    }
+
+    private function check_sign($list){
+        foreach($list as $k => $v){
+            $new_save_path = str_replace('Sign', 'Unsign', $v['save_path']);
+            $unsign_filesize = filesize($new_save_path);
+            $sign_filesize = filesize($v['save_path']);
+            $unsign_filemtime = filemtime($new_save_path);
+            $sign_filemtime = filemtime($v['save_path']);
+            if($unsign_filesize == $sign_filesize || $unsign_filemtime == $sign_filemtime){
+                unset($list[$k]);
+                $this->log("list_new表中的记录ID为:%s发生异常,重新处理",  'error');
+                M('list_new')->data(array(
+                    'status' => STATUS_INIT,
+                    'sign_used' => '',
+                    'sign_method' => '',
+                ))->where("id={$v['id']}")->save();
+            }
+        }
+        return $list;
     }
 }
