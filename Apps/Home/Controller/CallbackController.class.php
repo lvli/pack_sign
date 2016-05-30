@@ -132,9 +132,26 @@ class CallbackController extends CommonController {
             }
             $id_str = trim(implode(',', $id_str), ',');
 
-            $list_cron = M('list_cron')->where("id IN ({$id_str})")->order('id DESC')->find();
-            $scan_times = intval($list_cron['scan_times']);
-            $list_new_id = M('list_new')->where("id={$list_cron['new_id']}")->getField('id');
+            $scan_times =  (int)M('list_cron')->order('id DESC')->getField('scan_times');
+
+            $list_cron_new_id_arr = M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->order('id DESC')->select();
+            $list_cron_new_id_str = '';
+            $list_cron_mains_id_str = '';
+            foreach($list_cron_new_id_arr as $m){
+                $list_cron_new_id_str[] = $m['new_id'];
+                if(!empty($m['mains_id'])){
+                    $list_cron_mains_id_str[] = $m['mains_id'];
+                }
+            }
+            $list_cron_new_id_str = trim(implode(',', $list_cron_new_id_str), ',');
+            $list_cron_mains_id_str = trim(implode(',', $list_cron_mains_id_str), ',');
+
+            $list_new_id_arr = M('list_new')->where("id IN ({$list_cron_new_id_str})")->field('id')->select();
+            $id_new_id_str = '';
+            foreach($list_new_id_arr as $t){
+                $id_new_id_str[] = $t['id'];
+            }
+            $id_new_id_str = trim(implode(',', $id_new_id_str), ',');
 
             if($data['status'] == 0){ //无毒
                 M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->data(array(
@@ -142,22 +159,26 @@ class CallbackController extends CommonController {
                 ))->save();
             }else{ //有毒
                 //修改list表 如果有毒，把list_new上的状态改为初始状态，按新文件的流程继续扫描
-                M('list_new')->where("id={$list_new_id}")->data(array(
+                M('list_new')->where("id IN ({$id_new_id_str})")->data(array(
                     'status' => STATUS_INIT,
                     'sign_used' => '',
                 ))->save();
+                echo  M('list_new')->getLastSql();
 
                 M('list_cron')->where("id IN ({$id_str}) AND scan_times={$scan_times}")->data(array(
                     'status' => STATUS_PROGRAM_VIRUS,
                 ))->save();
+                echo  M('list_cron')->getLastSql();
+
                 $connection = sprintf("mysql://%s:%s@%s:%s/%s", C('DB_INS_USER'), C('DB_INS_PWD'), C('DB_INS_HOST'), C('DB_INS_PORT'), C('DB_INS_NAME'));
                 $this->log(sprintf("DB_INS_HOST=%s,DB_INS_NAME=%s", C('DB_INS_HOST'), C('DB_INS_NAME')),  'info');
 
 
-                if(!empty($list_cron['mains_id'])){
-                    M('mains', NULL, $connection)->where('id='.$list_cron['mains_id'])->data(array(
+                if(!empty($list_cron_mains_id_str)){
+                    M('mains', NULL, $connection)->where("id IN ({$list_cron_mains_id_str}) AND signed=0")->data(array(
                         "sign_status" => MAINS_STATUS_PROGRAM_VIRUS,
                     ))->save();
+                    echo M('mains', NULL, $connection)->getLastSql();
                 }
             }
         }
