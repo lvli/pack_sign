@@ -21,6 +21,7 @@ class UserModel extends Model{
 		if(intval($user_info['id']) > 0){
 			session('admin_id', intval($user_info['id']));
 			session('admin_name', $user_info['name']);
+			cookie('admin_name', $user_info['name']);
 			return true;
 		}else{
 			return false;

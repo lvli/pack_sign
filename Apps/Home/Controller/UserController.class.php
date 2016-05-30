@@ -4,6 +4,7 @@ use Think\Controller;
 
 class UserController extends CommonController {
     public function login(){
+        $this->assign('admin_name', cookie('admin_name'));
         $this->display();
     }
 
