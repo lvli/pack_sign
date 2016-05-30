@@ -34,6 +34,7 @@ class CommonController extends Controller {
 
         $params = explode('/', __SELF__);
         $menu_hl = $params[2] . '_' . $params[3];
+        $menu_hl = strstr($menu_hl, '?', true);
         $this->assign('menu_hl', $menu_hl);
     }
 
